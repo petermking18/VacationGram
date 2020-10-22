@@ -36,7 +36,8 @@ app.use(ExpressAPILogMiddleware(logger, { request: true }));
 connection.connect(function (err) {
   if (err)
     logger.error("Cannot connect to DB!");
-  logger.info("Connected to the DB!");
+  else
+    logger.info("Connected to the DB!");
 });
 
 //GET /
