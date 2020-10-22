@@ -1,21 +1,19 @@
-# Sample_docker-compose_project
-#### A sample project using docker-compose with mysql, node, and react.js containers.
-#### This project is meant to give you an understanding of how to formulate your docker development environment for developing web apps using node.js and mysql.
+#### Forked from [a sample docker project](https://github.com/liamlows/Sample_Docker-Compose_Project) by [@liamlows](https://github.com/liamlows)
 
-- Express Server
+# VacationGram
+A simple vacation sharing social website to document and discover new trips around the globe.
 
-- React.JS Client
+# Setup instructions
 
-- MySQL Database
+### node.js setup
 
-# SETUP
+Navigate to `./backend/node` and `.frontend` and run `npm install` (`yarn` also works)
 
-First make sure to open a terminal window to `./backend/node` and `./frontend` and from there run `yarn` or `npm install` in both directories to install the necessary packages. Then, from the root directory of the project, all you need to do is run `docker-compose up` to have the compose file automatically spin the containers up for you.
+### docker-compose
 
-If you want to run a terminal in detached mode (so you can close the window and it wont stop the containers) then type `docker-compose up -d` for a headless start instead.
+Navigate to project root and run `docker-compose up`.
+Use `docker-compose up -d` for detached headless start.
 
-As always make sure to type `docker-compose down` to shut the containers down and close everything up.
+### Once you're finished
 
-Hope this helps!
-
-Liam
+From the project root, run `docker-compose down` to shut down the containers.
