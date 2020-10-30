@@ -1,29 +1,30 @@
+require('dotenv').config()
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mysql = require('mysql');
 const { log, ExpressAPILogMiddleware } = require('@rama41222/node-logger');
 
-//mysql connection
+// mysql connection
 var connection = mysql.createConnection({
-  host: 'backend-db',
-  port: '3306',
-  user: 'manager',
-  password: 'Password',
-  database: 'db'
+  host: process.env.MYSQL_CLOUD_HOST,
+  user: process.env.MYSQL_CLOUD_USER,
+  password: process.env.MYSQL_CLOUD_PASS,
+  port: process.env.MYSQL_PORT,
+  database: process.env.MYSQL_DB
 });
 
-//set up some configs for express.
+// set up some configs for express.
 const config = {
   name: 'sample-express-app',
   port: 8000,
   host: '0.0.0.0',
 };
 
-//create the express.js object
+// create the express.js object
 const app = express();
 
-//create a logger object.  Using logger is preferable to simply writing to the console.
+// create a logger object.  Using logger is preferable to simply writing to the console.
 const logger = log({ console: true, file: false, label: config.name });
 
 app.use(bodyParser.json());
@@ -32,21 +33,20 @@ app.use(cors({
 }));
 app.use(ExpressAPILogMiddleware(logger, { request: true }));
 
-//Attempting to connect to the database.
+// Attempting to connect to the database.
 connection.connect(function (err) {
   if (err)
     logger.error("Cannot connect to DB!");
-  else
-    logger.info("Connected to the DB!");
+  logger.info("Connected to the DB!");
 });
 
-//GET /
+// GET /
 app.get('/', (req, res) => {
   res.status(200).send('Go to 0.0.0.0:3000.');
 });
 
 
-//POST /reset
+// POST /reset
 app.post('/reset', (req, res) => {
   connection.query('drop table if exists test_table', function (err, rows, fields) {
     if (err)
@@ -59,7 +59,7 @@ app.post('/reset', (req, res) => {
   res.status(200).send('created the table');
 });
 
-//POST /multplynumber
+// POST /multplynumber
 app.post('/multplynumber', (req, res) => {
   console.log(req.body.product);
 
@@ -73,7 +73,7 @@ app.post('/multplynumber', (req, res) => {
   });
 });
 
-//GET /checkdb
+// GET /checkdb
 app.get('/values', (req, res) => {
   connection.query('SELECT value FROM `db`.`test_table`', function (err, rows, fields) {
     if (err) {
@@ -91,7 +91,7 @@ app.get('/values', (req, res) => {
   });
 });
 
-//connecting the express object to listen on a particular port as defined in the config object.
+// connecting the express object to listen on a particular port as defined in the config object.
 app.listen(config.port, config.host, (e) => {
   if (e) {
     throw new Error('Internal Server Error');
