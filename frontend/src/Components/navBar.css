@@ -1,0 +1,54 @@
+nav{
+    background: royalblue;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 75px;
+    z-index: 1;
+}
+
+nav ul{
+  padding: 0;
+    text-align: left;
+}
+
+.Title{
+  font-size: 1.8em;
+  margin-top: .25em;
+  float: left;
+  display: inline;
+  margin-right: 2em;
+  margin-left: 1em;
+  color: white;
+}
+
+nav li{
+    margin-top: 1.5em;
+    float: right;
+    display: inline;
+    margin-right: 2em;
+    margin-left: 1em;
+}
+
+nav  a{
+    color: white;
+    text-decoration: none;
+    font-size: 1.7em;
+}
+
+nav a:hover{
+  background: white;
+  color: black;
+}
+
+h1{
+    font-size: 2em;
+    margin-top:3em;
+}
+
+img.avatarNav {
+  opacity: 90%;
+  height: 70px;
+  padding-left: .025em;
+}
