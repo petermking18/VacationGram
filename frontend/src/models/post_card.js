@@ -9,3 +9,4 @@ export class post_card{
         this.comments = comments;
     }
 }
+export default post_card;
