@@ -1,5 +1,5 @@
 import React from 'react';
-import { Feed } from './Feed';
+import { Feed } from './feed';
 import { post_card } from '../models/post_card';
 import { Comment } from '../models/comment';
 import './Main.css'
@@ -35,3 +35,5 @@ export class Main extends React.Component {
         );
     }
 }
+
+export default Main;

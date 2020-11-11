@@ -1,7 +1,7 @@
 //use for our project
 import React from 'react';
 import { post_card } from '../models/post_card';
-import './Feed.css'
+import './feed.css'
 
 //props will be array of post_cards
 export const Feed = (props) => (
