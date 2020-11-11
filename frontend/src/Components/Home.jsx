@@ -2,9 +2,9 @@ import React from 'react';
 import { Feed } from './Feed';
 import { post_card } from '../models/post_card';
 import { Comment } from '../models/comment';
-import './Main.css'
+import './Home.css'
 
-export class Main extends React.Component {
+export class Home extends React.Component {
     dummyPost1 = new post_card (1, "Mark Fontenot", "Nov 9 2020",
      "Hawaii", "https://www.smu.edu/-/media/Images/News/Experts/Mark-Fontenot.jpg?la=en",
      "Today, I went snorkeling and then I went hiking and then I built a sand castle and then I ............................... ........................................................................................................................",
@@ -35,3 +35,4 @@ export class Main extends React.Component {
         );
     }
 }
+export default Home;
