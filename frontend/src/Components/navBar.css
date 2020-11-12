@@ -37,6 +37,10 @@ nav a{
   font-size: 1.5em;
 }
 
+Link a{
+  font-size: 1.5em;
+}
+
 nav a:hover{
   border-radius: .25rem;
   background: white;

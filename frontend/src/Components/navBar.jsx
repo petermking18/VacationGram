@@ -12,7 +12,8 @@ class NavBar extends React.Component{
 			profile: false,
 			logout: false,
 			search: false,
-			dash: false
+			home: false,
+			newPost: false
 		};
 	}
 
@@ -23,12 +24,16 @@ class NavBar extends React.Component{
 	goToProfile = e => {
         this.setState({profile: true});
 	}
-	goToDash = e => {
-        this.setState({dash: true});
+	goToHome = e => {
+        this.setState({home: true});
 	}
 
 	goToSearch = e => {
 		this.setState({search: true});
+	}
+
+	goToNewPost = e => {
+		this.setState({newPost: true});
 	}
 	
 
@@ -54,8 +59,10 @@ class NavBar extends React.Component{
 						{this.state.profile  &&<Redirect to={'/profile/' + this.props.id}></Redirect>}
 					</li>
 					<li>
-						<a onClick = {this.goToDash} href="">Feed</a>
-						{this.state.dash &&<Redirect to={'/home/' + this.props.id}></Redirect>}
+						{/* <a onClick = {this.goToDash} href="">Feed</a>
+						{this.state.dash &&<Redirect to={'/home/' + this.props.id}></Redirect>} */}
+						<a onClick = {this.goToHome} href="">Feed</a>
+						{this.state.home &&<Redirect to={'/home/' + this.props.id}></Redirect>}
 					</li>
 				</ul>
 			</nav>

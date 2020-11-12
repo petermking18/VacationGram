@@ -18,21 +18,23 @@ export class Home extends React.Component {
      [this.dummyComment1] );
     
     posts = [this.dummyPost1,this.dummyPost2];
-    
-    state = (
-        []
-    );
 
-    onNewPost(/* post info */){
-        
+    constructor(props){
+        super(props)
+        this.state = {
+            id: '',
+            username: '',
+            email: '',
+            password: '',
+        }
     }
 
     render() {
         return (
             <>
-            <NavBar/>
+            <NavBar id={this.props.match.params.id}/>
             <Feed thePosts = {this.posts}></Feed>
-            <Link to={'newpost'}>
+            <Link to={'/newpost/' + this.props.match.params.id}>
                 <button type="button">New Post</button>
             </Link>
             </>

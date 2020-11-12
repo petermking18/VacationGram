@@ -69,13 +69,13 @@ class Login extends React.Component{
                 </div>
             <button className = "btn btn-primary btn-lg btn-block" type="button" 
             onClick={() => this.onLogin()}>Log In</button>
-            {this.state.authenticated && <Redirect to={'/dashboard/' + this.state.id}/>}
+            {this.state.authenticated && <Redirect to={'/home/' + this.state.id}/>}
             <br></br>
             <Link to={'register'}>
             <button className="btn btn-primary btn-lg btn-block" type="button">Register</button>
             </Link>
             </div>
-            <Link to={'home'}>
+            <Link to={'/home/' + 2}>
                 <button type="button">Skip to Home</button>
             </Link>
             </>;

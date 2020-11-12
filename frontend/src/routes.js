@@ -8,12 +8,12 @@ import DrugForm from "./Components/newDrugPage";
 import NewPost from "./Components/NewPost";
 
 export const ROUTES = [
-    { path: '/search/:id', component: Search },
-    { path: '/dashboard/:id', component: MainPage },
-    { path: '/home/', component: Home},
+    { path: '/search/:id', component: Search},
+    { path: '/dashboard/:id', component: MainPage},
+    { path: '/home/:id', component: Home},
+    { path: '/newpost', component: NewPost},
     { path: '/profile/:id', component: ProfilePage},
-    { path: '/register', component: RegisterPage },
+    { path: '/register', component: RegisterPage},
     { path: '/update/:id/:drugId', component: DrugForm },
     { path: '/', component: Login },
-    { path: '/newpost', component: NewPost}
 ]
