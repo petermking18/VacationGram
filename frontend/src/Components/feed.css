@@ -4,4 +4,10 @@
     background-color: #f1f1f1;
     border-radius: 5px;
     margin: .5rem;
+    padding-left: 1rem;
+}
+
+.feed{
+    list-style: none;
+    padding-left: none;
 }

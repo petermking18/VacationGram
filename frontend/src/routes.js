@@ -5,6 +5,7 @@ import Home from './Components/Home';
 import Search from './Components/search';
 import ProfilePage from './Components/profilePage';
 import DrugForm from "./Components/newDrugPage";
+import NewPost from "./Components/NewPost";
 
 export const ROUTES = [
     { path: '/search/:id', component: Search },
@@ -13,5 +14,6 @@ export const ROUTES = [
     { path: '/profile/:id', component: ProfilePage},
     { path: '/register', component: RegisterPage },
     { path: '/update/:id/:drugId', component: DrugForm },
-    { path: '/', component: Login }
+    { path: '/', component: Login },
+    { path: '/newpost', component: NewPost}
 ]

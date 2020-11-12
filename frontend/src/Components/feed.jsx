@@ -6,7 +6,7 @@ import './Feed.css'
 //props will be array of post_cards
 export const Feed = (props) => (
     <>
-        <ul>
+        <ul class="feed">
             {props.thePosts.map((post, index) => (
                 <li class="postcard">
                     <h4>{post.username}</h4>
