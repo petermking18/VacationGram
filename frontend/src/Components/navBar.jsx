@@ -38,24 +38,24 @@ class NavBar extends React.Component{
 			<nav>
 				<ul>
 					<li className = "Title">
-						TravelGram 
 						<img src={logo} alt="Avatar" className="avatarNav"></img>
+						TravelGram
 					</li>
 					<li>
-						<a href = "" onClick = {this.logoutUser}>Logout </a>
+						<a href = "" onClick = {this.logoutUser}>Logout</a>
 						{this.state.logout  && <Redirect to="/login" /> }
 					</li>
 					<li>
-						<a href="" onClick={this.goToSearch}>Search </a>
+						<a href="" onClick={this.goToSearch}>Search</a>
 						{this.state.search  && <Redirect to={'/search/' + this.props.id}/> }
 					</li>
 					<li>
-						<a href="" onClick = {this.goToProfile}>Profile </a>
+						<a href="" onClick = {this.goToProfile}>Profile</a>
 						{this.state.profile  &&<Redirect to={'/profile/' + this.props.id}></Redirect>}
 					</li>
 					<li>
 						<a onClick = {this.goToDash} href="">Feed</a>
-						{this.state.dash &&<Redirect to={'/dashboard/' + this.props.id}></Redirect>}
+						{this.state.dash &&<Redirect to={'/home/' + this.props.id}></Redirect>}
 					</li>
 				</ul>
 			</nav>

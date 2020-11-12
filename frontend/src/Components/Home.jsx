@@ -3,6 +3,7 @@ import { Feed } from './Feed';
 import { post_card } from '../models/post_card';
 import { Comment } from '../models/comment';
 import './Home.css'
+import NavBar from './navBar'
 
 export class Home extends React.Component {
     dummyPost1 = new post_card (1, "Mark Fontenot", "Nov 9 2020",
@@ -28,8 +29,7 @@ export class Home extends React.Component {
     render() {
         return (
             <>
-                {/* Nav Bar */}
-
+                <NavBar/>
                 <Feed thePosts = {this.posts}></Feed>
             </>
         );
