@@ -5,12 +5,14 @@ import Home from './Components/Home';
 import Search from './Components/search';
 import PersonalProfilePage from './Components/personalProfile';
 import OtherProfilePage from './Components/otherProfile';
+import PrivateSaved from './Components/privateSaved';
 
 export const ROUTES = [
     { path: '/search/:id', component: Search },
-    { path: '/', component: PersonalProfilePage},
-    { path: '/otherprofile/:id', component: OtherProfilePage},
+    { path: 'personalProfile/:id', component: PersonalProfilePage},
+    { path: '/otherProfile/:id', component: OtherProfilePage},
     { path: '/home/', component: Home},
+    { path: '/privateSaved/:id', component: PrivateSaved},
     { path: '/profile/:id', component: ProfilePage},
     { path: '/register', component: RegisterPage },
     { path: '/login/:id', component: Login }
