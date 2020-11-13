@@ -9,3 +9,36 @@ img{
 ul{
     padding-top: 75px;
 }
+
+#backdiv{
+    /* background: lightblue; */
+    filter: blur(4px);
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    margin-top: 0;
+    margin-left: 0;
+}
+
+#postformdiv{
+    backdrop-filter: blur(10px);
+    background: white;
+    width: 50%;
+    height: 50%;
+    margin-top: 25%;
+    margin-left: 25%;
+    border-radius: 1rem;
+    padding-top: 2rem;
+    padding-left: 2rem;
+}
+
+#newpostbutton{
+    color: white;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background: royalblue;
+    border-radius: .25rem;
+    margin-left: 4rem;
+}

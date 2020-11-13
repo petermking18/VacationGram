@@ -43,8 +43,10 @@ class NavBar extends React.Component{
 			<nav>
 				<ul>
 					<li className = "Title">
-						<img src={logo} alt="Avatar" className="avatarNav"></img>
-						TravelGram
+						<Link to={'/home/' + this.props.id} id="title">
+							<img src={logo} alt="Avatar" className="avatarNav"></img>
+							TravelGram
+						</Link>
 					</li>
 					<li>
 						<a href = "" onClick = {this.logoutUser}>Logout</a>

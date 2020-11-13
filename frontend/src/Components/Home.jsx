@@ -5,6 +5,7 @@ import { Comment } from '../models/comment';
 import { Redirect, Link } from 'react-router-dom';
 import './Home.css';
 import NavBar from './navBar';
+import PostForm from './PostForm';
 
 export class Home extends React.Component {
     dummyPost1 = new post_card (1, "Mark Fontenot", "Nov 9 2020",
@@ -23,10 +24,15 @@ export class Home extends React.Component {
         super(props)
         this.state = {
             id: '',
-            username: '',
-            email: '',
-            password: '',
+            postForm: false,
         }
+    }
+
+    postFormOpen(){
+        this.setState({postForm:true});
+    }
+    postFormClose(){
+        this.setState({postForm:false});
     }
 
     render() {
@@ -34,9 +40,17 @@ export class Home extends React.Component {
             <>
             <NavBar id={this.props.match.params.id}/>
             <Feed thePosts = {this.posts}></Feed>
-            <Link to={'/newpost/' + this.props.match.params.id}>
+            {/* <Link to={'/newpost/' + this.props.match.params.id}>
                 <button type="button">New Post</button>
-            </Link>
+            </Link> */}
+
+            <button id="newpostbutton" type="button" onClick={e => this.postFormOpen(e)}>
+                New Post
+            </button>
+            <PostForm show={this.state.postForm} handleClose={e => this.postFormClose(e)}>
+                <h2>Make a Post</h2>
+
+            </PostForm>
             </>
         );
     }

@@ -16,6 +16,16 @@ export default class NewPost extends React.Component{
         imgurl: ""
     }
 
+    constructor(props){
+        super(props)
+        this.state = {
+            id: '',
+            username: '',
+            email: '',
+            password: '',
+        }
+    }
+
     onSubmit(){
         var dateObj = new Date();
         var date = months[dateObj.getMonth()] + " " + dateObj.getDate() + ", " + dateObj.getFullYear();
@@ -37,7 +47,7 @@ export default class NewPost extends React.Component{
                 <input type="text" value={this.state.imgurl} onChange={e => this.setState({imgurl: e.target.value})}/><br/><br/>
                 <button type="button" onClick={() => this.onSubmit()}>Post</button>
             </form>
-            <p>ID: {this.state.id}</p>
+            <p>ID: {this.props.match.params.id}</p>
             </>
         );
     }
