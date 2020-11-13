@@ -1,13 +1,18 @@
-/*use for our project*/
-
 .postcard{
     background-color: #f1f1f1;
     border-radius: 5px;
     margin: .5rem;
+    margin-top: 1rem;
+    margin-left: 0;
     padding-left: 1rem;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
 }
 
 .feed{
     list-style: none;
-    padding-left: none;
+    max-width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 0;
 }

@@ -2,23 +2,14 @@
 import React from 'react';
 import { post_card } from '../models/post_card';
 import './Feed.css'
+import PostCard from './PostCard';
 
 //props will be array of post_cards
 export const Feed = (props) => (
     <>
-        <ul class="feed">
+        <ul class="feed" className="mt-1 bg-light list-unstyled bg-white" id="homefeed">
             {props.thePosts.map((post, index) => (
-                <li class="postcard">
-                    <h4>{post.username}</h4>
-                    <h5>{post.date}</h5>
-                    <h5>{post.location}</h5>
-                    <img src={post.imgurl}></img>
-                    <p>{post.text}</p>
-                    {post.comments.length === 1 && (<p>1 comment</p>)}
-                    {post.comments.length != 1 && (<p>{post.comments.length} comments</p>)}
-                    <button type="button">Like</button>
-                    <button type="button">Comment</button>
-                </li>
+                <PostCard thePost={post}></PostCard>
             ))}
         </ul>
     </>

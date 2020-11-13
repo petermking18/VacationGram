@@ -1,0 +1,18 @@
+#origindest{
+    font-size: 1.25rem;
+}
+
+img{
+    width: 153px;
+    border-radius: .3rem;
+}
+
+#likebutton{ 
+    color: white;
+    background: royalblue;
+}
+
+#commentbutton{
+    color: white;
+    background: royalblue;
+}
