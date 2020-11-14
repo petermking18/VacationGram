@@ -70,7 +70,7 @@ export class Home extends React.Component {
         this.setState({modalPostSaved: post.curr_user_saved});
         document.body.style.overflow = "hidden";
     }
-    postModalClose = (posts) => {
+    postModalClose = () => {
         this.setState({postModal:false});
         this.setState({newComment:""});
         document.body.style.overflow="visible";
@@ -101,7 +101,7 @@ export class Home extends React.Component {
             null, this.state.user_id, this.state.username, date, this.state.origin, this.state.destination, this.state.imgurl,
             this.state.text, this.state.price, this.state.reaction, this.state.rating, [], false, 0
         );
-        this.posts.unshift(mypost);//later this step will post to database
+        this.state.posts.unshift(mypost);//later this step will post to database
         this.postFormClose();
     }
     onNewComment() {
