@@ -6,6 +6,9 @@ import { Redirect, Link } from 'react-router-dom';
 import './Home.css';
 import NavBar from './navBar';
 import PostForm from './PostForm';
+import PostModal from './PostModal';
+import { Rating } from './Rating';
+import { Price } from './Price';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -23,12 +26,15 @@ export class Home extends React.Component {
      "$$$$$", "fun", "3 stars", [this.dummyComment1] );
     
     posts = [this.dummyPost1,this.dummyPost2,this.dummyPost1];
+    blankPost = new post_card();
 
     constructor(props){
         super(props)
         this.state = {
-            user_id: '1234',//keep track of logged in user somehow
-            username: "Dummy User",//get username somehow
+            user_id: this.props.location.user_id,
+            username: this.props.location.username,
+            email: this.props.location.email,
+            password: this.props.location.password,
             postForm: false,
             origin: "",
             destination: "",
@@ -36,18 +42,32 @@ export class Home extends React.Component {
             text: "",
             price: "",
             reaction: "",
-            rating: ""
+            rating: "",
+            postModal: false,
+            modalPost: this.blankPost
         }
     }
 
     prices = ["$","$$","$$$","$$$$","$$$$$"];
     ratings = ["1 star","2 stars","3 stars","4 stars","5 stars"];
     reactions = ["fun","boring","exciting","scary"]
+
+    postModalOpen = (post) => {
+        this.setState({postModal:true});
+        this.setState({modalPost:post});
+        document.body.style.overflow = "hidden";
+    }
+    postModalClose = () => {
+        this.setState({postModal:false});
+        this.setState({modalPost:this.blankPost});
+        document.body.style.overflow = "visible";
+    }
+
     postFormOpen(){
         this.setState({postForm:true});
         document.body.style.overflow = "hidden";
     }
-    postFormClose(){
+    postFormClose = () =>{
         this.setState({postForm:false});
         this.setState({origin: ""});
         this.setState({destination: ""});
@@ -57,6 +77,8 @@ export class Home extends React.Component {
         this.setState({reaction: ""});
         this.setState({rating: ""});
         document.body.style.overflow = "visible";
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
     }
     onPost(){
         let dateObj = new Date();
@@ -71,6 +93,10 @@ export class Home extends React.Component {
     onLoad(){
 
     }
+    componentDidMount(){
+        document.addEventListener("keydown",this.postModalClose, false);
+        document.addEventListener("keydown",this.postFormClose, false);
+    }
 
     render() {
         this.onLoad();
@@ -80,7 +106,7 @@ export class Home extends React.Component {
             <button id="newpostbutton" type="button" onClick={e => this.postFormOpen(e)}>
                 New Post
             </button>
-            <Feed thePosts={this.posts}></Feed>
+            <Feed thePosts={this.posts} postModalOpen={this.postModalOpen}></Feed>
 
             <PostForm show={this.state.postForm} handleClose={e => this.postFormClose(e)}>
                 <div className="mt-3 pt-4">
@@ -142,6 +168,45 @@ export class Home extends React.Component {
                     </form>
                 </div>
             </PostForm>
+            <PostModal show={this.state.postModal} handleClose={e => this.postModalClose(e)}>
+                <div className="container pt-4">
+                    <h3>{this.state.modalPost.origin} ✈ {this.state.modalPost.destination}</h3>
+                    <div className="row py-1">
+                        <div className="col">
+                            <h5>{this.state.modalPost.username}</h5>
+                        </div>
+                        <div className="col text-right text-muted">
+                            <Rating value={this.state.modalPost.rating}/>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col text-muted">
+                            <h6>{this.state.modalPost.date}</h6>
+                        </div>
+                        <div className="col text-right text-muted">
+                            <Price value={this.state.modalPost.price}/>
+                        </div>
+                    </div>
+                    <div className="row py-1">
+                        <img id="modalimg" src={this.state.modalPost.imgurl}/>
+                    </div>
+                    <div className="row py-1">
+                        <div className="col">
+                            <p>{this.state.modalPost.text}</p>
+                        </div>
+                    </div>
+                    <div className="row py-1">
+                        <div className="col">
+                            <button type="button" className="btn mr-2" id="likebutton">
+                                Like
+                            </button>
+                            <button type="button" className="btn mr-2" id="savebutton">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </PostModal>
             </>
         );
     }

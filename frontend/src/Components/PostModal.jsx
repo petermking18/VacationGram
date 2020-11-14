@@ -1,14 +1,15 @@
 import React from 'react';
-import ReactDom from 'react-dom';
-import './PostForm.css'
+import { Rating } from './Rating';
+import { Price } from './Price';
+import './PostModal.css';
 
-const PostForm = ({ handleClose, show, children}) => {
+const PostModal = ({handleClose, show, children}) => {
     const showHideClassName = show ? "modal d-block" : "modal d-none";
 
     return (
         <div className={showHideClassName}>
             <div id="backdiv" onClick={handleClose}></div>
-            <div id="postformdiv">
+            <div id="postmodaldiv">
                 <button type="button" href="javascript:;" className="float-right mr-2" onClick={handleClose} id="closeModalButton">
                 ×
                 </button>
@@ -16,5 +17,5 @@ const PostForm = ({ handleClose, show, children}) => {
             </div>
         </div>
     );
-};
-export default PostForm;
+}
+export default PostModal;

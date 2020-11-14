@@ -2,7 +2,7 @@
     font-size: 1.25rem;
 }
 
-img{
+#postcardimg{
     width: 153px;
     border-radius: .3rem;
 }
@@ -15,4 +15,13 @@ img{
 #commentbutton{
     color: white;
     background: royalblue;
+}
+
+#savebutton{
+    color: white;
+    background: royalblue;
+}
+
+#numcomments:hover{
+    cursor: pointer;
 }

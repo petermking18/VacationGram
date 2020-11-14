@@ -52,3 +52,11 @@
     resize: none;
 }
 
+#postlink p{
+    color: #212529;
+}
+#postlink:hover{text-decoration: none;}
+
+#postheader{
+    cursor: pointer;
+}

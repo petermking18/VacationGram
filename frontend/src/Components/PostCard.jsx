@@ -3,13 +3,8 @@ import { post_card } from '../models/post_card';
 import './PostCard.css';
 import { Rating } from './Rating'
 import { Price } from './Price'
+import { Redirect, Link } from 'react-router-dom';
 
-//props will be post card
-/* export const Feed = (props) => (
-    <>
-        <h4>{props.thePost.username}</h4>
-    </>
-); */
 export default class PostCard extends React.Component {
     constructor(props) {
         super(props)
@@ -21,7 +16,7 @@ export default class PostCard extends React.Component {
         return (
             <>
                 <li className="container rounded border border-secondary-50 border-top px-0 mt-3">
-                    <div className="bg-light py-2 border-bottom pl-3">
+                    <div onClick={() => this.props.postModalOpen(post)} id="postheader" className="bg-light py-2 border-bottom pl-3">
                         <div className="row">
                             <div className="col">
                                 <p id="origindest">{post.origin} ✈ {post.destination}</p>
@@ -32,7 +27,7 @@ export default class PostCard extends React.Component {
                         </div>
                         <div className="row">
                             <div className="col">
-                                {post.username}
+                                <p>{post.username}</p>
                             </div>
                             <div className="col text-right text-muted pr-5">
                                 <Price value={post.price} />
@@ -47,7 +42,7 @@ export default class PostCard extends React.Component {
                     <div className="pl-3 py-2">
                         <div className="row py-2">
                             <div className="col">
-                                <img src={post.imgurl} />
+                                <img id="postcardimg" src={post.imgurl} />
                             </div>
                             <div className="col-9 pl-1 pr-5">
                                 <p>{post.text}</p>
@@ -60,13 +55,16 @@ export default class PostCard extends React.Component {
                                 <button type="button" className="btn mr-2" id="likebutton">
                                     Like
                                 </button>
-                                <button type="button" className="btn" id="commentbutton">
+                                <button type="button" onClick={() => this.props.postModalOpen(post)} className="btn mr-2" id="commentbutton">
                                     Comment
                                 </button>
+                                <button type="button" className="btn mr-2" id="savebutton">
+                                    Save
+                                </button>
                             </div>
-                            <div className="col pr-5 text-right pt-2">
-                                {post.comments.length === 1 && (<p>1 comment</p>)}
-                                {post.comments.length != 1 && (<p>{post.comments.length} comments</p>)}
+                            <div className="col-3 pr-5 text-right pt-2">
+                                {post.comments.length === 1 && (<p onClick={() => this.props.postModalOpen(post)} id="numcomments">1 comment</p>)}
+                                {post.comments.length != 1 && (<p onClick={() => this.props.postModalOpen(post)} id="numcomments">{post.comments.length} comments</p>)}
                             </div>
                         </div>
                     </div>
