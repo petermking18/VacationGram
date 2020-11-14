@@ -11,6 +11,7 @@ export default class PostCard extends React.Component {
         this.state = {
             numlikes: this.props.thePost.numlikes,
             curr_user_liked: this.props.thePost.curr_user_liked,
+            curr_user_saved: this.props.thePost.curr_user_saved,
         }
     }
 
@@ -18,6 +19,11 @@ export default class PostCard extends React.Component {
         this.props.likeButton(this.props.thePost);
         this.setState({numlikes: this.props.thePost.numlikes});
         this.setState({curr_user_liked: this.props.thePost.curr_user_liked});
+    }
+
+    clickSave(){
+        this.props.saveButton(this.props.thePost);
+        this.setState({curr_user_saved: this.props.thePost.curr_user_saved});
     }
 
     render() {
@@ -65,17 +71,14 @@ export default class PostCard extends React.Component {
                     <div className="bg-light py-2 border-top pl-3">
                         <div className="row">
                             <div className="col">
-                                {/* <button type="button" onClick={() => this.props.likeButton(post)} className="btn mr-2" id="likebutton">
-                                👍 {!post.curr_user_liked && "Like"}{post.curr_user_liked && "Unlike"}
-                                </button> */}
                                 <button type="button" onClick={() => this.clickLike(post)} className="btn mr-2" id="likebutton">
                                 👍 {!this.state.curr_user_liked && "Like"}{this.state.curr_user_liked && "Unlike"}
                                 </button>
                                 <button type="button" onClick={() => this.props.commentButton(post)} className="btn mr-2" id="commentbutton">
                                     Comment
                                 </button>
-                                <button type="button" className="btn mr-2" id="savebutton">
-                                    Save
+                                <button type="button" onClick={() => this.clickSave(post)} className="btn mr-2" id="savebutton">
+                                {!this.state.curr_user_saved && "Save"}{this.state.curr_user_saved && "Unsave"}
                                 </button>
                             </div>
                             <div className="col-4 pr-5 text-right pt-2">

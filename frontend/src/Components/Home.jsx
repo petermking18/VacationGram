@@ -27,7 +27,7 @@ export class Home extends React.Component {
         "I walked around the National Mall and saw some cool buildings!",
         "$$$$$", "fun", "3 stars", [this.dummyComment1, this.dummyComment2], false, 1, true);
 
-    posts = [this.dummyPost1, this.dummyPost2, this.dummyPost1];
+    dummyPosts = [this.dummyPost1, this.dummyPost2, this.dummyPost1];
     blankPost = new post_card(
         0, 0, "", "", "", "", "", "", "", "", "", [], false, 0, false
     );
@@ -53,6 +53,8 @@ export class Home extends React.Component {
             modalPost: this.blankPost,
             modalPostLiked: false,
             modalPostNumLikes: 0,
+            modalPostSaved: false,
+            posts: this.dummyPosts,
         }
     }
 
@@ -65,12 +67,14 @@ export class Home extends React.Component {
         this.setState({ modalPost: post });
         this.setState({modalPostLiked: post.curr_user_liked});
         this.setState({modalPostNumLikes: post.numlikes});
+        this.setState({modalPostSaved: post.curr_user_saved});
         document.body.style.overflow = "hidden";
     }
-    postModalClose = () => {
+    postModalClose = (posts) => {
         this.setState({postModal:false});
         this.setState({newComment:""});
         document.body.style.overflow="visible";
+        this.setState({posts: this.state.posts});
     }
 
     postFormOpen() {
@@ -120,7 +124,6 @@ export class Home extends React.Component {
         this.scrollToAddComment();
     }
     onClickFeedLikeButton = (post) => {
-        console.log("Old src: " + this.posts[2].numlikes);
         if(post.curr_user_liked){
             //unlike in database
             post.curr_user_liked = false;
@@ -134,7 +137,17 @@ export class Home extends React.Component {
             this.setState({modalPostLiked: true});
             this.setState({modalPostNumLikes: this.state.modalPostNumLikes+1});
         }
-        console.log("New src: " + this.posts[2].numlikes);
+    }
+    onClickSaveButton = (post) =>{
+        if(post.curr_user_saved){
+            //unsave in database
+            post.curr_user_saved = false;
+            this.setState({modalPostSaved: false});
+        }else{
+            //save in database
+            post.curr_user_saved = true;
+            this.setState({modalPostSaved: true});
+        }
     }
     onLoad() {
         //load from api
@@ -157,7 +170,7 @@ export class Home extends React.Component {
                 <button id="newpostbutton" type="button" onClick={e => this.postFormOpen(e)}>
                     New Post
             </button>
-                <PostFeed thePosts={this.posts} likeButton={e => this.onClickFeedLikeButton(e)} 
+                <PostFeed thePosts={this.state.posts} likeButton={e => this.onClickFeedLikeButton(e)} saveButton={e => this.onClickSaveButton(e)} 
                 commentButton={e => this.onClickFeedCommentButton(e)} 
                 postModalOpen={this.postModalOpen}></PostFeed> 
                 <PostForm show={this.state.postForm} handleClose={e => this.postFormClose(e)}>
@@ -258,8 +271,8 @@ export class Home extends React.Component {
                                 <button type="button" className="btn mr-2" id="commentbutton" onClick={this.scrollToAddComment}>
                                     Comment
                                 </button>
-                                <button type="button" className="btn mr-2" id="savebutton">
-                                    Save
+                                <button type="button" onClick={() => this.onClickSaveButton(this.state.modalPost)} className="btn mr-2" id="savebutton">
+                                {!this.state.modalPostSaved && "Save"}{this.state.modalPostSaved && "Unsave"}
                                 </button>
                             </div>
                         </div>
