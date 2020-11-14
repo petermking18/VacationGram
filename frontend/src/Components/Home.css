@@ -1,7 +1,6 @@
 *{
-
+    scroll-behavior: smooth;
 }
-
 
 #homefeed{
     padding-top: 75px;
@@ -24,4 +23,33 @@
     border: 0;
     box-shadow: none;
     z-index: 5;
+}
+
+#modalcontainer{
+    display: block;
+    margin-top: 1rem;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 600px;
+    height: 85%;
+}
+
+#newcomment{
+    resize: none;
+}
+
+#newcommenttextarea{
+    width: 72%;
+}
+
+#newCommentButton{
+    border-radius: 3rem;
+}
+
+#newCommentButtonInactive{
+    border-radius: 3rem;
+    background: lightgray;
+    color: gray;
+    cursor: not-allowed;
 }

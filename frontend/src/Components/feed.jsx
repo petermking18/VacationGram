@@ -8,7 +8,7 @@ export const Feed = (props) => (
     <>
         <ul class="feed" className="mt-1 bg-light list-unstyled bg-white" id="homefeed">
             {props.thePosts.map((post, index) => (
-                <PostCard thePost={post} postModalOpen={props.postModalOpen}></PostCard>
+                <PostCard thePost={post} commentButton={props.commentButton} postModalOpen={props.postModalOpen}></PostCard>
             ))}
         </ul>
     </>

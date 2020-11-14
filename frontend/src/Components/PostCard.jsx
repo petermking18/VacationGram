@@ -55,7 +55,7 @@ export default class PostCard extends React.Component {
                                 <button type="button" className="btn mr-2" id="likebutton">
                                     Like
                                 </button>
-                                <button type="button" onClick={() => this.props.postModalOpen(post)} className="btn mr-2" id="commentbutton">
+                                <button type="button" onClick={() => this.props.commentButton(post)} className="btn mr-2" id="commentbutton">
                                     Comment
                                 </button>
                                 <button type="button" className="btn mr-2" id="savebutton">

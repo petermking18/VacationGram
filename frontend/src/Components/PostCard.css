@@ -10,16 +10,19 @@
 #likebutton{ 
     color: white;
     background: royalblue;
+    border-radius: 3rem;
 }
 
 #commentbutton{
     color: white;
     background: royalblue;
+    border-radius: 3rem;
 }
 
 #savebutton{
     color: white;
     background: royalblue;
+    border-radius: 3rem;
 }
 
 #numcomments:hover{
