@@ -22,11 +22,11 @@ export const CommentList = (props) => (
                                 </div>
                             </div>
                         </div>
-                        <div className="py-2 bg-light border-bottom px-2">
-                            <p>"{comment.text}"</p>
+                        <div className="py-1 bg-light border-bottom my-0 px-2">
+                            <p className="mb-1">"{comment.text}"</p>
                             <div className="row">
                                 <div className="col">
-                                    <button type="button" className="btn alert-secondary px-2 mr-1" id="likecomment">
+                                    <button type="button" className="btn alert-secondary px-2 mr-1 mt-0" id="likecomment">
                                         👍 Like Comment
                                 </button>
                                     <t className="text-muted">({comment.numlikes} likes)</t>

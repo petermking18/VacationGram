@@ -1,5 +1,5 @@
 import React from 'react';
-import { Feed } from './Feed';
+import PostFeed from './PostFeed';
 import { post_card } from '../models/post_card';
 import { Comment } from '../models/comment';
 import { Redirect, Link } from 'react-router-dom';
@@ -21,15 +21,15 @@ export class Home extends React.Component {
     dummyPost1 = new post_card(1, 2, "Mark Fontenot", "Nov 9 2020",
         "Dallas", "Hawaii", "https://www.smu.edu/-/media/Images/News/Experts/Mark-Fontenot.jpg?la=en",
         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        "$$$", "happy", "4 stars", [this.dummyComment1, this.dummyComment2, this.dummyComment1, this.dummyComment2]);
+        "$$$", "happy", "4 stars", [this.dummyComment1, this.dummyComment2, this.dummyComment1, this.dummyComment2], true, 12, false);
     dummyPost2 = new post_card(2, 1, "Peter King", "Nov 10 2020",
         "Texas", "Washington, DC", "https://dcist.com/wp-content/uploads/sites/3/2020/07/washington-monument-5266903_1920-1500x1000.jpg",
         "I walked around the National Mall and saw some cool buildings!",
-        "$$$$$", "fun", "3 stars", [this.dummyComment1, this.dummyComment2]);
+        "$$$$$", "fun", "3 stars", [this.dummyComment1, this.dummyComment2], false, 1, true);
 
     posts = [this.dummyPost1, this.dummyPost2, this.dummyPost1];
     blankPost = new post_card(
-        0, 0, "", "", "", "", "", "", "", "", "", []
+        0, 0, "", "", "", "", "", "", "", "", "", [], false, 0, false
     );
 
     constructor(props) {
@@ -51,6 +51,8 @@ export class Home extends React.Component {
             newComment: "",
             postModal: false,
             modalPost: this.blankPost,
+            modalPostLiked: false,
+            modalPostNumLikes: 0,
         }
     }
 
@@ -61,6 +63,8 @@ export class Home extends React.Component {
     postModalOpen = (post) => {
         this.setState({ postModal: true });
         this.setState({ modalPost: post });
+        this.setState({modalPostLiked: post.curr_user_liked});
+        this.setState({modalPostNumLikes: post.numlikes});
         document.body.style.overflow = "hidden";
     }
     postModalClose = () => {
@@ -91,7 +95,7 @@ export class Home extends React.Component {
         let date = months[dateObj.getMonth()] + " " + dateObj.getDate() + ", " + dateObj.getFullYear();
         let mypost = new post_card(
             null, this.state.user_id, this.state.username, date, this.state.origin, this.state.destination, this.state.imgurl,
-            this.state.text, this.state.price, this.state.reaction, this.state.rating, []
+            this.state.text, this.state.price, this.state.reaction, this.state.rating, [], false, 0
         );
         this.posts.unshift(mypost);//later this step will post to database
         this.postFormClose();
@@ -115,6 +119,23 @@ export class Home extends React.Component {
         this.postModalOpen(post);
         this.scrollToAddComment();
     }
+    onClickFeedLikeButton = (post) => {
+        console.log("Old src: " + this.posts[2].numlikes);
+        if(post.curr_user_liked){
+            //unlike in database
+            post.curr_user_liked = false;
+            post.numlikes--;
+            this.setState({modalPostLiked: false});
+            this.setState({modalPostNumLikes: this.state.modalPostNumLikes-1});
+        }else{
+            //like in database
+            post.curr_user_liked = true;
+            post.numlikes++;
+            this.setState({modalPostLiked: true});
+            this.setState({modalPostNumLikes: this.state.modalPostNumLikes+1});
+        }
+        console.log("New src: " + this.posts[2].numlikes);
+    }
     onLoad() {
         //load from api
     }
@@ -136,8 +157,9 @@ export class Home extends React.Component {
                 <button id="newpostbutton" type="button" onClick={e => this.postFormOpen(e)}>
                     New Post
             </button>
-                <Feed thePosts={this.posts} commentButton={e => this.onClickFeedCommentButton(e)} postModalOpen={this.postModalOpen}></Feed>
-
+                <PostFeed thePosts={this.posts} likeButton={e => this.onClickFeedLikeButton(e)} 
+                commentButton={e => this.onClickFeedCommentButton(e)} 
+                postModalOpen={this.postModalOpen}></PostFeed> 
                 <PostForm show={this.state.postForm} handleClose={e => this.postFormClose(e)}>
                     <div className="mt-3 pt-4">
                         <h2>Make a Post</h2>
@@ -227,8 +249,11 @@ export class Home extends React.Component {
                         </div>
                         <div className="row py-1">
                             <div className="col">
-                                <button type="button" className="btn mr-2" id="likebutton">
-                                    Like
+                                {/* <button type="button" className="btn mr-2" id="likebutton">
+                                👍 Like
+                                </button> */}
+                                <button type="button" onClick={() => this.onClickFeedLikeButton(this.state.modalPost)} className="btn mr-2" id="likebutton">
+                                👍 {!this.state.modalPostLiked && "Like (" + this.state.modalPostNumLikes + ")"}{this.state.modalPostLiked && "Unlike (" + this.state.modalPostNumLikes + ")"}
                                 </button>
                                 <button type="button" className="btn mr-2" id="commentbutton" onClick={this.scrollToAddComment}>
                                     Comment

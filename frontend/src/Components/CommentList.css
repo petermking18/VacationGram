@@ -8,4 +8,6 @@
 
 #likecomment{
     border-radius: 3rem;
+    padding-top: 0;
+    padding-bottom: 0;
 }

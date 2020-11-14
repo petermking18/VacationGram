@@ -8,14 +8,25 @@ import { Redirect, Link } from 'react-router-dom';
 export default class PostCard extends React.Component {
     constructor(props) {
         super(props)
+        this.state = {
+            numlikes: this.props.thePost.numlikes,
+            curr_user_liked: this.props.thePost.curr_user_liked,
+        }
+    }
+
+    clickLike(){
+        this.props.likeButton(this.props.thePost);
+        this.setState({numlikes: this.props.thePost.numlikes});
+        this.setState({curr_user_liked: this.props.thePost.curr_user_liked});
     }
 
     render() {
-        const { thePost } = this.props;
-        const post = thePost;
+        var { thePost } = this.props;
+        var post = thePost;
         return (
             <>
                 <li className="container rounded border border-secondary-50 border-top px-0 mt-3">
+                    {/* Top area: origin, dest, username, date, rating, price */}
                     <div onClick={() => this.props.postModalOpen(post)} id="postheader" className="bg-light py-2 border-bottom pl-3">
                         <div className="row">
                             <div className="col">
@@ -39,6 +50,7 @@ export default class PostCard extends React.Component {
                             </div>
                         </div>
                     </div>
+                    {/* Middle area: image, text */}
                     <div className="pl-3 py-2">
                         <div className="row py-2">
                             <div className="col">
@@ -49,11 +61,15 @@ export default class PostCard extends React.Component {
                             </div>
                         </div>
                     </div>
+                    {/* Bottom area: like button, comment button, save button, numlikes, numcomments */}
                     <div className="bg-light py-2 border-top pl-3">
                         <div className="row">
                             <div className="col">
-                                <button type="button" className="btn mr-2" id="likebutton">
-                                    Like
+                                {/* <button type="button" onClick={() => this.props.likeButton(post)} className="btn mr-2" id="likebutton">
+                                👍 {!post.curr_user_liked && "Like"}{post.curr_user_liked && "Unlike"}
+                                </button> */}
+                                <button type="button" onClick={() => this.clickLike(post)} className="btn mr-2" id="likebutton">
+                                👍 {!this.state.curr_user_liked && "Like"}{this.state.curr_user_liked && "Unlike"}
                                 </button>
                                 <button type="button" onClick={() => this.props.commentButton(post)} className="btn mr-2" id="commentbutton">
                                     Comment
@@ -62,9 +78,11 @@ export default class PostCard extends React.Component {
                                     Save
                                 </button>
                             </div>
-                            <div className="col-3 pr-5 text-right pt-2">
-                                {post.comments.length === 1 && (<p onClick={() => this.props.postModalOpen(post)} id="numcomments">1 comment</p>)}
-                                {post.comments.length != 1 && (<p onClick={() => this.props.postModalOpen(post)} id="numcomments">{post.comments.length} comments</p>)}
+                            <div className="col-4 pr-5 text-right pt-2">
+                                {this.state.numlikes === 1 && (<t className="mr-3" onClick={() => this.props.postModalOpen(post)} id="numlikes">1 like</t>)}
+                                {this.state.numlikes != 1 && (<t className="mr-3" onClick={() => this.props.postModalOpen(post)} id="numlikes">{this.state.numlikes} likes</t>)}
+                                {post.comments.length === 1 && (<t onClick={() => this.props.postModalOpen(post)} id="numcomments">1 comment</t>)}
+                                {post.comments.length != 1 && (<t onClick={() => this.props.postModalOpen(post)} id="numcomments">{post.comments.length} comments</t>)}
                             </div>
                         </div>
                     </div>
