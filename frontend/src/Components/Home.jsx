@@ -12,12 +12,12 @@ const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
 ];
 
 export class Home extends React.Component {
-    dummyPost1 = new post_card (1, "Mark Fontenot", "Nov 9 2020",
+    dummyPost1 = new post_card (1, 2, "Mark Fontenot", "Nov 9 2020",
      "Dallas", "Hawaii", "https://www.smu.edu/-/media/Images/News/Experts/Mark-Fontenot.jpg?la=en",
      "Today, I went snorkeling and then I went hiking and then I built a sand castle and then I ................ ............... ......... .............. .................... .................. ........ ........... .............. ............. .............",
      "$$$", "happy", "4 stars", [] );
      dummyComment1 = new Comment (1, 1, 1, 1, false, "Nov 11 2020");
-     dummyPost2 = new post_card (2, "Peter King", "Nov 10 2020",
+     dummyPost2 = new post_card (2, 1, "Peter King", "Nov 10 2020",
      "Texas", "Washington, DC", "https://dcist.com/wp-content/uploads/sites/3/2020/07/washington-monument-5266903_1920-1500x1000.jpg", 
      "I walked around the National Mall and saw some cool buildings!",
      "$$$$$", "fun", "3 stars", [this.dummyComment1] );
@@ -27,8 +27,8 @@ export class Home extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            id: '',
-            username: "Dummy User",
+            user_id: '1234',//keep track of logged in user somehow
+            username: "Dummy User",//get username somehow
             postForm: false,
             origin: "",
             destination: "",
@@ -39,13 +39,13 @@ export class Home extends React.Component {
             rating: ""
         }
     }
-    ///change postForm to false ^
 
     prices = ["$","$$","$$$","$$$$","$$$$$"];
     ratings = ["1 star","2 stars","3 stars","4 stars","5 stars"];
     reactions = ["fun","boring","exciting","scary"]
     postFormOpen(){
         this.setState({postForm:true});
+        document.body.style.overflow = "hidden";
     }
     postFormClose(){
         this.setState({postForm:false});
@@ -56,19 +56,24 @@ export class Home extends React.Component {
         this.setState({price: ""});
         this.setState({reaction: ""});
         this.setState({rating: ""});
+        document.body.style.overflow = "visible";
     }
     onPost(){
         let dateObj = new Date();
         let date = months[dateObj.getMonth()] + " " + dateObj.getDate() + ", " + dateObj.getFullYear();
         let mypost = new post_card(
-            5, this.state.username, date, this.state.origin, this.state.destination, this.state.imgurl,
+            null, this.state.user_id, this.state.username, date, this.state.origin, this.state.destination, this.state.imgurl,
             this.state.text, this.state.price, this.state.reaction, this.state.rating, [] 
         );
-        this.posts.push(mypost);//later this step will post to database
+        this.posts.unshift(mypost);//later this step will post to database
         this.postFormClose();
+    }
+    onLoad(){
+
     }
 
     render() {
+        this.onLoad();
         return (
             <>
             <NavBar id={this.props.match.params.id}/>
