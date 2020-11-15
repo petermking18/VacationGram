@@ -10,7 +10,7 @@ nav{
 
 nav ul{
   padding: 0;
-    text-align: left;
+  text-align: left;
 }
 
 .Title{
@@ -31,15 +31,21 @@ nav li{
     margin-left: 1em;
 }
 
-nav  a{
-    color: white;
-    text-decoration: none;
-    font-size: 1.7em;
+nav a{
+  color: white;
+  text-decoration: none;
+  font-size: 1.5em;
+}
+
+Link a{
+  font-size: 1.5em;
 }
 
 nav a:hover{
+  border-radius: .25rem;
   background: white;
-  color: black;
+  color: royalblue;
+  text-decoration: none;
 }
 
 h1{
@@ -50,5 +56,11 @@ h1{
 img.avatarNav {
   opacity: 90%;
   height: 70px;
+  width: 70px;
   padding-left: .025em;
+}
+
+#title:hover{
+  background: royalblue;
+  color: white;
 }

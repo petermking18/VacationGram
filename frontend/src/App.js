@@ -5,8 +5,6 @@ import { ROUTES } from './routes';
 import './Semantic-UI-CSS/semantic.min.css'
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Home } from './Components/Home';
-
 
 
 class App extends Component {
@@ -18,7 +16,6 @@ class App extends Component {
             { ROUTES.map((route, index) => <Route key={index} { ...route } />) }
           </Switch>
         </Router>
-        {/* <Main></Main> */}
       </>
     );
   }
