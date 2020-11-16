@@ -9,7 +9,7 @@ import PostForm from './PostForm';
 import PostModal from './PostModal';
 import { Rating } from './Rating';
 import { Price } from './Price';
-import { CommentList } from './CommentList';
+import CommentList from './CommentList';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -54,7 +54,7 @@ export class Home extends React.Component {
             modalPostLiked: false,
             modalPostNumLikes: 0,
             modalPostSaved: false,
-            posts: this.dummyPosts,
+            posts: this.dummyPosts,//get from api
         }
     }
 
@@ -74,7 +74,7 @@ export class Home extends React.Component {
         this.setState({postModal:false});
         this.setState({newComment:""});
         document.body.style.overflow="visible";
-        this.setState({posts: this.state.posts});
+        this.setState({posts: this.state.posts});//pull from api again
     }
 
     postFormOpen() {
@@ -98,10 +98,11 @@ export class Home extends React.Component {
         let dateObj = new Date();
         let date = months[dateObj.getMonth()] + " " + dateObj.getDate() + ", " + dateObj.getFullYear();
         let mypost = new post_card(
-            null, this.state.user_id, this.state.username, date, this.state.origin, this.state.destination, this.state.imgurl,
-            this.state.text, this.state.price, this.state.reaction, this.state.rating, [], false, 0
+            1, this.state.user_id, this.state.username, date, this.state.origin, this.state.destination, this.state.imgurl,
+            this.state.text, this.state.price, this.state.reaction, this.state.rating, [], false, 0, false
         );
         this.state.posts.unshift(mypost);//later this step will post to database
+        this.setState(this.state);
         this.postFormClose();
     }
     onNewComment() {
@@ -139,7 +140,7 @@ export class Home extends React.Component {
         }
     }
     onClickSaveButton = (post) =>{
-        if(post.curr_user_saved){
+        /* if(post.curr_user_saved){
             //unsave in database
             post.curr_user_saved = false;
             this.setState({modalPostSaved: false});
@@ -148,29 +149,67 @@ export class Home extends React.Component {
             post.curr_user_saved = true;
             this.setState({modalPostSaved: true});
         }
+        let p;
+        for(p in this.state.posts){
+            if(p.post_id === this.state.modalPost.post_id){
+                p.curr_user_saved = this.state.modalPostSaved;
+            }
+        } */
+        let p;
+        for(p in this.state.posts){
+            if(p.post_id === post.post_id){
+                if(p.curr_user_saved){
+                    //unsave in database
+                    p.curr_user_saved = false;
+                    this.setState({modalPostSaved: false});
+                }else{
+                    //save in database
+                    p.curr_user_saved = true;
+                    this.setState({modalPostSaved: true});
+                }
+            }
+        }
     }
-    onLoad() {
-        //load from api
+    getPosts = () => {
+        return this.state.posts;
+    }
+    getSaved = (post) => {
+        let p;
+        for(p in this.state.posts){
+            if(p.post_id === post.post_id){
+                return p.curr_user_saved;
+            }
+        }
     }
     checkEsc(event) {
         if (event.keyCode === 27) {
             this.postModalClose();
-            this.postFormClose();
+            this.setState({ postForm: false });
+            this.setState({ origin: "" });
+            this.setState({ destination: "" });
+            this.setState({ imgurl: "" });
+            this.setState({ text: "" });
+            this.setState({ price: "" });
+            this.setState({ reaction: "" });
+            this.setState({ rating: "" });
+            document.body.style.overflow = "visible";
         }
     }
     componentDidMount() {
         document.addEventListener("keydown", this.checkEsc, false);
     }
-
+    componentWillUpdate(){
+        console.log(this.state.posts[0].curr_user_saved);
+    }
+    
     render() {
-        this.onLoad();
         return (
             <>
                 <NavBar id={this.props.match.params.id} />
                 <button id="newpostbutton" type="button" onClick={e => this.postFormOpen(e)}>
                     New Post
             </button>
-                <PostFeed thePosts={this.state.posts} likeButton={e => this.onClickFeedLikeButton(e)} saveButton={e => this.onClickSaveButton(e)} 
+                <PostFeed thePosts={this.getPosts()} getSaved={this.getSaved} likeButton={e => this.onClickFeedLikeButton(e)} saveButton={e => this.onClickSaveButton(e)} 
                 commentButton={e => this.onClickFeedCommentButton(e)} 
                 postModalOpen={this.postModalOpen}></PostFeed> 
                 <PostForm show={this.state.postForm} handleClose={e => this.postFormClose(e)}>

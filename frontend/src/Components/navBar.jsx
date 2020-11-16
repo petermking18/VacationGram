@@ -43,7 +43,7 @@ class NavBar extends React.Component{
 			<nav>
 				<ul>
 					<li className = "Title">
-						<Link to={'/home/' + this.props.id} id="title">
+						<Link to={'/home/'} id="title">
 							<img src={logo} alt="Avatar" className="avatarNav"></img>
 							TravelGram
 						</Link>
@@ -54,17 +54,17 @@ class NavBar extends React.Component{
 					</li>
 					<li>
 						<a href="" onClick={this.goToSearch}>Search</a>
-						{this.state.search  && <Redirect to={'/search/' + this.props.id}/> }
+						{this.state.search  && <Redirect to={'/search/'}/> }
 					</li>
 					<li>
 						<a href="" onClick = {this.goToProfile}>Profile</a>
-						{this.state.profile  &&<Redirect to={'/profile/' + this.props.id}></Redirect>}
+						{this.state.profile  &&<Redirect to={'/profile/'}></Redirect>}
 					</li>
 					<li>
 						{/* <a onClick = {this.goToDash} href="">Feed</a>
 						{this.state.dash &&<Redirect to={'/home/' + this.props.id}></Redirect>} */}
 						<a onClick = {this.goToHome} href="">Feed</a>
-						{this.state.home &&<Redirect to={'/home/' + this.props.id}></Redirect>}
+						{this.state.home &&<Redirect to={'/home/'}></Redirect>}
 					</li>
 				</ul>
 			</nav>

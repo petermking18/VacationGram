@@ -78,7 +78,7 @@ export default class PostCard extends React.Component {
                                     Comment
                                 </button>
                                 <button type="button" onClick={() => this.clickSave(post)} className="btn mr-2" id="savebutton">
-                                {!this.state.curr_user_saved && "Save"}{this.state.curr_user_saved && "Unsave"}
+                                {!this.props.getSaved && "Save"}{this.props.getSaved && "Unsave"}
                                 </button>
                             </div>
                             <div className="col-4 pr-5 text-right pt-2">
