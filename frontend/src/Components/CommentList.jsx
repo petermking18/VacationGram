@@ -10,6 +10,13 @@ export default class CommentList extends React.Component {
         }
     }
 
+    isDeletable(comment){
+        return (comment.user_id === this.props.curr_user_id) || (this.props.curr_user_id === this.props.poster_id);
+    }
+    deleteComment(comment){
+        //
+    }
+
     render() {
         return (
             <>
@@ -38,8 +45,15 @@ export default class CommentList extends React.Component {
                                         <div className="col">
                                             <button type="button" className="btn alert-secondary px-2 mr-1 mt-0" id="likecomment">
                                                 👍
-                                </button>
+                                            </button>
                                             <t className="text-muted">({comment.numlikes} likes)</t>
+                                        </div>
+                                        <div className="col text-right">
+                                            {this.isDeletable(comment) &&
+                                            <button type="button" className="btn alert-secondary text-danger px-2 mr-1 mt-0" id="deletecomment">
+                                                Delete comment
+                                            </button>
+                                            }
                                         </div>
                                     </div>
                                 </div>

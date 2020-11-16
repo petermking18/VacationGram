@@ -17,16 +17,16 @@ const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
 ];
 
 export class Home extends React.Component {
-    dummyComment1 = new Comment(1, 1, 1, "Pete", 1, false, "Nov 11 2020", "Very cool trip!", 5);
-    dummyComment2 = new Comment(2, 2, 2, "John Lawrimore", 2, false, "Nov 12 2020", "Seems like you had fun", 2);
+    dummyComment1 = new Comment(1, 1, 75, "Pete", 1, false, "Nov 11 2020", "Very cool trip!", 5, false);
+    dummyComment2 = new Comment(2, 2, 2, "John Lawrimore", 2, false, "Nov 12 2020", "Seems like you had fun", 2, false);
     dummyPost1 = new post_card(1, 2, "Mark Fontenot", "Nov 9 2020",
         "Dallas", "Hawaii", "https://www.smu.edu/-/media/Images/News/Experts/Mark-Fontenot.jpg?la=en",
         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        "$$$", "happy", "4 stars", [this.dummyComment1, this.dummyComment2, this.dummyComment1, this.dummyComment2], true, 12, false);
+        "$$$", "happy", "4 stars", [this.dummyComment1,this.dummyComment2], true, 12, false);
     dummyPost2 = new post_card(2, 1, "Peter King", "Nov 10 2020",
         "Texas", "Washington, DC", "https://dcist.com/wp-content/uploads/sites/3/2020/07/washington-monument-5266903_1920-1500x1000.jpg",
         "I walked around the National Mall and saw some cool buildings!",
-        "$$$$$", "fun", "3 stars", [this.dummyComment1, this.dummyComment2], false, 1, true);
+        "$$$$$", "fun", "3 stars", [], false, 1, true);
 
     dummyPosts = [this.dummyPost1, this.dummyPost2, this.dummyPost1];
     blankPost = new post_card(
@@ -109,9 +109,10 @@ export class Home extends React.Component {
     onNewComment() {
         let dateObj = new Date();
         let date = months[dateObj.getMonth()] + " " + dateObj.getDate() + ", " + dateObj.getFullYear();
+        console.log("commenter: " + this.state.user_id);
         let mycomment = new Comment(
             null/*change to new comment id*/, this.state.modalPost.id, this.state.user_id, this.state.username,
-            null/*parent id?*/, null/*is question?*/, date, this.state.newComment, 0
+            null/*parent id?*/, null/*is question?*/, date, this.state.newComment, 0, false
         );
         this.state.modalPost.comments.unshift(mycomment);
         this.postModalClose();
@@ -124,6 +125,7 @@ export class Home extends React.Component {
     onClickFeedCommentButton = (post) => {
         this.postModalOpen(post);
         this.scrollToAddComment();
+        console.log(this.state.user_id);
     }
     onClickFeedLikeButton = (post) => {
         if (post.curr_user_liked) {
@@ -156,7 +158,6 @@ export class Home extends React.Component {
                 p.curr_user_saved = this.state.modalPostSaved;
             }
         }
-        console.log("here");
     }
     getPosts = () => {
         return this.state.posts;
@@ -359,7 +360,7 @@ export class Home extends React.Component {
                                 </button>
                             </div>
                         </div>
-                        <CommentList comments={this.state.modalPost.comments} />
+                        <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.user_id} poster_id={this.state.modalPost.user_id} />
                         <form className="row mt-0 ml-0 pl-0" name="newCommentForm">
                             <div className="ml-0 pl-0" id="newcommenttextarea">
                                 <textarea name="newCommentTA" type="text" className="form-control mb-3" placeholder="add a comment" id="newcomment"

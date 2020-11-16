@@ -76,7 +76,8 @@ class Login extends React.Component {
             </div>
             <Link to={{
                 pathname: "/home/",
-                user_id: this.state.id,
+                //user_id: this.state.id,
+                user_id: 75,//change later
                 username: this.state.username,
                 email: this.state.email,
                 password: this.state.password
