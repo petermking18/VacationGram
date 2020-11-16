@@ -1,6 +1,7 @@
 import React from 'react';
 import PostFeed from './PostFeed';
 import { post_card } from '../models/post_card';
+import PostCard from './PostCard';
 import { Comment } from '../models/comment';
 import { Redirect, Link } from 'react-router-dom';
 import './Home.css';
@@ -65,16 +66,16 @@ export class Home extends React.Component {
     postModalOpen = (post) => {
         this.setState({ postModal: true });
         this.setState({ modalPost: post });
-        this.setState({modalPostLiked: post.curr_user_liked});
-        this.setState({modalPostNumLikes: post.numlikes});
-        this.setState({modalPostSaved: post.curr_user_saved});
+        this.setState({ modalPostLiked: post.curr_user_liked });
+        this.setState({ modalPostNumLikes: post.numlikes });
+        this.setState({ modalPostSaved: post.curr_user_saved });
         document.body.style.overflow = "hidden";
     }
     postModalClose = () => {
-        this.setState({postModal:false});
-        this.setState({newComment:""});
-        document.body.style.overflow="visible";
-        this.setState({posts: this.state.posts});//pull from api again
+        this.setState({ postModal: false });
+        this.setState({ newComment: "" });
+        document.body.style.overflow = "visible";
+        this.setState({ posts: this.state.posts });//pull from api again
     }
 
     postFormOpen() {
@@ -125,61 +126,40 @@ export class Home extends React.Component {
         this.scrollToAddComment();
     }
     onClickFeedLikeButton = (post) => {
-        if(post.curr_user_liked){
+        if (post.curr_user_liked) {
             //unlike in database
             post.curr_user_liked = false;
             post.numlikes--;
-            this.setState({modalPostLiked: false});
-            this.setState({modalPostNumLikes: this.state.modalPostNumLikes-1});
-        }else{
+            this.setState({ modalPostLiked: false });
+            this.setState({ modalPostNumLikes: this.state.modalPostNumLikes - 1 });
+        } else {
             //like in database
             post.curr_user_liked = true;
             post.numlikes++;
-            this.setState({modalPostLiked: true});
-            this.setState({modalPostNumLikes: this.state.modalPostNumLikes+1});
+            this.setState({ modalPostLiked: true });
+            this.setState({ modalPostNumLikes: this.state.modalPostNumLikes + 1 });
         }
     }
-    onClickSaveButton = (post) =>{
-        /* if(post.curr_user_saved){
+    onClickSaveButton = (post) => {
+        if (post.curr_user_saved) {
             //unsave in database
             post.curr_user_saved = false;
-            this.setState({modalPostSaved: false});
-        }else{
+            this.setState({ modalPostSaved: false });
+        } else {
             //save in database
             post.curr_user_saved = true;
-            this.setState({modalPostSaved: true});
+            this.setState({ modalPostSaved: true });
         }
         let p;
-        for(p in this.state.posts){
-            if(p.post_id === this.state.modalPost.post_id){
+        for (p in this.state.posts) {
+            if (p.post_id === this.state.modalPost.post_id) {
                 p.curr_user_saved = this.state.modalPostSaved;
             }
-        } */
-        let p;
-        for(p in this.state.posts){
-            if(p.post_id === post.post_id){
-                if(p.curr_user_saved){
-                    //unsave in database
-                    p.curr_user_saved = false;
-                    this.setState({modalPostSaved: false});
-                }else{
-                    //save in database
-                    p.curr_user_saved = true;
-                    this.setState({modalPostSaved: true});
-                }
-            }
         }
+        console.log("here");
     }
     getPosts = () => {
         return this.state.posts;
-    }
-    getSaved = (post) => {
-        let p;
-        for(p in this.state.posts){
-            if(p.post_id === post.post_id){
-                return p.curr_user_saved;
-            }
-        }
     }
     checkEsc(event) {
         if (event.keyCode === 27) {
@@ -198,20 +178,84 @@ export class Home extends React.Component {
     componentDidMount() {
         document.addEventListener("keydown", this.checkEsc, false);
     }
-    componentWillUpdate(){
-        console.log(this.state.posts[0].curr_user_saved);
+    componentWillUpdate() {
+
     }
-    
+
     render() {
         return (
             <>
                 <NavBar id={this.props.match.params.id} />
                 <button id="newpostbutton" type="button" onClick={e => this.postFormOpen(e)}>
                     New Post
-            </button>
-                <PostFeed thePosts={this.getPosts()} getSaved={this.getSaved} likeButton={e => this.onClickFeedLikeButton(e)} saveButton={e => this.onClickSaveButton(e)} 
-                commentButton={e => this.onClickFeedCommentButton(e)} 
-                postModalOpen={this.postModalOpen}></PostFeed> 
+                </button>
+                <PostFeed>
+                    <ul class="feed" className="mt-1 bg-light list-unstyled bg-white" id="homefeed">
+                        {this.state.posts.map((post, index) => (
+                            <PostCard>
+                                <li className="container rounded border border-secondary-50 border-top px-0 mt-3">
+                                    {/* Top area: origin, dest, username, date, rating, price */}
+                                    <div onClick={() => this.postModalOpen(post)} id="postheader" className="bg-light py-2 border-bottom pl-3">
+                                        <div className="row">
+                                            <div className="col">
+                                                <p id="origindest">{post.origin} ✈ {post.destination}</p>
+                                            </div>
+                                            <div className="col text-right text-muted pr-5">
+                                                <Rating value={post.rating} />
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col">
+                                                <p>{post.username}</p>
+                                            </div>
+                                            <div className="col text-right text-muted pr-5">
+                                                <Price value={post.price} />
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col text-muted">
+                                                {post.date}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {/* Middle area: image, text */}
+                                    <div className="pl-3 py-2">
+                                        <div className="row py-2">
+                                            <div className="col">
+                                                <img id="postcardimg" src={post.imgurl} />
+                                            </div>
+                                            <div className="col-9 pl-1 pr-5">
+                                                <p>{post.text}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {/* Bottom area: like button, comment button, save button, numlikes, numcomments */}
+                                    <div className="bg-light py-2 border-top pl-3">
+                                        <div className="row">
+                                            <div className="col">
+                                                <button type="button" onClick={() => this.onClickFeedLikeButton(post)} className="btn mr-2" id="likebutton">
+                                                👍 {!post.curr_user_liked && "Like"}{post.curr_user_liked && "Unlike"}    
+                                                </button>
+                                                <button type="button" onClick={() => this.onClickFeedCommentButton(post)} className="btn mr-2" id="commentbutton">
+                                                Comment
+                                                </button>
+                                                <button type="button" onClick={() => this.onClickSaveButton(post)} className="btn mr-2" id="savebutton">
+                                                {!post.curr_user_saved && "Save"}{post.curr_user_saved && "Unsave"}
+                                                </button>
+                                            </div>
+                                            <div className="col-4 pr-5 text-right pt-2">
+                                                {post.numlikes === 1 && (<t className="mr-3" onClick={() => this.postModalOpen(post)} id="numlikes">1 like</t>)}
+                                                {post.numlikes != 1 && (<t className="mr-3" onClick={() => this.postModalOpen(post)} id="numlikes">{post.numlikes} likes</t>)}
+                                                {post.comments.length === 1 && (<t onClick={() => this.postModalOpen(post)} id="numcomments">1 comment</t>)}
+                                                {post.comments.length != 1 && (<t onClick={() => this.postModalOpen(post)} id="numcomments">{post.comments.length} comments</t>)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </PostCard>
+                        ))}
+                    </ul>
+                </PostFeed>
                 <PostForm show={this.state.postForm} handleClose={e => this.postFormClose(e)}>
                     <div className="mt-3 pt-4">
                         <h2>Make a Post</h2>
@@ -305,13 +349,13 @@ export class Home extends React.Component {
                                 👍 Like
                                 </button> */}
                                 <button type="button" onClick={() => this.onClickFeedLikeButton(this.state.modalPost)} className="btn mr-2" id="likebutton">
-                                👍 {!this.state.modalPostLiked && "Like (" + this.state.modalPostNumLikes + ")"}{this.state.modalPostLiked && "Unlike (" + this.state.modalPostNumLikes + ")"}
+                                    👍 {!this.state.modalPostLiked && "Like (" + this.state.modalPostNumLikes + ")"}{this.state.modalPostLiked && "Unlike (" + this.state.modalPostNumLikes + ")"}
                                 </button>
                                 <button type="button" className="btn mr-2" id="commentbutton" onClick={this.scrollToAddComment}>
                                     Comment
                                 </button>
                                 <button type="button" onClick={() => this.onClickSaveButton(this.state.modalPost)} className="btn mr-2" id="savebutton">
-                                {!this.state.modalPostSaved && "Save"}{this.state.modalPostSaved && "Unsave"}
+                                    {!this.state.modalPostSaved && "Save"}{this.state.modalPostSaved && "Unsave"}
                                 </button>
                             </div>
                         </div>
