@@ -11,7 +11,7 @@ export const ROUTES = [
     { path: '/dashboard/:id', component: MainPage},
     { path: '/home/', component: Home},
     { path: '/newpost', component: NewPost},
-    { path: '/privateSaved/:id', component: PrivateSaved},
+    { path: '/privateSaved', component: PrivateSaved},
     { path: '/register', component: RegisterPage },
     { path: '/', component: Login },
 ]

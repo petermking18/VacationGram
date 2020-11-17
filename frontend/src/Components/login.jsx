@@ -75,12 +75,22 @@ class Login extends React.Component {
                 </Link>
             </div>
             <Link to={{
-                pathname: "/privateSaved/",
-                user_id: this.state.id,
+                pathname: "/privateSaved",
+                //user_id: this.state.id,
+                user_id: 75,//change later
                 username: this.state.username,
                 email: this.state.email,
                 password: this.state.password
             }}>Skip to Private Saved</Link>
+            <br></br>
+            <Link to={{
+                pathname: "/home/",
+                //user_id: this.state.id,
+                user_id: 75,//change later
+                username: this.state.username,
+                email: this.state.email,
+                password: this.state.password
+            }}>Skip to home</Link>
         </>;
     }
 
