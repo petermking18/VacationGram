@@ -1,74 +1,32 @@
 import React from "react";
-import { SYMPTOMS } from "../constants";
-import { DISEASE } from "../constants";
-import { SIDEEFFECT } from "../constants";
-import { NoverdoseRepo } from '../Api/NoverdoseRepo';
+import {Rating} from './Rating';
+import { Price } from './Price';
+import { TravelGramRepo } from '../Api/TravelGramRepo';
 import NavBar from './navBar';
 import './search.css';
-import Symptom from "../models/symptom";
-import SideEffect from "../models/sideEffect";
 import { Link } from "react-router-dom";
 
 export class Search extends React.Component{
 
-    noverdoseRepo = new NoverdoseRepo();
+    travelGramRepo = new TravelGramRepo();
 
     state = {
-        id:'',
-        added: null,
-        name: '',
-        disease: '',
-        symptom: '',
-        minPrice: '',
-        maxPrice: '',
-        sideEffect: '',
-        pharmacy: '',
-        drugs: [],
-        symptoms: [],
-        sideEffects:[],
-        diseases:[],
-        pharmacies: [],
-        drugName: '',
-        specialist: null,
-        drugId: ''
+        username: "",
+        origin: "",
+        destination: "",
+        price: "",
+        reaction: "",
+        rating: "",
+        results: [],
     }
 
-    search(name, disease, symptom, min, max, sideEffect, pharmacy)
+    search(username, origin, destination, price, reaction, rating)
     {
-        console.log(symptom);
-            name = '"' + name + '"';
-            this.noverdoseRepo.search(name, disease, symptom, min, max, sideEffect,pharmacy).then(returnDrugs => {
-                console.log(returnDrugs);
-                this.setState({drugs: returnDrugs});
-            });
-    }
-    
-    setSpecial()
-    {
-        if(this.state.specialist == 0)
-        {
-            this.setState({specialist: false});
-        }
-        else
-        {
-            this.setState({specialist: true});
-        }
-    }
-
-    addPrescription(drugId, name)
-    {
-        console.log(drugId);
-        var returnValue = this.noverdoseRepo.addPrescription(drugId, this.props.match.params.id);
-            console.log(returnValue);
-            if(returnValue == "perscriptionAdded")
-            {
-                this.setState({added: true});
-            }
-            else
-            {
-                this.setState({added: true});
-                this.setState({drugName: name});
-            }
+        username = '"' + username + '"';
+        this.travelGramRepo.search(username, origin, destination, price, reaction, rating).then(returnResults => {
+            console.log(returnResults);
+            this.setState({results: returnResults});
+        });
     }
 
   render() {
@@ -78,83 +36,76 @@ export class Search extends React.Component{
         <div className = "container">
         <div className="card mt-3 mb-3">
             <div className="card-body">
-                <h3 className="card-title">Search NOverdose </h3>
+                <h3 className="card-title">Search TravelGram </h3>
                 <h6 className="card-title text-danger">(If not applicable, enter "N/A") </h6>
                 <div className="form-group">
-                    <label >Name<span className="text-danger">*</span></label>
+                    <label >Username<span className="text-danger">*</span></label>
                         <input type="text"
                             className="form-control"
-                            value={ this.state.name }
-                            onChange={ e => this.setState( { name: e.target.value } ) } />
-                </div>
-                <div className="form-group">
-                <label >Pharmacy<span className="text-danger">*</span></label>
-                <select 
-                        className="form-control"
-                        value={ this.state.pharmacy }
-                        onChange={ e => this.setState( { pharmacy: e.target.value } ) }>
-                    <option></option>
-                    {
-                        this.state.pharmacies.map((d, i) => <option key={ i } value={ d.pharmacyId }>{ d.name }</option>)
-                    }
-                </select>
-                </div>
-                <div className="form-group">
-                <label >Disease<span className="text-danger">*</span></label>
-                <select 
-                        className="form-control"
-                        value={ this.state.disease }
-                        onChange={ e => this.setState( { disease: e.target.value } ) }>
-                    <option></option>
-                    {
-                        this.state.diseases.map((d, i) => <option key={ i } value={ d.diseaseId }>{ d.name }</option>)
-                    }
-                </select>
-                </div>
-                <div className="form-group">
-                <label>Symptoms<span className="text-danger">*</span></label>
-                <select 
-                        className="form-control"
-                        value={ this.state.symptom }
-                        onChange={ e => this.setState( { symptom: e.target.value } ) }>
-                    <option></option>
-                    {
-                        this.state.symptoms.map((d, i) => <option key={ i } value={ d.symptomId }>{ d.name }</option>)
-                    }
-                </select>
-                </div>
-                <div className="form-group">
-                <label >Side Effects<span className="text-danger">*</span></label>
-                <select 
-                        className="form-control"
-                        value={ this.state.sideEffect }
-                        onChange={ e => this.setState( { sideEffect: e.target.value } ) }>
-                    <option></option>
-                    {
-                        this.state.sideEffects.map((d, i) =><option key={ i } value={ d.sideEffectId }>{ d.name }</option>)
-                    }
-                </select>
+                            value={ this.state.username }
+                            onChange={ e => this.setState( { username: e.target.value } ) } />
                 </div>
                 <div className="row">
                                 <div className="col-5">
                                     <br></br>
-                                    <label>Minimum Price<span className="text-danger">*</span></label>
+                                    <label>Origin<span className="text-danger">*</span></label>
                                     <input
                                         type="text"
                                         className="form-control"
-                                        value={this.state.minPrice}
-                                        onChange={ e => this.setState({ minPrice: e.target.value })} />
+                                        value={this.state.origin}
+                                        onChange={ e => this.setState({ origin: e.target.value })} />
                                 </div>
                                 <div className="col-5">
                                     <br></br>
-                                    <label>Maximum Price<span className="text-danger">*</span></label>
+                                    <label>Destination<span className="text-danger">*</span></label>
                                     <input
                                         type="text"
                                         className="form-control"
-                                        value={this.state.maxPrice}
-                                        onChange={ e => this.setState({ maxPrice: e.target.value })} />
+                                        value={this.state.destination}
+                                        onChange={ e => this.setState({ destination: e.target.value })} />
                                 </div>
                             </div>
+                <div className="form-group">
+                <label >Price<span className="text-danger">*</span></label>
+                <select 
+                        className="form-control"
+                        value={ this.state.price }
+                        onChange={ e => this.setState( { price: e.target.value } ) }>
+                        <option> </option>
+                        <option value = '1'>$</option>
+                        <option value = '2'>$$</option>
+                        <option value = '3'>$$$</option>
+                        <option value = '4'>$$$$</option>
+                        <option value = '5'>$$$$$</option>
+                </select>
+                </div>
+                <div className="form-group">
+                <label>Rating<span className="text-danger">*</span></label>
+                <select 
+                        className="form-control"
+                        value={ this.state.rating }
+                        onChange={ e => this.setState( { rating: e.target.value } ) }>
+                        <option> </option>
+                        <option value = '1'>1 star</option>
+                        <option value = '2'>2 stars</option>
+                        <option value = '3'>3 stars</option>
+                        <option value = '4'>4 stars</option>
+                        <option value = '5'>5 stars</option>
+                </select>
+                </div>
+                <div className="form-group">
+                <label >Reaction<span className="text-danger">*</span></label>
+                <select 
+                        className="form-control"
+                        value={ this.state.reaction }
+                        onChange={ e => this.setState( { reaction: e.target.value } ) }>
+                        <option> </option>
+                        <option>fun</option>
+                        <option>boring</option>
+                        <option>exciting</option>
+                        <option>scary</option>
+                </select>
+                </div>
                 <div className="mt-2">
                     <button type="button" className="btn btn-primary" onClick={() => this.search(this.state.name, this.state.disease, this.state.symptom, this.state.minPrice, this.state.maxPrice, this.state.sideEffect, this.state.pharmacy)}>
                         Search
@@ -163,7 +114,7 @@ export class Search extends React.Component{
             </div>
         </div>
 
-        <br></br>
+        {/* <br></br>
             {this.state.added == true && <h1 className = "text-center text-success">Perscription Sent to the Pharmacy!</h1>}
             {this.state.added == false && <h1 className = "text-center text-danger">Perscription Has Already Been Sent!</h1>}
             <br></br>
@@ -211,32 +162,32 @@ export class Search extends React.Component{
                         )
                     }
                 </tbody>
-            </table>
+            </table> */}
         </div>
       </>
     );
   }
-  componentDidMount()
-  {
-    this.setState({id: +this.props.match.params.id})
-      let id = +this.props.match.params.id;
-      this.noverdoseRepo.getUserById(id).then(user => {
-        console.log(user.user[0].specialist);
-        this.setState({specialist: user.user[0].specialist})
-  });
-    this.noverdoseRepo.symptoms().then(symptom => {
-          this.setState({symptoms: symptom.data})
-    });
-    this.noverdoseRepo.sideEffects().then(sideEffect => {
-        this.setState({sideEffects: sideEffect.data})
-    });
-    this.noverdoseRepo.diseases().then(disease => {
-        this.setState({diseases: disease.data})
-    });
-    this.noverdoseRepo.pharmacies().then(pharmacy => {
-        this.setState({pharmacies: pharmacy.data})
-    });
-  }
-}
+//   componentDidMount()
+//   {
+//     this.setState({id: +this.props.match.params.id})
+//       let id = +this.props.match.params.id;
+//       this.noverdoseRepo.getUserById(id).then(user => {
+//         console.log(user.user[0].specialist);
+//         this.setState({specialist: user.user[0].specialist})
+//   });
+//     this.noverdoseRepo.symptoms().then(symptom => {
+//           this.setState({symptoms: symptom.data})
+//     });
+//     this.noverdoseRepo.sideEffects().then(sideEffect => {
+//         this.setState({sideEffects: sideEffect.data})
+//     });
+//     this.noverdoseRepo.diseases().then(disease => {
+//         this.setState({diseases: disease.data})
+//     });
+//     this.noverdoseRepo.pharmacies().then(pharmacy => {
+//         this.setState({pharmacies: pharmacy.data})
+//     });
+//   }
+} 
 
 export default Search;

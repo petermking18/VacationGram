@@ -54,11 +54,11 @@ class NavBar extends React.Component{
 					</li>
 					<li>
 						<a href="" onClick={this.goToSearch}>Search</a>
-						{this.state.search  && <Redirect to={'/search/'}/> }
+						{this.state.search  && <Redirect to={'/search/:id'}/> }
 					</li>
 					<li>
 						<a href="" onClick = {this.goToProfile}>Profile</a>
-						{this.state.profile  &&<Redirect to={'/profile/'}></Redirect>}
+						{this.state.profile  &&<Redirect to={'/profile/:id'}></Redirect>}
 					</li>
 					<li>
 						{/* <a onClick = {this.goToDash} href="">Feed</a>
