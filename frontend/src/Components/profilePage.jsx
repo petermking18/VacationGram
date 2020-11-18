@@ -1,10 +1,10 @@
 import React from 'react';
-import {NoverdoseRepo} from '../Api/NoverdoseRepo';
+import {TravelGramRepo} from '../Api/TravelGramRepo';
 import { Redirect } from 'react-router-dom';
 import NavBar from "./navBar";
 
 export default class ProfilePage extends React.Component {
-    repo = new NoverdoseRepo();
+    repo = new TravelGramRepo();
     constructor(props)
     {
         super(props)
@@ -13,8 +13,6 @@ export default class ProfilePage extends React.Component {
             name: '',
             email: '',
             password: '',
-            specialist: '',
-            birthday:'',
             homePage: false
         };
     }
@@ -24,9 +22,9 @@ export default class ProfilePage extends React.Component {
     }
 
 
-    updateUserInfo = (id, name, email, password, specialist, birthday) => {
+    updateUserInfo = (id, name, email, password) => {
 
-        this.repo.updateUserByID(id, name, email, password, specialist, birthday);
+        this.repo.updateUserByID(id, name, email, password);
         console.log("Updating user info");
         console.log(this.state);
     }
@@ -37,17 +35,10 @@ export default class ProfilePage extends React.Component {
         if (newid) {
             this.repo.getUserById(newid)
                 .then(curuser => {
-                        let rawBday = curuser.user[0].dob;
-                        if (rawBday == null){
-                            rawBday = "0000-00-00";
-                        }
-                        let bday = rawBday.slice(0,10);
                         this.setState({
                             id: curuser.user[0].id,
                             name: curuser.user[0].name,
                             email: curuser.user[0].email,
-                            specialist: curuser.user[0].specialist,
-                            birthday: bday,
                             password: curuser.user[0].password
                         })
                     }
@@ -59,7 +50,7 @@ export default class ProfilePage extends React.Component {
             <>
                 <NavBar id={this.props.match.params.id}/>
                 <form className="container">
-                    <h1>{this.state.title} Profile</h1>
+                    <h1>{this.state.title} Profile Settings</h1>
                     <div className="form-group">
                         <label htmlFor="name">First Name</label>
                         <input type="text"
@@ -96,23 +87,6 @@ export default class ProfilePage extends React.Component {
                                className="form-control"
                                value={this.state.password}
                                onChange={e => this.setState({ password: e.target.value })} />
-                    </div>
-
-                    <div>
-                        <label htmlFor="userAccountType">Account Type</label>
-                        <form>
-                            <select className="form-control"
-                                    value={this.state.specialist}
-                                    onChange={e =>
-                                        this.setState(
-                                            { specialist: e.target.value }
-                                        )
-                                    }>
-                                <option defaultValue=""></option>
-                                <option value="0">User</option>
-                                <option value="1">Medical Specialist</option>
-                            </select>
-                        </form>
                     </div>
                     <br></br>
 
