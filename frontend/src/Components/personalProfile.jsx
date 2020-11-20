@@ -11,13 +11,13 @@ import PostModal from './PostModal';
 import { Rating } from './Rating';
 import { Price } from './Price';
 import CommentList from './CommentList';
-import {ProfileHeader} from './profileHeader';
+import './personalProfile.css';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ];
 
-export class Home extends React.Component {
+export class PersonalProfile extends React.Component {
     dummyComment1 = new Comment(1, 1, 75, "Pete", 1, false, "Nov 11 2020", "Very cool trip!", 5, false);
     dummyComment2 = new Comment(2, 2, 2, "John Lawrimore", 2, false, "Nov 12 2020", "Seems like you had fun", 2, false);
     dummyPost1 = new post_card(1, 2, "Mark Fontenot", "Nov 9 2020",
@@ -52,12 +52,17 @@ export class Home extends React.Component {
             modalPostNumLikes: 0,
             modalPostSaved: false,
             posts: this.dummyPosts,//get from api
+            settingsPage: false,
         }
     }
 
     prices = ["$", "$$", "$$$", "$$$$", "$$$$$"];
     ratings = ["1 star", "2 stars", "3 stars", "4 stars", "5 stars"];
     reactions = ["fun", "boring", "exciting", "scary"]
+
+    goSettingsPage = e => {
+        this.setState({settingsPage: true});
+    }
 
     postModalOpen = (post) => {
         this.setState({ postModal: true });
@@ -183,10 +188,34 @@ export class Home extends React.Component {
         return (
             <>
                 <NavBar id={this.props.match.params.id} />
+                <div className = "container boostrap-snippet header-container">
+                    <div className = "bg-white">
+                        <div className = "container py-5">
+                            <div className = "media col-md-10 cold-lg-8 col-xl-7 p-0 my-4 mx-auto">
+                                <img src = "https://www.smu.edu/-/media/Images/News/Experts/Mark-Fontenot.jpg?la=en" className = "d-block ui-w-100 rounded circle" id = "profImg"/>
+                            </div>
+                            <div className = "profUsername">
+                                    <h4 className = "font-weight-bold mb-4">Mark Fontenot</h4>
+                            </div>
+                        </div>
+                        <hr className = "m-0"/>
+                        <ul className="nav nav-tabs tabs-alt justify-content-center">
+                            <li className="nav-item">
+                            <a className="nav-link py-4 active" href="#"><img src = "https://cdn.icon-icons.com/icons2/1875/PNG/512/imagegallery_120168.png" id = "galleryIcon"/></a>
+                            </li>
+                            <li className="nav-item">
+                            <a className="nav-link py-4" href="#"><img src = "https://www.flaticon.com/svg/static/icons/svg/84/84510.svg" id = "bookMarkIcon"/></a>
+                            </li>
+                            <li className="nav-item">
+                            <a onClick = {this.goSettingsPage} className="nav-link py-4" href="#"><img src = "https://icon-library.net/images/white-gear-icon-png/white-gear-icon-png-13.jpg" id = "gearIcon"/></a>
+                            {this.state.settingsPage && <Redirect to={"/settings"}/>}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
                 <button id="newpostbutton" type="button" onClick={e => this.postFormOpen(e)}>
                     New Post
                 </button>
-                <ProfileHeader></ProfileHeader>
                 <PostFeed>
                     <ul className="feed" className="mt-1 bg-light list-unstyled bg-white" id="homefeed">
                         {this.state.posts.map((post, index) => (
@@ -379,4 +408,4 @@ export class Home extends React.Component {
         );
     }
 }
-export default Home;
+export default PersonalProfile;

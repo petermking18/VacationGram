@@ -1,0 +1,15 @@
+#settingsButton {
+    color: white;
+    background: royalblue;
+}
+
+h1 {
+    text-align: center;
+}
+
+.settingsContainer {
+    height: 500px;
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}

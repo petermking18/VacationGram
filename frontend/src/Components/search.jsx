@@ -46,7 +46,7 @@ export class Search extends React.Component{
                             onChange={ e => this.setState( { username: e.target.value } ) } />
                 </div>
                 <div className="row">
-                                <div className="col-5">
+                                <div id = "originRow" className="col-5">
                                     <br></br>
                                     <label>Origin<span className="text-danger">*</span></label>
                                     <input
@@ -55,7 +55,7 @@ export class Search extends React.Component{
                                         value={this.state.origin}
                                         onChange={ e => this.setState({ origin: e.target.value })} />
                                 </div>
-                                <div className="col-5">
+                                <div id = "destRow" className="col-5">
                                     <br></br>
                                     <label>Destination<span className="text-danger">*</span></label>
                                     <input
@@ -64,7 +64,7 @@ export class Search extends React.Component{
                                         value={this.state.destination}
                                         onChange={ e => this.setState({ destination: e.target.value })} />
                                 </div>
-                            </div>
+                </div>
                 <div className="form-group">
                 <label >Price<span className="text-danger">*</span></label>
                 <select 
@@ -107,87 +107,16 @@ export class Search extends React.Component{
                 </select>
                 </div>
                 <div className="mt-2">
-                    <button type="button" className="btn btn-primary" onClick={() => this.search(this.state.name, this.state.disease, this.state.symptom, this.state.minPrice, this.state.maxPrice, this.state.sideEffect, this.state.pharmacy)}>
+                    <button type="button" id = "searchButton" className="btn btn-primary" onClick={() => this.search(this.state.name, this.state.disease, this.state.symptom, this.state.minPrice, this.state.maxPrice, this.state.sideEffect, this.state.pharmacy)}>
                         Search
                     </button>
                 </div>
             </div>
         </div>
-
-        {/* <br></br>
-            {this.state.added == true && <h1 className = "text-center text-success">Perscription Sent to the Pharmacy!</h1>}
-            {this.state.added == false && <h1 className = "text-center text-danger">Perscription Has Already Been Sent!</h1>}
-            <br></br>
-            <table className="table table-striped table-condensed">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Symptom</th>
-                        <th>Disease</th>
-                        <th>Side Effect</th>
-                        <th>Pharmacy</th>
-                        <th className = "text-right">Price</th>
-                        <th className = "text-right">Add Perscription</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.state.specialist == 0 &&
-                        this.state.drugs.map((p, i) =>
-                                <tr key = {i}>
-                                    <td key = {i}>{ p.name }</td>
-                                    <td key = {i}>{ p.SymptomName }</td>
-                                    <td key = {i}>{ p.DiseaseName }</td>
-                                    <td key = {i}>{ p.SideEffectName }</td>
-                                    <td key = {i}>{ p.PharmacyName }</td>
-                                    <td key = {i} className = "text-right">{ p.price }</td>
-                                    <td key = {i}>
-                                        <button className = "btn btn-success float-right" onClick = {() => this.addPrescription(p.drugId, p.name)}>+</button>
-                                    </td>
-                                </tr>
-                        )
-                    }
-                    {this.state.specialist == 1 &&
-                        this.state.drugs.map((p, i) =>
-                                <tr key = {i}>
-                                    <td key = {i}><Link to = {"../update/" + this.state.id + "/" + p.drugId}>{ p.name }</Link></td>
-                                    <td key = {i}>{ p.SymptomName }</td>
-                                    <td key = {i}>{ p.DiseaseName }</td>
-                                    <td key = {i}>{ p.SideEffectName }</td>
-                                    <td key = {i}>{ p.PharmacyName }</td>
-                                    <td key = {i} className = "text-right">{ p.price }</td>
-                                    <td key = {i}>
-                                        <button className = "btn btn-success float-right" onClick = {() => this.addPrescription(p.drugId, p.name)}>+</button>
-                                    </td>
-                                </tr>
-                        )
-                    }
-                </tbody>
-            </table> */}
         </div>
       </>
     );
   }
-//   componentDidMount()
-//   {
-//     this.setState({id: +this.props.match.params.id})
-//       let id = +this.props.match.params.id;
-//       this.noverdoseRepo.getUserById(id).then(user => {
-//         console.log(user.user[0].specialist);
-//         this.setState({specialist: user.user[0].specialist})
-//   });
-//     this.noverdoseRepo.symptoms().then(symptom => {
-//           this.setState({symptoms: symptom.data})
-//     });
-//     this.noverdoseRepo.sideEffects().then(sideEffect => {
-//         this.setState({sideEffects: sideEffect.data})
-//     });
-//     this.noverdoseRepo.diseases().then(disease => {
-//         this.setState({diseases: disease.data})
-//     });
-//     this.noverdoseRepo.pharmacies().then(pharmacy => {
-//         this.setState({pharmacies: pharmacy.data})
-//     });
-//   }
 } 
 
 export default Search;

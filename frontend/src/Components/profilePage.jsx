@@ -2,6 +2,7 @@ import React from 'react';
 import {TravelGramRepo} from '../Api/TravelGramRepo';
 import { Redirect } from 'react-router-dom';
 import NavBar from "./navBar";
+import "./profilePage.css"
 
 export default class ProfilePage extends React.Component {
     repo = new TravelGramRepo();
@@ -13,12 +14,13 @@ export default class ProfilePage extends React.Component {
             name: '',
             email: '',
             password: '',
-            homePage: false
+            postPage: false,
+            savedPage: false,
         };
     }
 
-    goHome = e => {
-        this.setState({homePage: true});
+    goPostPage = e => {
+        this.setState({postPage: true});
     }
 
 
@@ -49,8 +51,33 @@ export default class ProfilePage extends React.Component {
         return (
             <>
                 <NavBar id={this.props.match.params.id}/>
-                <form className="container">
-                    <h1>{this.state.title} Profile Settings</h1>
+                <div className = "container boostrap-snippet header-container">
+                    <div className = "bg-white">
+                        <div className = "container py-5">
+                            <div className = "media col-md-10 cold-lg-8 col-xl-7 p-0 my-4 mx-auto">
+                                <img src = "https://www.smu.edu/-/media/Images/News/Experts/Mark-Fontenot.jpg?la=en" className = "d-block ui-w-100 rounded circle" id = "profImg"/>
+                            </div>
+                            <div className = "profUsername">
+                                    <h4 className = "font-weight-bold mb-4">Mark Fontenot</h4>
+                            </div>
+                        </div>
+                        <hr className = "m-0"/>
+                        <ul className="nav nav-tabs tabs-alt justify-content-center">
+                            <li className="nav-item">
+                            <a onClick = {this.goPostPage} className="nav-link py-4" href="#"><img src = "https://cdn.icon-icons.com/icons2/1875/PNG/512/imagegallery_120168.png" id = "galleryIcon"/></a>
+                            {this.state.postPage && <Redirect to={"/profile/:id"}/>}
+                            </li>
+                            <li className="nav-item">
+                            <a className="nav-link py-4" href="#"><img src = "https://www.flaticon.com/svg/static/icons/svg/84/84510.svg" id = "bookMarkIcon"/></a>
+                            </li>
+                            <li className="nav-item">
+                            <a className="nav-link py-4 active" href="#"><img src = "https://icon-library.net/images/white-gear-icon-png/white-gear-icon-png-13.jpg" id = "gearIcon"/></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <form className="settingsContainer">
+                    <h1> Profile Settings</h1>
                     <div className="form-group">
                         <label htmlFor="name">First Name</label>
                         <input type="text"
@@ -69,15 +96,6 @@ export default class ProfilePage extends React.Component {
                                value={this.state.email}
                                onChange={e => this.setState({ email: e.target.value })} />
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="birthday">Birthday</label>
-                        <input type="text"
-                               id="birthday"
-                               name="birthday"
-                               className="form-control"
-                               value={this.state.birthday}
-                               onChange={e => this.setState({ birthday: e.target.value })} />
-                    </div>
 
                     <div className="form-group">
                         <label htmlFor="birthday">Password</label>
@@ -90,9 +108,7 @@ export default class ProfilePage extends React.Component {
                     </div>
                     <br></br>
 
-                    <button className="btn btn-primary btn-block" onClick={this.goHome}>Go Back</button>
-                    {this.state.homePage && <Redirect to={"/dashboard/" + this.state.id}/>}
-                    <button className="btn btn-primary btn-block" onClick={() => this.updateUserInfo(this.state.id, this.state.name, this.state.email, this.state.password, this.state.specialist, this.state.birthday)}>Save</button>
+                    <button id = "settingsButton" className="btn btn-primary btn-block" onClick={() => this.updateUserInfo(this.state.id, this.state.name, this.state.email, this.state.password, this.state.specialist, this.state.birthday)}>Save</button>
                 </form>
             </>
         );
