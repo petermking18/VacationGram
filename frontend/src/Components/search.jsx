@@ -37,9 +37,8 @@ export class Search extends React.Component{
         <div className="card mt-3 mb-3">
             <div className="card-body">
                 <h3 className="card-title">Search TravelGram </h3>
-                <h6 className="card-title text-danger">(If not applicable, enter "N/A") </h6>
                 <div className="form-group">
-                    <label >Username<span className="text-danger">*</span></label>
+                    <label >Username</label>
                         <input type="text"
                             className="form-control"
                             value={ this.state.username }
@@ -48,7 +47,7 @@ export class Search extends React.Component{
                 <div className="row">
                                 <div id = "originRow" className="col-5">
                                     <br></br>
-                                    <label>Origin<span className="text-danger">*</span></label>
+                                    <label>Origin</label>
                                     <input
                                         type="text"
                                         className="form-control"
@@ -57,7 +56,7 @@ export class Search extends React.Component{
                                 </div>
                                 <div id = "destRow" className="col-5">
                                     <br></br>
-                                    <label>Destination<span className="text-danger">*</span></label>
+                                    <label>Destination</label>
                                     <input
                                         type="text"
                                         className="form-control"
@@ -66,7 +65,7 @@ export class Search extends React.Component{
                                 </div>
                 </div>
                 <div className="form-group">
-                <label >Price<span className="text-danger">*</span></label>
+                <label >Price</label>
                 <select 
                         className="form-control"
                         value={ this.state.price }
@@ -80,7 +79,7 @@ export class Search extends React.Component{
                 </select>
                 </div>
                 <div className="form-group">
-                <label>Rating<span className="text-danger">*</span></label>
+                <label>Rating</label>
                 <select 
                         className="form-control"
                         value={ this.state.rating }
@@ -94,7 +93,7 @@ export class Search extends React.Component{
                 </select>
                 </div>
                 <div className="form-group">
-                <label >Reaction<span className="text-danger">*</span></label>
+                <label >Reaction</label>
                 <select 
                         className="form-control"
                         value={ this.state.reaction }

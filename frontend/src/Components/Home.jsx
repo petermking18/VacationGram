@@ -20,7 +20,7 @@ export class Home extends React.Component {
     dummyComment1 = new Comment(1, 1, 75, "Pete", 1, false, "Nov 11 2020", "Very cool trip!", 5, false);
     dummyComment2 = new Comment(2, 2, 2, "John Lawrimore", 2, false, "Nov 12 2020", "Seems like you had fun", 2, false);
     dummyPost1 = new post_card(1, 2, "Mark Fontenot", "Nov 9 2020",
-        "Dallas", "Hawaii", "https://www.smu.edu/-/media/Images/News/Experts/Mark-Fontenot.jpg?la=en",
+        "Dallas", "Hawaii", "https://lp-cms-production.imgix.net/2019-06/c05b829af5ee38ab1917f335d937f8e1-hawaii.jpg?auto=compress&fit=crop&fm=auto&sharp=10&vib=20&w=1200",
         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
         "$$$", "happy", "4 stars", [this.dummyComment1,this.dummyComment2], true, 12, false);
     dummyPost2 = new post_card(2, 1, "Peter King", "Nov 10 2020",
@@ -222,7 +222,7 @@ export class Home extends React.Component {
                                     {/* Middle area: image, text */}
                                     <div className="pl-3 py-2">
                                         <div className="row py-2">
-                                            <div className="col">
+                                            <div className="col" id="postcardimgcol">
                                                 <img id="postcardimg" src={post.imgurl} />
                                             </div>
                                             <div className="col-9 pl-1 pr-5">
