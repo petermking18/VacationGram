@@ -258,7 +258,7 @@ export class Home extends React.Component {
                     </ul>
                 </PostFeed>
                 <PostForm show={this.state.postForm} handleClose={e => this.postFormClose(e)}>
-                    <div className="mt-3 pt-4">
+                    <div className="pt-4">
                         <h2>Make a Post</h2>
                         <form className="pr-5" id="newpostform">
                             <div className="row">
