@@ -1,9 +1,8 @@
-
 .imgcontainer {
     text-align: center;
     color: #3498DB;
     margin: 24px 0 12px 0;
-  }
+}
 
 .login-form {
     width: 300px;
@@ -20,13 +19,12 @@
 
 .login-form input[type="password"],
 .login-form input[type="text"] {
-    
     width: 100%;
     padding: 10px;
     border: 1px solid #dddddd;
     margin-top: 5px;
     margin-bottom: 15px;
-    box-sizing:border-box;
+    box-sizing: border-box;
 }
 
 .login-form input[type="submit"] {
@@ -45,12 +43,11 @@ img.avatar {
     height: 200px;
     width: 200px;
     border-radius: 50%;
-    
 }
 
-.loginButton{
+.loginButton {
     border-radius: 10px;
-    background-color:  #3498DB;
+    background-color: royalblue;
     border: none;
     color: white;
     padding: 16px 32px;
@@ -64,10 +61,10 @@ img.avatar {
     cursor: pointer;
 }
 
-.loginButton2{
+.loginButton2 {
     width: 18.5em;
     border-radius: 10px;
-    background-color:  #3498DB;
+    background-color: royalblue;
     border: none;
     color: white;
     padding: 16px 32px;
@@ -81,8 +78,7 @@ img.avatar {
     cursor: pointer;
 }
 
-
-.error{
+.error {
     color: red;
     text-align: center;
 }

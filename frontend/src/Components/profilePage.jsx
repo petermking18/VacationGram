@@ -23,30 +23,6 @@ export default class ProfilePage extends React.Component {
         this.setState({postPage: true});
     }
 
-
-    updateUserInfo = (id, name, email, password) => {
-
-        this.repo.updateUserByID(id, name, email, password);
-        console.log("Updating user info");
-        console.log(this.state);
-    }
-
-
-    componentWillMount() {
-        let newid = +this.props.match.params.id;
-        if (newid) {
-            this.repo.getUserById(newid)
-                .then(curuser => {
-                        this.setState({
-                            id: curuser.user[0].id,
-                            name: curuser.user[0].name,
-                            email: curuser.user[0].email,
-                            password: curuser.user[0].password
-                        })
-                    }
-                );
-        }
-    }
     render() {
         return (
             <>
