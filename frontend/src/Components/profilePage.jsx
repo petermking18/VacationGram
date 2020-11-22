@@ -27,7 +27,8 @@ export default class ProfilePage extends React.Component {
         return (
             <>
                 <NavBar id={this.props.match.params.id}/>
-                <div className = "container boostrap-snippet header-container">
+                {/* <div className = "container boostrap-snippet header-container"> */}
+                <div className="container">
                     <div className = "bg-white">
                         <div className = "container py-5">
                             <div className = "media col-md-10 cold-lg-8 col-xl-7 p-0 my-4 mx-auto">

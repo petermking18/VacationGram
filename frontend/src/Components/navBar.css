@@ -1,13 +1,7 @@
-/* body {
-    margin: 0;
-    font-family: Helvetica, sans-serif;
-    background-color: #f4f4f4;
-  }
- */
   img.avatarNav{
       opacity: 90%;
-      height: 70px;
-      width: 70px;
+      height: 65px;
+      width: 65px;
       padding-left: .025em;
   }
   
