@@ -21,6 +21,7 @@ export default class ProfilePage extends React.Component {
 
     goPostPage = e => {
         this.setState({postPage: true});
+        console.log("goPostPage");
     }
 
     render() {
@@ -32,7 +33,7 @@ export default class ProfilePage extends React.Component {
                     <div className = "bg-white">
                         <div className = "container py-5">
                             <div className = "media col-md-10 cold-lg-8 col-xl-7 p-0 my-4 mx-auto">
-                                <img src = "https://www.smu.edu/-/media/Images/News/Experts/Mark-Fontenot.jpg?la=en" className = "d-block ui-w-100 rounded circle" id = "profImg"/>
+                                <img alt="profilePhoto" src = "https://www.smu.edu/-/media/Images/News/Experts/Mark-Fontenot.jpg?la=en" className = "d-block ui-w-100 rounded circle" id = "profImg"/>
                             </div>
                             <div className = "profUsername">
                                     <h4 className = "font-weight-bold mb-4">Mark Fontenot</h4>
@@ -41,14 +42,14 @@ export default class ProfilePage extends React.Component {
                         <hr className = "m-0"/>
                         <ul className="nav nav-tabs tabs-alt justify-content-center">
                             <li className="nav-item">
-                            <a onClick = {this.goPostPage} className="nav-link py-4" href="#"><img src = "https://cdn.icon-icons.com/icons2/1875/PNG/512/imagegallery_120168.png" id = "galleryIcon"/></a>
+                            <a onClick={this.goPostPage} className="nav-link py-4" href="#"><img src="https://cdn.icon-icons.com/icons2/1875/PNG/512/imagegallery_120168.png" id="galleryIcon" alt="Posts"/></a>
                             {this.state.postPage && <Redirect to={"/profile/:id"}/>}
                             </li>
                             <li className="nav-item">
-                            <a className="nav-link py-4" href="#"><img src = "https://www.flaticon.com/svg/static/icons/svg/84/84510.svg" id = "bookMarkIcon"/></a>
+                            <a className="nav-link py-4" href="#"><img src = "https://www.flaticon.com/svg/static/icons/svg/84/84510.svg" id="bookMarkIcon" alt="Saved"/></a>
                             </li>
                             <li className="nav-item">
-                            <a className="nav-link py-4 active" href="#"><img src = "https://icon-library.net/images/white-gear-icon-png/white-gear-icon-png-13.jpg" id = "gearIcon"/></a>
+                            <a className="nav-link py-4 active" href="#"><img src = "https://icon-library.net/images/white-gear-icon-png/white-gear-icon-png-13.jpg" id = "gearIcon" alt="Settings"/></a>
                             </li>
                         </ul>
                     </div>
@@ -75,7 +76,7 @@ export default class ProfilePage extends React.Component {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="birthday">Password</label>
+                        <label htmlFor="password">Password</label>
                         <input type="text"
                                id="password"
                                name="password"

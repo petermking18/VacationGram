@@ -54,3 +54,7 @@
     color: gray;
     cursor: not-allowed;
 }
+
+#numlikesnumcomments p{
+    display: inline;
+}

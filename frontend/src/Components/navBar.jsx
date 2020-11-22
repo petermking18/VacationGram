@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './NavBar.css';
 import logo from './mainPageLogo.png';
 
@@ -32,30 +32,50 @@ export default class NavBar extends React.Component {
 
     render() {
         return <>
-            <header class="header">
-                <Link to={'/home/'} id="title" class="logo">
+            <header className="header">
+                <Link to={'/home/'} id="title" className="logo">
                     <img src={logo} alt="Avatar" className="avatarNav"></img>
 					TravelGram
                 </Link>
-                <input class="menu-btn" type="checkbox" id="menu-btn" />
-                <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
-                <ul class="menu">
-                    <li>
+                <input className="menu-btn" type="checkbox" id="menu-btn" />
+                <label className="menu-icon" htmlFor="menu-btn"><span className="navicon"></span></label>
+                <ul className="menu">
+                    {/* <li>
                         <a href="" onClick={this.goToHome}>Feed</a>
                         {this.state.home &&<Redirect to={'/home/'}></Redirect>}
+                    </li> */}
+                    <li>
+                        <Link to={'/home/'}>
+                            Feed
+                        </Link>
                     </li>
-                    <li>
-						<a href="" onClick = {this.goToProfile}>Profile</a>
+                    {/* <li>
+						<a href="" onClick={this.goToProfile}>Profile</a>
 						{this.state.profile  &&<Redirect to={'/profile/:id'}></Redirect>}
-					</li>
+					</li> */}
                     <li>
+                        <Link to={'/profile/:id'}>
+                            Profile
+                        </Link>
+                    </li>
+                    {/* <li>
 						<a href="" onClick={this.goToSearch}>Search</a>
 						{this.state.search  && <Redirect to={'/search/:id'}/> }
-					</li>
+					</li> */}
                     <li>
-						<a href = "" onClick = {this.logoutUser}>Logout</a>
+                        <Link to={'/search/:id'}>
+                            Search
+                        </Link>
+                    </li>
+                    {/* <li>
+						<a href="" onClick={this.logoutUser}>Logout</a>
 						{this.state.logout  && <Redirect to="/login" /> }
-					</li>
+					</li> */}
+                    <li>
+                        <Link to={'/login'}>
+                            Logout
+                        </Link>
+                    </li>
                 </ul>
             </header>
         </>

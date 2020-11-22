@@ -180,9 +180,6 @@ export class PersonalProfile extends React.Component {
     componentDidMount() {
         document.addEventListener("keydown", this.checkEsc, false);
     }
-    componentWillUpdate() {
-
-    }
 
     render() {
         return (
@@ -219,7 +216,7 @@ export class PersonalProfile extends React.Component {
                 <PostFeed>
                     <ul className="feed" className="mt-1 bg-light list-unstyled bg-white" id="homefeed">
                         {this.state.posts.map((post, index) => (
-                            <PostCard>
+                            <PostCard key={index}>
                                 <li className="container rounded border border-secondary-50 border-top px-0 mt-3">
                                     {/* Top area: origin, dest, username, date, rating, price */}
                                     <div onClick={() => this.postModalOpen(post)} id="postheader" className="bg-light py-2 border-bottom pl-3">
@@ -270,11 +267,11 @@ export class PersonalProfile extends React.Component {
                                                 {!post.curr_user_saved && "Save"}{post.curr_user_saved && "Unsave"}
                                                 </button>
                                             </div>
-                                            <div className="col-4 pr-5 text-right pt-2">
-                                                {post.numlikes === 1 && (<t className="mr-3" onClick={() => this.postModalOpen(post)} id="numlikes">1 like</t>)}
-                                                {post.numlikes != 1 && (<t className="mr-3" onClick={() => this.postModalOpen(post)} id="numlikes">{post.numlikes} likes</t>)}
-                                                {post.comments.length === 1 && (<t onClick={() => this.postModalOpen(post)} id="numcomments">1 comment</t>)}
-                                                {post.comments.length != 1 && (<t onClick={() => this.postModalOpen(post)} id="numcomments">{post.comments.length} comments</t>)}
+                                            <div className="col-4 pr-5 text-right pt-2" id="numlikesnumcomments">
+                                                {post.numlikes === 1 && (<p className="mr-3" onClick={() => this.postModalOpen(post)} id="numlikes">1 like</p>)}
+                                                {post.numlikes != 1 && (<p className="mr-3" onClick={() => this.postModalOpen(post)} id="numlikes">{post.numlikes} likes</p>)}
+                                                {post.comments.length === 1 && (<p onClick={() => this.postModalOpen(post)} id="numcomments">1 comment</p>)}
+                                                {post.comments.length != 1 && (<p onClick={() => this.postModalOpen(post)} id="numcomments">{post.comments.length} comments</p>)}
                                             </div>
                                         </div>
                                     </div>
