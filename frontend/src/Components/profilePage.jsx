@@ -1,7 +1,7 @@
 import React from 'react';
 import {TravelGramRepo} from '../Api/TravelGramRepo';
 import { Redirect } from 'react-router-dom';
-import NavBar from "./navBar";
+import NavBar from "./NavBar";
 import "./profilePage.css"
 
 export default class ProfilePage extends React.Component {

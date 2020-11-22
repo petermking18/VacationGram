@@ -2,7 +2,7 @@ import React from "react";
 import {Rating} from './Rating';
 import { Price } from './Price';
 import { TravelGramRepo } from '../Api/TravelGramRepo';
-import NavBar from './navBar';
+import NavBar from './NavBar';
 import './search.css';
 import { Link } from "react-router-dom";
 

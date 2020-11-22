@@ -5,7 +5,7 @@ import PostCard from './PostCard';
 import { Comment } from '../models/comment';
 import { Redirect, Link } from 'react-router-dom';
 import './Home.css';
-import NavBar from './navBar';
+import NavBar from './NavBar';
 import PostForm from './PostForm';
 import PostModal from './PostModal';
 import { Rating } from './Rating';

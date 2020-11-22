@@ -5,7 +5,7 @@ import PostCard from './PostCard';
 import { Comment } from '../models/comment';
 import { Redirect, Link } from 'react-router-dom';
 import './Home.css';
-import NavBar from './navBar';
+import NavBar from './NavBar';
 import PostForm from './PostForm';
 import PostModal from './PostModal';
 import { Rating } from './Rating';
@@ -191,7 +191,7 @@ export class Home extends React.Component {
                     New Post
                 </button>
                 <PostFeed>
-                    <ul class="feed" className="mt-1 bg-light list-unstyled bg-white" id="homefeed">
+                    <ul class="feed" className="mt bg-light list-unstyled bg-white" id="homefeed">
                         {this.state.posts.map((post, index) => (
                             <PostCard>
                                 <li className="container rounded border border-secondary-50 border-top px-0 mt-3">
