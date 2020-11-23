@@ -264,9 +264,9 @@ export class Home extends React.Component {
                     </ul>
                 </PostFeed>
                 <PostForm show={this.state.postForm} handleClose={e => this.postFormClose(e)}>
-                    <div className="pt-4">
+                    <div className="pt-4" id="modalcontainer">
                         <h2>Make a Post</h2>
-                        <form className="pr-5" id="newpostform">
+                        <form className="pl-0 pr-3" id="newpostform">
                             <div className="row">
                                 <div className="col">
                                     <label htmlFor="origin">Origin of Trip</label>
