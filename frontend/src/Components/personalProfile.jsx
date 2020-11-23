@@ -185,12 +185,12 @@ export class PersonalProfile extends React.Component {
     render() {
         return (
             <>
-                <NavBar id={this.props.match.params.id} />
+                <NavBar id={this.props.match.params.id}/>
                 <div className = "container boostrap-snippet header-container">
                     <div className = "bg-white">
                         <div className = "container pt-5">
                             <div className = "media col-md-10 cold-lg-8 col-xl-7 p-0 my-4 mx-auto">
-                                <img src = "https://www.smu.edu/-/media/Images/News/Experts/Mark-Fontenot.jpg?la=en" className = "d-block ui-w-100 rounded circle" id = "profImg"/>
+                                <img src = "https://www.smu.edu/-/media/Images/News/Experts/Mark-Fontenot.jpg?la=en" className = "d-block ui-w-100 rounded circle mt-4" id = "profImg"/>
                             </div>
                             <div className = "profUsername">
                                     <h4 className = "font-weight-bold mb-4">Mark Fontenot</h4>
