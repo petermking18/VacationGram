@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import NavBar from "./NavBar";
 import "./profilePage.css"
 
+///This page is settings page
 export default class ProfilePage extends React.Component {
     repo = new TravelGramRepo();
     constructor(props)
@@ -21,7 +22,6 @@ export default class ProfilePage extends React.Component {
 
     goPostPage = e => {
         this.setState({postPage: true});
-        console.log("goPostPage");
     }
 
     render() {

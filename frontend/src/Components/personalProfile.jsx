@@ -4,7 +4,7 @@ import {post_card} from '../models/post_card';
 import PostCard from './PostCard';
 import { Comment } from '../models/comment';
 import { Redirect, Link } from 'react-router-dom';
-import './Home.css';
+//import './Home.css';
 import NavBar from './NavBar';
 import PostForm from './PostForm';
 import PostModal from './PostModal';
@@ -17,6 +17,7 @@ const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ];
 
+///This is main profile page
 export class PersonalProfile extends React.Component {
     dummyComment1 = new Comment(1, 1, 75, "Pete", 1, false, "Nov 11 2020", "Very cool trip!", 5, false);
     dummyComment2 = new Comment(2, 2, 2, "John Lawrimore", 2, false, "Nov 12 2020", "Seems like you had fun", 2, false);
@@ -187,7 +188,7 @@ export class PersonalProfile extends React.Component {
                 <NavBar id={this.props.match.params.id} />
                 <div className = "container boostrap-snippet header-container">
                     <div className = "bg-white">
-                        <div className = "container py-5">
+                        <div className = "container pt-5">
                             <div className = "media col-md-10 cold-lg-8 col-xl-7 p-0 my-4 mx-auto">
                                 <img src = "https://www.smu.edu/-/media/Images/News/Experts/Mark-Fontenot.jpg?la=en" className = "d-block ui-w-100 rounded circle" id = "profImg"/>
                             </div>
@@ -214,7 +215,7 @@ export class PersonalProfile extends React.Component {
                     New Post
                 </button>
                 <PostFeed>
-                    <ul className="feed" className="mt-1 bg-light list-unstyled bg-white" id="homefeed">
+                    <ul className="feed mt-5 bg-light list-unstyled bg-white" id="profilefeed">
                         {this.state.posts.map((post, index) => (
                             <PostCard key={index}>
                                 <li className="container rounded border border-secondary-50 border-top px-0 mt-3">
