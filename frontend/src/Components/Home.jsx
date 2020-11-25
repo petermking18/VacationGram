@@ -1,9 +1,9 @@
 import React from 'react';
 import PostFeed from './PostFeed';
+import Feed from './Feed';
 import { post_card } from '../models/post_card';
 import PostCard from './PostCard';
 import { Comment } from '../models/comment';
-import { Redirect, Link } from 'react-router-dom';
 import './Home.css';
 import NavBar from './NavBar';
 import PostForm from './PostForm';
@@ -11,6 +11,7 @@ import PostModal from './PostModal';
 import { Rating } from './Rating';
 import { Price } from './Price';
 import CommentList from './CommentList';
+import { Redirect } from 'react-router-dom';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -37,7 +38,7 @@ export class Home extends React.Component {
         super(props)
         this.checkEsc = this.checkEsc.bind(this);
         this.state = {
-            user_id: this.props.location.user_id,
+            user_id: this.props.location.curr_user_id,
             username: this.props.location.username,
             email: this.props.location.email,
             password: this.props.location.password,
@@ -56,6 +57,8 @@ export class Home extends React.Component {
             modalPostNumLikes: 0,
             modalPostSaved: false,
             posts: this.dummyPosts,//get from api
+            viewOtherProfile: false,
+            otherProfileId: null,
         }
     }
 
@@ -162,6 +165,10 @@ export class Home extends React.Component {
     getPosts = () => {
         return this.state.posts;
     }
+    openOtherProfile = (user_id) => {
+        console.log("Should open other profile now: " + user_id);
+        this.setState({otherProfileId: user_id, viewOtherProfile: true});
+    }
     checkEsc(event) {
         if (event.keyCode === 27) {
             this.postModalClose();
@@ -176,91 +183,39 @@ export class Home extends React.Component {
             document.body.style.overflow = "visible";
         }
     }
+    onCommentDeletion = (postid, comments) => {
+        var postsArr = this.state.posts;
+        for(let p = 0; p < postsArr.length; p++){//find the post
+            if(postsArr[p].id === postid){
+                postsArr[p].comments = comments;
+            }
+        }
+        this.setState({posts: postsArr});
+    }
     componentDidMount() {
         document.addEventListener("keydown", this.checkEsc, false);
-    }
-    componentWillUpdate() {
-
+        console.log("Home mounted, user id: " + this.state.user_id);
     }
 
     render() {
         return (
             <>
-                <NavBar id={this.props.match.params.id} />
+                {this.state.viewOtherProfile && 
+                <Redirect to={{
+                    pathname: "/otherprofile/",
+                    curr_user_id: this.state.user_id,
+                    other_user_id: this.state.otherProfileId
+                }}/>}
+                <NavBar id={this.state.user_id} />
                 <button id="newpostbutton" type="button" onClick={e => this.postFormOpen(e)}>
                     New Post
                 </button>
-                <PostFeed>
-                    <ul class="feed" className="mt bg-light list-unstyled bg-white" id="homefeed">
-                        {this.state.posts.map((post, index) => (
-                            <PostCard>
-                                <li className="container rounded border border-secondary-50 border-top px-0 mt-3">
-                                    {/* Top area: origin, dest, username, date, rating, price */}
-                                    <div onClick={() => this.postModalOpen(post)} id="postheader" className="bg-light py-2 border-bottom pl-3">
-                                        <div className="row">
-                                            <div className="col">
-                                                <p id="origindest">{post.origin} ✈ {post.destination}</p>
-                                            </div>
-                                            <div className="col text-right text-muted pr-5">
-                                                <Rating value={post.rating} />
-                                            </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col">
-                                                <p>{post.username}</p>
-                                            </div>
-                                            <div className="col text-right text-muted pr-5">
-                                                <Price value={post.price} />
-                                            </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col text-muted">
-                                                {post.date}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* Middle area: image, text */}
-                                    <div className="pl-3 py-2">
-                                        <div className="row py-2">
-                                            <div className="col" id="postcardimgcol">
-                                                <img id="postcardimg" src={post.imgurl} />
-                                            </div>
-                                            <div className="col-9 pl-1 pr-5">
-                                                <p>{post.text}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* Bottom area: like button, comment button, save button, numlikes, numcomments */}
-                                    <div className="bg-light py-2 border-top pl-3">
-                                        <div className="row">
-                                            <div className="col">
-                                                <button type="button" onClick={() => this.onClickFeedLikeButton(post)} className="btn mr-2" id="likebutton">
-                                                👍 {!post.curr_user_liked && "Like"}{post.curr_user_liked && "Unlike"}    
-                                                </button>
-                                                <button type="button" onClick={() => this.onClickFeedCommentButton(post)} className="btn mr-2" id="commentbutton">
-                                                Comment
-                                                </button>
-                                                <button type="button" onClick={() => this.onClickSaveButton(post)} className="btn mr-2" id="savebutton">
-                                                {!post.curr_user_saved && "Save"}{post.curr_user_saved && "Unsave"}
-                                                </button>
-                                            </div>
-                                            <div className="col-4 pr-5 text-right pt-2">
-                                                {post.numlikes === 1 && (<t className="mr-3" onClick={() => this.postModalOpen(post)} id="numlikes">1 like</t>)}
-                                                {post.numlikes != 1 && (<t className="mr-3" onClick={() => this.postModalOpen(post)} id="numlikes">{post.numlikes} likes</t>)}
-                                                {post.comments.length === 1 && (<t onClick={() => this.postModalOpen(post)} id="numcomments">1 comment</t>)}
-                                                {post.comments.length != 1 && (<t onClick={() => this.postModalOpen(post)} id="numcomments">{post.comments.length} comments</t>)}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            </PostCard>
-                        ))}
-                    </ul>
-                </PostFeed>
+                <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton}/>
+                <div id="bottomspacer"/>
                 <PostForm show={this.state.postForm} handleClose={e => this.postFormClose(e)}>
-                    <div className="pt-4">
+                    <div className="pt-4" id="modalcontainer">
                         <h2>Make a Post</h2>
-                        <form className="pr-5" id="newpostform">
+                        <form className="pl-0 pr-3" id="newpostform">
                             <div className="row">
                                 <div className="col">
                                     <label htmlFor="origin">Origin of Trip</label>
@@ -360,7 +315,7 @@ export class Home extends React.Component {
                                 </button>
                             </div>
                         </div>
-                        <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.user_id} poster_id={this.state.modalPost.user_id} />
+                        <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.user_id} poster_id={this.state.modalPost.user_id} post_id={this.state.modalPost.post_id} handleDeletion={this.onCommentDeletion}/>
                         <form className="row mt-0 ml-0 pl-0" name="newCommentForm">
                             <div className="ml-0 pl-0" id="newcommenttextarea">
                                 <textarea name="newCommentTA" type="text" className="form-control mb-3" placeholder="add a comment" id="newcomment"

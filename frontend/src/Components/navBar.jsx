@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './NavBar.css';
 import logo from './mainPageLogo.png';
 
@@ -7,7 +7,7 @@ export default class NavBar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: '',
+            id: this.props.id,
             profile: false,
             logout: false,
             search: false,
@@ -29,35 +29,50 @@ export default class NavBar extends React.Component {
     goToSearch = e => {
         this.setState({ search: true });
     }
+    componentDidMount(){
+        console.log("NavBar mounted, user id: " + this.state.id);
+    }
 
     render() {
         return <>
-            <header class="header">
-                <Link to={'/home/'} id="title" class="logo">
+            <header className="header">
+                <Link to={{
+                    pathname: '/home/',
+                    curr_user_id: this.state.id
+                }} id="title" className="logo">
                     <img src={logo} alt="Avatar" className="avatarNav"></img>
-					TravelGram
+                    TravelGram
                 </Link>
-                <input class="menu-btn" type="checkbox" id="menu-btn" />
-                <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
-                <ul class="menu">
+                <input className="menu-btn" type="checkbox" id="menu-btn" />
+                <label className="menu-icon" htmlFor="menu-btn"><span className="navicon"></span></label>
+                <ul className="menu">
                     <li>
-                        <a href="" onClick={this.goToHome}>Feed</a>
-                        {this.state.home &&<Redirect to={'/home/'}></Redirect>}
+                        <Link to={{
+                            pathname: '/home/',
+                            curr_user_id: this.state.id
+                        }}>Feed</Link>
                     </li>
                     <li>
-						<a href="" onClick = {this.goToProfile}>Profile</a>
-						{this.state.profile  &&<Redirect to={'/profile/:id'}></Redirect>}
-					</li>
+                        <Link to={{
+                            pathname: '/profile/',
+                            curr_user_id: this.state.id
+                        }}>Profile</Link>
+                    </li>
                     <li>
-						<a href="" onClick={this.goToSearch}>Search</a>
-						{this.state.search  && <Redirect to={'/search/:id'}/> }
-					</li>
+                        <Link to={{
+                            pathname: '/search/',
+                            curr_user_id: this.state.id
+                        }}>Search</Link>
+                    </li>
                     <li>
-						<a href = "" onClick = {this.logoutUser}>Logout</a>
-						{this.state.logout  && <Redirect to="/login" /> }
-					</li>
+                        <Link to={{
+                            pathname: '/',
+                            curr_user_id: this.state.id
+                        }}>Logout</Link>
+                    </li>
                 </ul>
             </header>
+            <div id="spacer"/>
         </>
     }
 }

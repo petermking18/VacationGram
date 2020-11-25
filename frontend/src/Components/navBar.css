@@ -1,18 +1,16 @@
-/* body {
-    margin: 0;
-    font-family: Helvetica, sans-serif;
-    background-color: #f4f4f4;
-  }
- */
   img.avatarNav{
       opacity: 90%;
-      height: 70px;
-      width: 70px;
+      height: 65px;
+      width: 65px;
       padding-left: .025em;
   }
   
   a {
     color: #000;
+  }
+
+  #spacer{
+    height: 75px
   }
   
   /* header */
@@ -23,6 +21,7 @@
     position: fixed;
     width: 100%;
     z-index: 3;
+    top: 0;
   }
 
   #title{

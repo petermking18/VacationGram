@@ -4,7 +4,7 @@ import {post_card} from '../models/post_card';
 import PostCard from './PostCard';
 import { Comment } from '../models/comment';
 import { Redirect, Link } from 'react-router-dom';
-import './Home.css';
+//import './Home.css';
 import NavBar from './NavBar';
 import PostForm from './PostForm';
 import PostModal from './PostModal';
@@ -17,6 +17,7 @@ const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ];
 
+///This is main profile page
 export class PersonalProfile extends React.Component {
     dummyComment1 = new Comment(1, 1, 75, "Pete", 1, false, "Nov 11 2020", "Very cool trip!", 5, false);
     dummyComment2 = new Comment(2, 2, 2, "John Lawrimore", 2, false, "Nov 12 2020", "Seems like you had fun", 2, false);
@@ -33,7 +34,7 @@ export class PersonalProfile extends React.Component {
         super(props)
         this.checkEsc = this.checkEsc.bind(this);
         this.state = {
-            user_id: this.props.location.user_id,
+            user_id: this.props.location.curr_user_id,
             username: this.props.location.username,
             email: this.props.location.email,
             password: this.props.location.password,
@@ -179,20 +180,18 @@ export class PersonalProfile extends React.Component {
     }
     componentDidMount() {
         document.addEventListener("keydown", this.checkEsc, false);
-    }
-    componentWillUpdate() {
-
+        console.log("PersonalProfile mounted, user id: " + this.props.location.curr_user_id);
     }
 
     render() {
         return (
             <>
-                <NavBar id={this.props.match.params.id} />
+                <NavBar id={this.state.user_id}/>
                 <div className = "container boostrap-snippet header-container">
                     <div className = "bg-white">
-                        <div className = "container py-5">
-                            <div className = "media col-md-10 cold-lg-8 col-xl-7 p-0 my-4 mx-auto">
-                                <img src = "https://www.smu.edu/-/media/Images/News/Experts/Mark-Fontenot.jpg?la=en" className = "d-block ui-w-100 rounded circle" id = "profImg"/>
+                        <div className = "container pt-0">
+                            <div className = "media col-md-10 cold-lg-8 col-xl-7 p-0 mb-4 mx-auto">
+                                <img src = "https://www.smu.edu/-/media/Images/News/Experts/Mark-Fontenot.jpg?la=en" className = "d-block ui-w-100 rounded circle mt-4" id = "profImg"/>
                             </div>
                             <div className = "profUsername">
                                     <h4 className = "font-weight-bold mb-4">Mark Fontenot</h4>
@@ -217,9 +216,9 @@ export class PersonalProfile extends React.Component {
                     New Post
                 </button>
                 <PostFeed>
-                    <ul className="feed" className="mt-1 bg-light list-unstyled bg-white" id="homefeed">
+                    <ul className="feed mt-5 bg-light list-unstyled bg-white" id="profilefeed">
                         {this.state.posts.map((post, index) => (
-                            <PostCard>
+                            <PostCard key={index}>
                                 <li className="container rounded border border-secondary-50 border-top px-0 mt-3">
                                     {/* Top area: origin, dest, username, date, rating, price */}
                                     <div onClick={() => this.postModalOpen(post)} id="postheader" className="bg-light py-2 border-bottom pl-3">
@@ -270,11 +269,11 @@ export class PersonalProfile extends React.Component {
                                                 {!post.curr_user_saved && "Save"}{post.curr_user_saved && "Unsave"}
                                                 </button>
                                             </div>
-                                            <div className="col-4 pr-5 text-right pt-2">
-                                                {post.numlikes === 1 && (<t className="mr-3" onClick={() => this.postModalOpen(post)} id="numlikes">1 like</t>)}
-                                                {post.numlikes != 1 && (<t className="mr-3" onClick={() => this.postModalOpen(post)} id="numlikes">{post.numlikes} likes</t>)}
-                                                {post.comments.length === 1 && (<t onClick={() => this.postModalOpen(post)} id="numcomments">1 comment</t>)}
-                                                {post.comments.length != 1 && (<t onClick={() => this.postModalOpen(post)} id="numcomments">{post.comments.length} comments</t>)}
+                                            <div className="col-4 pr-5 text-right pt-2" id="numlikesnumcomments">
+                                                {post.numlikes === 1 && (<p className="mr-3" onClick={() => this.postModalOpen(post)} id="numlikes">1 like</p>)}
+                                                {post.numlikes != 1 && (<p className="mr-3" onClick={() => this.postModalOpen(post)} id="numlikes">{post.numlikes} likes</p>)}
+                                                {post.comments.length === 1 && (<p onClick={() => this.postModalOpen(post)} id="numcomments">1 comment</p>)}
+                                                {post.comments.length != 1 && (<p onClick={() => this.postModalOpen(post)} id="numcomments">{post.comments.length} comments</p>)}
                                             </div>
                                         </div>
                                     </div>

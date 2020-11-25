@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDom from 'react-dom';
 import './PostForm.css'
 
 const PostForm = ({ handleClose, show, children}) => {
@@ -9,7 +8,7 @@ const PostForm = ({ handleClose, show, children}) => {
         <div className={showHideClassName}>
             <div id="backdiv" onClick={handleClose}></div>
             <div id="postformdiv">
-                <button type="button" href="javascript:;" className="float-right mr-2" onClick={handleClose} id="closeModalButton">
+                <button type="button" /*href="javascript:;"*/ className="float-right mr-2" onClick={handleClose} id="closeModalButton">
                 ×
                 </button>
                 {children}

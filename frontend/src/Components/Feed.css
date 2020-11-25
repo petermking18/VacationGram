@@ -1,0 +1,39 @@
+#origindest{
+    font-size: 1.25rem;
+}
+
+#username{
+    z-index: 5;
+}
+
+#postcardimgcol{
+    display: block;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+#postcardimg{
+    width: 153px;
+    border-radius: .3rem;
+    display: block;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+#topclickablearea:hover{
+    cursor: pointer;
+}
+
+#likebutton,#commentbutton,#savebutton{
+    color: white;
+    background: royalblue;
+    border-radius: 3rem;
+}
+
+#numlikesnumcomments p{
+    display: inline;
+}
+
+#numcomments:hover,#numlikes:hover{
+    cursor: pointer;
+}

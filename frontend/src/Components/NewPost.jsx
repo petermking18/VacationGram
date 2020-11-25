@@ -1,5 +1,4 @@
 import React from 'react';
-import { Redirect, Link } from 'react-router-dom';
 import './NewPost.css';
 import NavBar from './NavBar';
 
@@ -27,8 +26,6 @@ export default class NewPost extends React.Component{
     }
 
     onSubmit(){
-        var dateObj = new Date();
-        var date = months[dateObj.getMonth()] + " " + dateObj.getDate() + ", " + dateObj.getFullYear();
         //post to database
         
     }

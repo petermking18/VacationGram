@@ -2,7 +2,7 @@
     scroll-behavior: smooth;
 }
 
-#homefeed {
+#homefeed{
     padding-top: 75px;
     padding-bottom: 100px;
 }
@@ -53,4 +53,12 @@
     background: lightgray;
     color: gray;
     cursor: not-allowed;
+}
+
+#numlikesnumcomments p{
+    display: inline;
+}
+
+#bottomspacer{
+    height: 100px;
 }
