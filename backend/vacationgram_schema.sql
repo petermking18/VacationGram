@@ -9,6 +9,12 @@ SET
   @OLD_SQL_MODE = @ @SQL_MODE,
   SQL_MODE = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 -- -----------------------------------------------------
+  -- Schema mydb
+  -- -----------------------------------------------------
+  -- -----------------------------------------------------
+  -- Schema db
+  -- -----------------------------------------------------
+  -- -----------------------------------------------------
   -- Schema db
   -- -----------------------------------------------------
   CREATE SCHEMA IF NOT EXISTS `db` DEFAULT CHARACTER SET utf8;
@@ -16,11 +22,12 @@ USE `db`;
 -- -----------------------------------------------------
   -- Table `db`.`user`
   -- -----------------------------------------------------
-  CREATE TABLE IF NOT EXISTS `db`.`user` (
+  DROP TABLE IF EXISTS `db`.`user`;
+CREATE TABLE IF NOT EXISTS `db`.`user` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(45) NOT NULL,
     `birthdate` DATE NULL DEFAULT NULL,
-    `location` POINT NULL DEFAULT NULL COMMENT 'long/lat of user location/hometown',
+    `location` VARCHAR(45) NULL DEFAULT NULL COMMENT 'long/lat of user location/hometown',
     `bio` VARCHAR(240) NULL DEFAULT NULL,
     `email` VARCHAR(45) NOT NULL,
     `password` VARCHAR(45) NOT NULL,
@@ -28,12 +35,14 @@ USE `db`;
     `username` VARCHAR(20) NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-    UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE
-  ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
+    UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE,
+    UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE
+  ) ENGINE = InnoDB AUTO_INCREMENT = 10 DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
   -- Table `db`.`lkp_trip_sentiment`
   -- -----------------------------------------------------
-  CREATE TABLE IF NOT EXISTS `db`.`lkp_trip_sentiment` (
+  DROP TABLE IF EXISTS `db`.`lkp_trip_sentiment`;
+CREATE TABLE IF NOT EXISTS `db`.`lkp_trip_sentiment` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(45) NOT NULL,
     PRIMARY KEY (`id`),
@@ -43,14 +52,15 @@ USE `db`;
 -- -----------------------------------------------------
   -- Table `db`.`trip`
   -- -----------------------------------------------------
-  CREATE TABLE IF NOT EXISTS `db`.`trip` (
+  DROP TABLE IF EXISTS `db`.`trip`;
+CREATE TABLE IF NOT EXISTS `db`.`trip` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `user_id` INT NOT NULL,
     `title` VARCHAR(45) NOT NULL,
     `body` TEXT NOT NULL,
     `price` INT NULL DEFAULT NULL,
-    `origin` POINT NULL DEFAULT NULL,
-    `destination` POINT NOT NULL,
+    `origin` VARCHAR(45) NULL DEFAULT NULL,
+    `destination` VARCHAR(45) NOT NULL,
     `rating` INT NOT NULL,
     `sentiment_id` INT NULL DEFAULT NULL,
     `is_public` BIT(1) NOT NULL DEFAULT b '1',
@@ -62,30 +72,33 @@ USE `db`;
     INDEX `sentiment_id_idx` (`sentiment_id` ASC) VISIBLE,
     CONSTRAINT `fk_user_trip_id` FOREIGN KEY (`user_id`) REFERENCES `db`.`user` (`id`),
     CONSTRAINT `sentiment_id` FOREIGN KEY (`sentiment_id`) REFERENCES `db`.`lkp_trip_sentiment` (`id`)
-  ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
+  ) ENGINE = InnoDB AUTO_INCREMENT = 3 DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
   -- Table `db`.`comment`
   -- -----------------------------------------------------
-  CREATE TABLE IF NOT EXISTS `db`.`comment` (
-    `id` INT NOT NULL,
+  DROP TABLE IF EXISTS `db`.`comment`;
+CREATE TABLE IF NOT EXISTS `db`.`comment` (
+    `id` INT NOT NULL AUTO_INCREMENT,
     `trip_id` INT NOT NULL,
     `user_id` INT NOT NULL,
-    `parent_comment_id` INT NULL DEFAULT NULL COMMENT 'parent comment id, if null it is root comment\\\\n\\\\nused for replies',
+    `parent_comment_id` INT NULL COMMENT 'parent comment id, if null it is root comment\\\\\\\\\\\\\\\\n\\\\\\\\\\\\\\\\nused for replies',
     `is_question` BIT(1) NOT NULL DEFAULT b '0',
     `date_created` DATETIME NOT NULL,
+    `body` VARCHAR(240) NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
     INDEX `trip_id_idx` (`trip_id` ASC) VISIBLE,
     INDEX `user_id_idx` (`user_id` ASC) VISIBLE,
     INDEX `parent_id_idx` (`parent_comment_id` ASC) VISIBLE,
-    CONSTRAINT `fk_trip_comment_id` FOREIGN KEY (`trip_id`) REFERENCES `db`.`trip` (`id`),
-    CONSTRAINT `fk_user_comment_id` FOREIGN KEY (`user_id`) REFERENCES `db`.`user` (`id`),
-    CONSTRAINT `parent_id` FOREIGN KEY (`parent_comment_id`) REFERENCES `db`.`comment` (`id`)
+    CONSTRAINT `fk_trip_comment_id` FOREIGN KEY (`trip_id`) REFERENCES `db`.`trip` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT `fk_user_comment_id` FOREIGN KEY (`user_id`) REFERENCES `db`.`user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT `fk_parent_comment_id` FOREIGN KEY (`parent_comment_id`) REFERENCES `db`.`comment` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
   ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
   -- Table `db`.`like_on_comment`
   -- -----------------------------------------------------
-  CREATE TABLE IF NOT EXISTS `db`.`like_on_comment` (
+  DROP TABLE IF EXISTS `db`.`like_on_comment`;
+CREATE TABLE IF NOT EXISTS `db`.`like_on_comment` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `comment_id` INT NOT NULL,
     `liked_by_user_id` INT NOT NULL,
@@ -100,7 +113,8 @@ USE `db`;
 -- -----------------------------------------------------
   -- Table `db`.`like_on_trip`
   -- -----------------------------------------------------
-  CREATE TABLE IF NOT EXISTS `db`.`like_on_trip` (
+  DROP TABLE IF EXISTS `db`.`like_on_trip`;
+CREATE TABLE IF NOT EXISTS `db`.`like_on_trip` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `liked_by_user` INT NOT NULL,
     `trip_id` INT NOT NULL,
@@ -114,7 +128,8 @@ USE `db`;
 -- -----------------------------------------------------
   -- Table `db`.`user_saved_trip`
   -- -----------------------------------------------------
-  CREATE TABLE IF NOT EXISTS `db`.`user_saved_trip` (
+  DROP TABLE IF EXISTS `db`.`user_saved_trip`;
+CREATE TABLE IF NOT EXISTS `db`.`user_saved_trip` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `trip_id` INT NOT NULL,
     `saved_by_user_id` INT NOT NULL,

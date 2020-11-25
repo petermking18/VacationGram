@@ -22,4 +22,24 @@ connection.connect(function (err) {
   else logger.info("Connected to the DB! ");
 });
 
-module.exports = connection;
+var propertyCheck = function (req, res, propertyNameList) {
+  var success = true;
+
+  propertyNameList.every(function (name) {
+    if (!(name in req.body)) {
+      res.status(400).json({
+        code: 400,
+        response: "Missing required field: `" + name + "`",
+      });
+
+      success = false;
+      return false;
+    }
+    return true;
+  });
+
+  return success;
+};
+
+exports.connection = connection;
+exports.propertyCheck = propertyCheck;

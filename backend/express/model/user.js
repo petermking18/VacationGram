@@ -13,31 +13,24 @@ var User = function (user) {
 };
 
 User.createUser = function (newUser, result) {
-  sql.query(
-    "INSERT INTO `db`.`user` (`name`, `email`, `password`, `date_joined`, `username`) VALUES ('" +
-      newUser.name +
-      "', '" +
-      newUser.email +
-      "', '" +
-      newUser.password +
-      "', '" +
-      newUser.date_joined +
-      "', '" +
-      newUser.username +
-      "');",
+  sql.connection.query(
+    {
+      sql: "INSERT INTO `user` SET ?;",
+      values: newUser,
+    },
     function (err, res) {
       if (err) {
         result(
           {
             code: 204,
-            response: "Could not create new user.",
+            response: err,
           },
           null
         );
       } else {
         result(null, {
           code: 200,
-          response: "Created new user.",
+          response: res,
         });
       }
     }
@@ -45,33 +38,10 @@ User.createUser = function (newUser, result) {
 };
 
 exports.create_user = function (req, res) {
-  var newUser = new User(req.body);
-  newUser.date_joined = new Date();
-  newUser.date_joined =
-    newUser.date_joined.getUTCFullYear() +
-    "-" +
-    ("00" + (newUser.date_joined.getUTCMonth() + 1)).slice(-2) +
-    "-" +
-    ("00" + newUser.date_joined.getUTCDate()).slice(-2) +
-    " " +
-    ("00" + newUser.date_joined.getUTCHours()).slice(-2) +
-    ":" +
-    ("00" + newUser.date_joined.getUTCMinutes()).slice(-2) +
-    ":" +
-    ("00" + newUser.date_joined.getUTCSeconds()).slice(-2);
+  if (sql.propertyCheck(req, res, ["name", "email", "password", "username"])) {
+    var newUser = new User(req.body);
+    newUser.date_joined = new Date();
 
-  if (
-    !newUser.name ||
-    !newUser.email ||
-    !newUser.password ||
-    !newUser.username ||
-    !newUser.date_joined
-  ) {
-    res.status(400).json({
-      code: 400,
-      response: "Missing input field.",
-    });
-  } else {
     User.createUser(newUser, function (err, user) {
       if (err) {
         res.send(err);
@@ -83,43 +53,36 @@ exports.create_user = function (req, res) {
 };
 
 User.loginUser = function (loginUser, result) {
-  sql.query(
-    "SELECT * FROM `db`.`user` WHERE email = ?;",
-    [loginUser.email],
+  sql.connection.query(
+    {
+      sql: "SELECT * FROM `user` WHERE `email` = ? AND `password` = ?;",
+      values: [loginUser.email, loginUser.password],
+    },
     function (err, res) {
       if (err) {
-        result({ code: 400, response: "Fatal SQL error ocurred" }, null);
+        result(
+          {
+            code: 400,
+            response: err,
+          },
+          null
+        );
       } else {
-        if (res.length <= 0) {
+        if (!Object.keys(res).length) {
+          // empty res
           result(
             {
               code: 204,
-              response: "Email not found.",
+              response: "Could not find matching email and password.",
             },
             null
           );
         } else {
-          if (res[0].password == loginUser.password) {
-            result(null, {
-              code: 200,
-              response: "Login successful.",
-              id: res[0].id,
-              name: res[0].name,
-              birthdate: res[0].birthdate,
-              location: res[0].location,
-              bio: res[0].bio,
-              date_joined: res[0].date_joined,
-              username: res[0].username,
-            });
-          } else {
-            result(
-              {
-                code: 204,
-                response: "Email and password do not match.",
-              },
-              null
-            );
-          }
+          // non empty res
+          result(null, {
+            code: 200,
+            response: res,
+          });
         }
       }
     }
@@ -127,14 +90,9 @@ User.loginUser = function (loginUser, result) {
 };
 
 exports.login_user = function (req, res) {
-  var loginUser = new User(req.body);
+  if (sql.propertyCheck(req, res, ["email", "password"])) {
+    var loginUser = new User(req.body);
 
-  if (!loginUser.email || !loginUser.password) {
-    res.status(400).json({
-      code: 400,
-      response: "Missing email or password.",
-    });
-  } else {
     User.loginUser(loginUser, function (err, user) {
       if (err) {
         res.send(err);
@@ -146,23 +104,26 @@ exports.login_user = function (req, res) {
 };
 
 User.deleteUser = function (id, result) {
-  sql.query("DELETE from `db`.`user` WHERE id = ?;", [id], function (err, res) {
-    if (err) {
-      result(err, null);
-    } else {
-      result(null, {
-        code: 200,
-        response: "Deleted user with id=" + id,
-      });
+  sql.connection.query(
+    {
+      sql: "DELETE FROM `user` WHERE id = ?;",
+      values: id,
+    },
+    function (err, res) {
+      if (err) {
+        result(err, null);
+      } else {
+        result(null, res);
+      }
     }
-  });
+  );
 };
 
 exports.delete_user = function (req, res) {
-  if (!req.params.id) {
+  if (!("id" in req.params)) {
     res.status(400).json({
       code: 400,
-      response: "Missing ID in request.",
+      response: "Missing required field: `id`",
     });
   } else {
     User.deleteUser(req.params.id, function (err, user) {
