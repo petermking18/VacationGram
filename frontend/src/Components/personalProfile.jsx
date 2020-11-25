@@ -12,6 +12,7 @@ import { Rating } from './Rating';
 import { Price } from './Price';
 import CommentList from './CommentList';
 import './personalProfile.css';
+import Feed from './Feed';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -161,8 +162,8 @@ export class PersonalProfile extends React.Component {
             }
         }
     }
-    getPosts = () => {
-        return this.state.posts;
+    openOtherProfile(){
+        
     }
     checkEsc(event) {
         if (event.keyCode === 27) {
@@ -215,12 +216,12 @@ export class PersonalProfile extends React.Component {
                 <button id="newpostbutton" type="button" onClick={e => this.postFormOpen(e)}>
                     New Post
                 </button>
-                <PostFeed>
+                <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton}/>
+                {/* <PostFeed>
                     <ul className="feed mt-5 bg-light list-unstyled bg-white" id="profilefeed">
                         {this.state.posts.map((post, index) => (
                             <PostCard key={index}>
                                 <li className="container rounded border border-secondary-50 border-top px-0 mt-3">
-                                    {/* Top area: origin, dest, username, date, rating, price */}
                                     <div onClick={() => this.postModalOpen(post)} id="postheader" className="bg-light py-2 border-bottom pl-3">
                                         <div className="row">
                                             <div className="col">
@@ -244,7 +245,6 @@ export class PersonalProfile extends React.Component {
                                             </div>
                                         </div>
                                     </div>
-                                    {/* Middle area: image, text */}
                                     <div className="pl-3 py-2">
                                         <div className="row py-2">
                                             <div className="col" id="postcardimgcol">
@@ -255,7 +255,6 @@ export class PersonalProfile extends React.Component {
                                             </div>
                                         </div>
                                     </div>
-                                    {/* Bottom area: like button, comment button, save button, numlikes, numcomments */}
                                     <div className="bg-light py-2 border-top pl-3">
                                         <div className="row">
                                             <div className="col">
@@ -281,7 +280,7 @@ export class PersonalProfile extends React.Component {
                             </PostCard>
                         ))}
                     </ul>
-                </PostFeed>
+                </PostFeed> */}
                 <PostForm show={this.state.postForm} handleClose={e => this.postFormClose(e)}>
                     <div className="mt-3 pt-4">
                         <h2>Make a Post</h2>

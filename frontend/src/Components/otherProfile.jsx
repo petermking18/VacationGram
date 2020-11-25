@@ -9,6 +9,7 @@ import { Rating } from './Rating';
 import { Price } from './Price';
 import Feed from './Feed';
 import { User } from '../models/user';
+import {Comment} from '../models/comment';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -34,6 +35,7 @@ export default class OtherProfile extends React.Component {
         this.state = {
             curr_user_id: this.props.location.curr_user_id,
             other_user_id: this.props.location.other_user_id,
+            username: "get username from api using curr_user_id",
             user: this.dummmyUser1,
             postModal: false,
             modalPost: this.blankPost,
@@ -73,9 +75,11 @@ export default class OtherProfile extends React.Component {
         let dateObj = new Date();
         let date = months[dateObj.getMonth()] + " " + dateObj.getDate() + ", " + dateObj.getFullYear();
         let mycomment = new Comment(
-            null/*change to new comment id*/, this.state.modalPost.id, this.state.user_id, this.state.username,
-            null/*parent id?*/, null/*is question?*/, date, this.state.newComment, 0, false
+            null, this.state.modalPost.id, this.state.curr_user_id, this.state.username, null, null, date, this.state.newComment, 0, false
         );
+        /* let mycomment = new Comment(
+            null, this.state.modalPost.id, this.state.curr
+        ); */
         this.state.modalPost.comments.unshift(mycomment);
         this.postModalClose();
         this.postModalOpen(this.state.modalPost);
@@ -125,32 +129,27 @@ export default class OtherProfile extends React.Component {
         }
         this.setState({ posts: postsArr });
     }
-    openOtherProfile(){
+    openOtherProfile() {
 
     }
 
     componentDidMount() {
         document.addEventListener("keydown", this.checkEsc, false);
-        this.setState({ posts: [this.dummyPost1,this.dummyPost1,this.dummyPost1] });//fetch user and users posts
+        this.setState({ posts: [this.dummyPost1, this.dummyPost1, this.dummyPost1] });//fetch user and users posts
         this.setState({ user: this.dummmyUser1 });
     }
 
     render() {
         return <>
             <NavBar id={this.props.location.curr_user_id} />
-            <div className="container bg-gradient-secondary" id="backbutton">
-                <Link to={{
-                    pathname: this.props.location.prevPath,
-                    curr_user_id: this.props.location.curr_user_id,
-                }}>
-                    <button type="button" className="my-1 btn btn-light">
-                        ← back
-                </button>
-                </Link>
-            </div>
-            {/* <div className="container">
-                Profile id to render: {this.props.location.other_user_id}
-            </div> */}
+            <Link to={{
+                        pathname: this.props.location.prevPath,
+                        curr_user_id: this.props.location.curr_user_id,
+                    }} className="float-left">
+                        <button type="button" className="my-1 btn btn-light">
+                            ← back
+                        </button>
+                    </Link>
             <div className="container bootstrap-snippet header-container">
                 <div className="bg-white">
                     <div className="container pt-0">
