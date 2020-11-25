@@ -128,7 +128,6 @@ export class Home extends React.Component {
     onClickFeedCommentButton = (post) => {
         this.postModalOpen(post);
         this.scrollToAddComment();
-        console.log(this.state.user_id);
     }
     onClickFeedLikeButton = (post) => {
         if (post.curr_user_liked) {
@@ -161,9 +160,6 @@ export class Home extends React.Component {
                 p.curr_user_saved = this.state.modalPostSaved;
             }
         }
-    }
-    getPosts = () => {
-        return this.state.posts;
     }
     openOtherProfile = (user_id) => {
         console.log("Should open other profile now: " + user_id);
@@ -204,7 +200,8 @@ export class Home extends React.Component {
                 <Redirect to={{
                     pathname: "/otherprofile/",
                     curr_user_id: this.state.user_id,
-                    other_user_id: this.state.otherProfileId
+                    other_user_id: this.state.otherProfileId,
+                    prevPath: "/home/"
                 }}/>}
                 <NavBar id={this.state.user_id} />
                 <button id="newpostbutton" type="button" onClick={e => this.postFormOpen(e)}>
