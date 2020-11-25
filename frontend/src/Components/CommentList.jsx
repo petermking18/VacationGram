@@ -45,7 +45,7 @@ export default class CommentList extends React.Component {
     componentDidMount(){
         this.setState({comments: this.props.comments});
     }
-    UNSAFE_componentWillReceiveProps(nextProps){
+    componentWillReceiveProps(nextProps){
         this.setState({comments: nextProps.comments});
     }
     /* static getDerivedStateFromProps(props, state){

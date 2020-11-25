@@ -7,7 +7,7 @@ export default class NavBar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: '',
+            id: this.props.id,
             profile: false,
             logout: false,
             search: false,
@@ -29,55 +29,50 @@ export default class NavBar extends React.Component {
     goToSearch = e => {
         this.setState({ search: true });
     }
+    componentDidMount(){
+        console.log("NavBar mounted, user id: " + this.state.id);
+    }
 
     render() {
         return <>
             <header className="header">
-                <Link to={'/home/'} id="title" className="logo">
+                <Link to={{
+                    pathname: '/home/',
+                    curr_user_id: this.state.id
+                }} id="title" className="logo">
                     <img src={logo} alt="Avatar" className="avatarNav"></img>
-					TravelGram
+                    TravelGram
                 </Link>
                 <input className="menu-btn" type="checkbox" id="menu-btn" />
                 <label className="menu-icon" htmlFor="menu-btn"><span className="navicon"></span></label>
                 <ul className="menu">
-                    {/* <li>
-                        <a href="" onClick={this.goToHome}>Feed</a>
-                        {this.state.home &&<Redirect to={'/home/'}></Redirect>}
-                    </li> */}
                     <li>
-                        <Link to={'/home/'}>
-                            Feed
-                        </Link>
+                        <Link to={{
+                            pathname: '/home/',
+                            curr_user_id: this.state.id
+                        }}>Feed</Link>
                     </li>
-                    {/* <li>
-						<a href="" onClick={this.goToProfile}>Profile</a>
-						{this.state.profile  &&<Redirect to={'/profile/:id'}></Redirect>}
-					</li> */}
                     <li>
-                        <Link to={'/profile/:id'}>
-                            Profile
-                        </Link>
+                        <Link to={{
+                            pathname: '/profile/',
+                            curr_user_id: this.state.id
+                        }}>Profile</Link>
                     </li>
-                    {/* <li>
-						<a href="" onClick={this.goToSearch}>Search</a>
-						{this.state.search  && <Redirect to={'/search/:id'}/> }
-					</li> */}
                     <li>
-                        <Link to={'/search/:id'}>
-                            Search
-                        </Link>
+                        <Link to={{
+                            pathname: '/search/',
+                            curr_user_id: this.state.id
+                        }}>Search</Link>
                     </li>
-                    {/* <li>
-						<a href="" onClick={this.logoutUser}>Logout</a>
-						{this.state.logout  && <Redirect to="/login" /> }
-					</li> */}
                     <li>
-                        <Link to={'/login'}>
-                            Logout
-                        </Link>
+                        <Link to={{
+                            pathname: '/',
+                            curr_user_id: this.state.id
+                        }}>Logout</Link>
                     </li>
                 </ul>
             </header>
+            <div id="spacer"/>
         </>
     }
 }

@@ -34,7 +34,7 @@ export class PersonalProfile extends React.Component {
         super(props)
         this.checkEsc = this.checkEsc.bind(this);
         this.state = {
-            user_id: this.props.location.user_id,
+            user_id: this.props.location.curr_user_id,
             username: this.props.location.username,
             email: this.props.location.email,
             password: this.props.location.password,
@@ -180,16 +180,17 @@ export class PersonalProfile extends React.Component {
     }
     componentDidMount() {
         document.addEventListener("keydown", this.checkEsc, false);
+        console.log("PersonalProfile mounted, user id: " + this.props.location.curr_user_id);
     }
 
     render() {
         return (
             <>
-                <NavBar id={this.props.match.params.id}/>
+                <NavBar id={this.state.user_id}/>
                 <div className = "container boostrap-snippet header-container">
                     <div className = "bg-white">
-                        <div className = "container pt-5">
-                            <div className = "media col-md-10 cold-lg-8 col-xl-7 p-0 my-4 mx-auto">
+                        <div className = "container pt-0">
+                            <div className = "media col-md-10 cold-lg-8 col-xl-7 p-0 mb-4 mx-auto">
                                 <img src = "https://www.smu.edu/-/media/Images/News/Experts/Mark-Fontenot.jpg?la=en" className = "d-block ui-w-100 rounded circle mt-4" id = "profImg"/>
                             </div>
                             <div className = "profUsername">

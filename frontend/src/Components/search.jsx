@@ -8,6 +8,7 @@ export class Search extends React.Component {
     travelGramRepo = new TravelGramRepo();
 
     state = {
+        user_id: this.props.location.curr_user_id,
         username: "",
         origin: "",
         destination: "",
@@ -24,16 +25,15 @@ export class Search extends React.Component {
             this.setState({ results: returnResults });
         });
     }
+    componentDidMount(){
+        console.log("Search mounted, user id: " + this.state.user_id);
+    }
 
     render() {
         return (
             <>
-                <NavBar id={this.props.match.params.id} />
+                <NavBar id={this.state.user_id} />
                 <div className="container">
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
                     <div className="card mt-0 mb-3">
                         <div className="card-body">
                             <h3 className="card-title">Search TravelGram </h3>
