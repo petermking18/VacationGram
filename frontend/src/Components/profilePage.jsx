@@ -31,7 +31,7 @@ export default class ProfilePage extends React.Component {
                 {/* <div className = "container boostrap-snippet header-container"> */}
                 <div className="container">
                     <div className = "bg-white">
-                        <div className = "container py-5">
+                        <div className = "container py-0">
                             <div className = "media col-md-10 cold-lg-8 col-xl-7 p-0 my-4 mx-auto">
                                 <img alt="profilePhoto" src = "https://www.smu.edu/-/media/Images/News/Experts/Mark-Fontenot.jpg?la=en" className = "d-block ui-w-100 rounded circle" id = "profImg"/>
                             </div>
