@@ -1,7 +1,8 @@
 "use strict";
+
 var sql = require("./connection");
 
-var Trip = function (trip) {
+var Trip = function Trip(trip) {
   this.body = trip.body;
   this.date_created = trip.date_created;
   this.date_last_updated = trip.date_last_updated;
@@ -18,42 +19,28 @@ var Trip = function (trip) {
 
 Trip.createTrip = function (newTrip, result) {
   sql.connection.query({
-      sql: "INSERT INTO `trip` SET ?;",
-      values: newTrip,
-    },
-    function (err, res) {
-      if (err) {
-        result({
-            code: 204,
-            response: err,
-          },
-          null
-        );
-      } else {
-        result(null, {
-          code: 200,
-          response: res,
-        });
-      }
+    sql: "INSERT INTO `trip` SET ?;",
+    values: newTrip
+  }, function (err, res) {
+    if (err) {
+      result({
+        code: 204,
+        response: err
+      }, null);
+    } else {
+      result(null, {
+        code: 200,
+        response: res
+      });
     }
-  );
+  });
 };
 
 exports.create_trip = function (req, res) {
-  if (
-    sql.propertyCheck(req, res, [
-      "body",
-      "destination",
-      "rating",
-      "title",
-      "user_id",
-      "is_public",
-    ])
-  ) {
+  if (sql.propertyCheck(req, res, ["body", "destination", "rating", "title", "user_id", "is_public"])) {
     var newTrip = new Trip(req.body);
     newTrip.date_created = new Date();
     newTrip.date_last_updated = new Date();
-
     Trip.createTrip(newTrip, function (err, trip) {
       if (err) {
         res.send(err);
@@ -61,10 +48,7 @@ exports.create_trip = function (req, res) {
         res.json(trip);
       }
     });
-  }
-
-  // var newTrip = new Trip(req.body);
-
+  } // var newTrip = new Trip(req.body);
   // newTrip.date_created = new Date();
   // newTrip.date_created =
   //   newTrip.date_created.getUTCFullYear() +
@@ -79,7 +63,6 @@ exports.create_trip = function (req, res) {
   //   ":" +
   //   ("00" + newTrip.date_created.getUTCSeconds()).slice(-2);
   // newTrip.date_last_updated = newTrip.date_created;
-
   // if (
   //   !newTrip.body ||
   //   !newTrip.date_created ||
@@ -101,4 +84,5 @@ exports.create_trip = function (req, res) {
   //     }
   //   });
   // }
+
 };
