@@ -23,7 +23,11 @@ export default class ProfilePage extends React.Component {
     goPostPage = e => {
         this.setState({postPage: true});
     }
+    goSavedPage = e => {
+        this.setState({savedPage: true});
+    }
     componentDidMount(){
+        window.scrollTo(0,0);
         console.log("Profile Settings mounted, user id: " + this.props.match.params.id);
     }
 
@@ -45,14 +49,15 @@ export default class ProfilePage extends React.Component {
                         <hr className = "m-0"/>
                         <ul className="nav nav-tabs tabs-alt justify-content-center">
                             <li className="nav-item">
-                            <a onClick={this.goPostPage} className="nav-link py-4" href="#"><img src="https://cdn.icon-icons.com/icons2/1875/PNG/512/imagegallery_120168.png" id="galleryIcon" alt="Posts"/></a>
-                            {this.state.postPage && <Redirect to={"/profile/:id"}/>}
+                            <a onClick={this.goPostPage} className="nav-link py-4"><img src="https://cdn.icon-icons.com/icons2/1875/PNG/512/imagegallery_120168.png" id="galleryIcon" alt="Posts"/></a>
+                            {this.state.postPage && <Redirect to={"/profile/" + this.state.id}/>}
                             </li>
                             <li className="nav-item">
-                            <a className="nav-link py-4" href="#"><img src = "https://www.flaticon.com/svg/static/icons/svg/84/84510.svg" id="bookMarkIcon" alt="Saved"/></a>
+                            <a onClick={this.goSavedPage} className="nav-link py-4"><img src = "https://www.flaticon.com/svg/static/icons/svg/84/84510.svg" id="bookMarkIcon" alt="Saved"/></a>
+                            {this.state.savedPage && <Redirect to={'/saved/'+this.state.id}/>}
                             </li>
                             <li className="nav-item">
-                            <a className="nav-link py-4 active" href="#"><img src = "https://icon-library.net/images/white-gear-icon-png/white-gear-icon-png-13.jpg" id = "gearIcon" alt="Settings"/></a>
+                            <a className="nav-link py-4 active"><img src = "https://icon-library.net/images/white-gear-icon-png/white-gear-icon-png-13.jpg" id = "gearIcon" alt="Settings"/></a>
                             </li>
                         </ul>
                     </div>
