@@ -6,6 +6,7 @@ import PersonalProfile from './Components/personalProfile';
 import NewPost from './Components/NewPost';
 import ProfilePage from './Components/profilePage';
 import OtherProfile from './Components/otherProfile';
+import Saved from './Components/Saved';
 
 export const ROUTES = [
     { path: '/search/:id', component: Search },
@@ -14,5 +15,6 @@ export const ROUTES = [
     { path: '/otherprofile/:curr_id/:other_id', component: OtherProfile},
     { path: '/register', component: RegisterPage },
     { path: '/settings/:id', component: ProfilePage },
+    { path: '/saved/:id', component: Saved},
     { path: '/', component: Login },
 ]

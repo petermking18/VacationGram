@@ -54,6 +54,7 @@ export class PersonalProfile extends React.Component {
             modalPostNumLikes: 0,
             modalPostSaved: false,
             posts: this.dummyPosts,//get from api
+            savedPage: false,
             settingsPage: false,
         }
     }
@@ -64,6 +65,9 @@ export class PersonalProfile extends React.Component {
 
     goSettingsPage = e => {
         this.setState({settingsPage: true});
+    }
+    goSavedPage = e => {
+        this.setState({savedPage: true});
     }
 
     postModalOpen = (post) => {
@@ -189,6 +193,7 @@ export class PersonalProfile extends React.Component {
         }
     }
     componentDidMount() {
+        window.scrollTo(0,0);
         document.addEventListener("keydown", this.checkEsc, false);
         console.log("PersonalProfile mounted, user id: " + this.props.match.params.id);
     }
@@ -210,13 +215,14 @@ export class PersonalProfile extends React.Component {
                         <hr className = "m-0"/>
                         <ul className="nav nav-tabs tabs-alt justify-content-center">
                             <li className="nav-item">
-                            <a className="nav-link py-4 active" href="#"><img src = "https://cdn.icon-icons.com/icons2/1875/PNG/512/imagegallery_120168.png" id = "galleryIcon"/></a>
+                            <a className="nav-link py-4 active"><img src = "https://cdn.icon-icons.com/icons2/1875/PNG/512/imagegallery_120168.png" id = "galleryIcon"/></a>
                             </li>
                             <li className="nav-item">
-                            <a className="nav-link py-4" href="#"><img src = "https://www.flaticon.com/svg/static/icons/svg/84/84510.svg" id = "bookMarkIcon"/></a>
+                            <a onClick={this.goSavedPage} className="nav-link py-4"><img src = "https://www.flaticon.com/svg/static/icons/svg/84/84510.svg" id = "bookMarkIcon"/></a>
+                            {this.state.savedPage && <Redirect to={'/saved/'+this.state.user_id}/>}
                             </li>
                             <li className="nav-item">
-                            <a onClick = {this.goSettingsPage} className="nav-link py-4" href="#"><img src = "https://icon-library.net/images/white-gear-icon-png/white-gear-icon-png-13.jpg" id = "gearIcon"/></a>
+                            <a onClick = {this.goSettingsPage} className="nav-link py-4"><img src = "https://icon-library.net/images/white-gear-icon-png/white-gear-icon-png-13.jpg" id = "gearIcon"/></a>
                             {this.state.settingsPage && <Redirect to={'/settings/'+this.state.user_id}/>}
                             </li>
                         </ul>
