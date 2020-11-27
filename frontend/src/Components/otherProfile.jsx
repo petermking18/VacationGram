@@ -33,8 +33,8 @@ export default class OtherProfile extends React.Component {
         super(props)
         this.checkEsc = this.checkEsc.bind(this);
         this.state = {
-            curr_user_id: this.props.location.curr_user_id,
-            other_user_id: this.props.location.other_user_id,
+            curr_user_id: this.props.match.params.curr_id,
+            other_user_id: this.props.match.params.other_id,
             username: "get username from api using curr_user_id",
             user: this.dummmyUser1,
             postModal: false,
@@ -134,22 +134,16 @@ export default class OtherProfile extends React.Component {
     }
 
     componentDidMount() {
+        window.scrollTo(0,0);
         document.addEventListener("keydown", this.checkEsc, false);
         this.setState({ posts: [this.dummyPost1, this.dummyPost1, this.dummyPost1] });//fetch user and users posts
         this.setState({ user: this.dummmyUser1 });
+        console.log("Other Profile mounted, curr user: " + this.state.curr_user_id + ", other user: " + this.state.other_user_id);
     }
 
     render() {
         return <>
-            <NavBar id={this.props.location.curr_user_id} />
-            <Link to={{
-                        pathname: this.props.location.prevPath,
-                        curr_user_id: this.props.location.curr_user_id,
-                    }} className="float-left">
-                        <button type="button" className="my-1 btn btn-light">
-                            ← back
-                        </button>
-                    </Link>
+            <NavBar id={this.state.curr_user_id} />
             <div className="container bootstrap-snippet header-container">
                 <div className="bg-white">
                     <div className="container pt-0">

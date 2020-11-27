@@ -38,10 +38,14 @@ export class Home extends React.Component {
         super(props)
         this.checkEsc = this.checkEsc.bind(this);
         this.state = {
-            user_id: this.props.location.curr_user_id,
-            username: this.props.location.username,
-            email: this.props.location.email,
-            password: this.props.location.password,
+            // user_id: this.props.location.curr_user_id,
+            user_id: this.props.match.params.id,
+            // username: this.props.location.username,
+            // email: this.props.location.email,
+            // password: this.props.location.password,
+            username: "",
+            email: "",
+            password: "",
             postForm: false,
             origin: "",
             destination: "",
@@ -189,6 +193,7 @@ export class Home extends React.Component {
         this.setState({posts: postsArr});
     }
     componentDidMount() {
+        window.scrollTo(0,0);
         document.addEventListener("keydown", this.checkEsc, false);
         console.log("Home mounted, user id: " + this.state.user_id);
     }
@@ -196,13 +201,7 @@ export class Home extends React.Component {
     render() {
         return (
             <>
-                {this.state.viewOtherProfile && 
-                <Redirect to={{
-                    pathname: "/otherprofile/",
-                    curr_user_id: this.state.user_id,
-                    other_user_id: this.state.otherProfileId,
-                    prevPath: "/home/"
-                }}/>}
+                {this.state.viewOtherProfile && <Redirect to={'/otherprofile/'+this.state.user_id+'/'+this.state.otherProfileId}/>}
                 <NavBar id={this.state.user_id} />
                 <button id="newpostbutton" type="button" onClick={e => this.postFormOpen(e)}>
                     New Post

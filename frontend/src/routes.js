@@ -8,12 +8,11 @@ import ProfilePage from './Components/profilePage';
 import OtherProfile from './Components/otherProfile';
 
 export const ROUTES = [
-    { path: '/search/', component: Search },
-    { path: '/home/', component: Home },
-    { path: '/newpost', component: NewPost },
-    { path: '/profile/', component: PersonalProfile },
-    { path: '/otherprofile/', component: OtherProfile},
+    { path: '/search/:id', component: Search },
+    { path: '/home/:id', component: Home },
+    { path: '/profile/:id', component: PersonalProfile },
+    { path: '/otherprofile/:curr_id/:other_id', component: OtherProfile},
     { path: '/register', component: RegisterPage },
-    { path: '/settings', component: ProfilePage },
+    { path: '/settings/:id', component: ProfilePage },
     { path: '/', component: Login },
 ]

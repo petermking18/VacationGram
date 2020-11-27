@@ -35,10 +35,10 @@ export class PersonalProfile extends React.Component {
         super(props)
         this.checkEsc = this.checkEsc.bind(this);
         this.state = {
-            user_id: this.props.location.curr_user_id,
-            username: this.props.location.username,
-            email: this.props.location.email,
-            password: this.props.location.password,
+            user_id: this.props.match.params.id,
+            username: "",
+            email: "",
+            password: "",
             postForm: false,
             origin: "",
             destination: "",
@@ -165,6 +165,15 @@ export class PersonalProfile extends React.Component {
     openOtherProfile(){
         
     }
+    onCommentDeletion = (postid, comments) => {
+        var postsArr = this.state.posts;
+        for(let p = 0; p < postsArr.length; p++){//find the post
+            if(postsArr[p].id === postid){
+                postsArr[p].comments = comments;
+            }
+        }
+        this.setState({posts: postsArr});
+    }
     checkEsc(event) {
         if (event.keyCode === 27) {
             this.postModalClose();
@@ -181,7 +190,7 @@ export class PersonalProfile extends React.Component {
     }
     componentDidMount() {
         document.addEventListener("keydown", this.checkEsc, false);
-        console.log("PersonalProfile mounted, user id: " + this.props.location.curr_user_id);
+        console.log("PersonalProfile mounted, user id: " + this.props.match.params.id);
     }
 
     render() {
@@ -208,7 +217,7 @@ export class PersonalProfile extends React.Component {
                             </li>
                             <li className="nav-item">
                             <a onClick = {this.goSettingsPage} className="nav-link py-4" href="#"><img src = "https://icon-library.net/images/white-gear-icon-png/white-gear-icon-png-13.jpg" id = "gearIcon"/></a>
-                            {this.state.settingsPage && <Redirect to={"/settings"}/>}
+                            {this.state.settingsPage && <Redirect to={'/settings/'+this.state.user_id}/>}
                             </li>
                         </ul>
                     </div>
@@ -217,70 +226,6 @@ export class PersonalProfile extends React.Component {
                     New Post
                 </button>
                 <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton}/>
-                {/* <PostFeed>
-                    <ul className="feed mt-5 bg-light list-unstyled bg-white" id="profilefeed">
-                        {this.state.posts.map((post, index) => (
-                            <PostCard key={index}>
-                                <li className="container rounded border border-secondary-50 border-top px-0 mt-3">
-                                    <div onClick={() => this.postModalOpen(post)} id="postheader" className="bg-light py-2 border-bottom pl-3">
-                                        <div className="row">
-                                            <div className="col">
-                                                <p id="origindest">{post.origin} ✈ {post.destination}</p>
-                                            </div>
-                                            <div className="col text-right text-muted pr-5">
-                                                <Rating value={post.rating} />
-                                            </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col">
-                                                <p>{post.username}</p>
-                                            </div>
-                                            <div className="col text-right text-muted pr-5">
-                                                <Price value={post.price} />
-                                            </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col text-muted">
-                                                {post.date}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="pl-3 py-2">
-                                        <div className="row py-2">
-                                            <div className="col" id="postcardimgcol">
-                                                <img id="postcardimg" src={post.imgurl} />
-                                            </div>
-                                            <div className="col-9 pl-1 pr-5">
-                                                <p>{post.text}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="bg-light py-2 border-top pl-3">
-                                        <div className="row">
-                                            <div className="col">
-                                                <button type="button" onClick={() => this.onClickFeedLikeButton(post)} className="btn mr-2" id="likebutton">
-                                                👍 {!post.curr_user_liked && "Like"}{post.curr_user_liked && "Unlike"}    
-                                                </button>
-                                                <button type="button" onClick={() => this.onClickFeedCommentButton(post)} className="btn mr-2" id="commentbutton">
-                                                Comment
-                                                </button>
-                                                <button type="button" onClick={() => this.onClickSaveButton(post)} className="btn mr-2" id="savebutton">
-                                                {!post.curr_user_saved && "Save"}{post.curr_user_saved && "Unsave"}
-                                                </button>
-                                            </div>
-                                            <div className="col-4 pr-5 text-right pt-2" id="numlikesnumcomments">
-                                                {post.numlikes === 1 && (<p className="mr-3" onClick={() => this.postModalOpen(post)} id="numlikes">1 like</p>)}
-                                                {post.numlikes != 1 && (<p className="mr-3" onClick={() => this.postModalOpen(post)} id="numlikes">{post.numlikes} likes</p>)}
-                                                {post.comments.length === 1 && (<p onClick={() => this.postModalOpen(post)} id="numcomments">1 comment</p>)}
-                                                {post.comments.length != 1 && (<p onClick={() => this.postModalOpen(post)} id="numcomments">{post.comments.length} comments</p>)}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            </PostCard>
-                        ))}
-                    </ul>
-                </PostFeed> */}
                 <PostForm show={this.state.postForm} handleClose={e => this.postFormClose(e)}>
                     <div className="mt-3 pt-4">
                         <h2>Make a Post</h2>
@@ -384,7 +329,7 @@ export class PersonalProfile extends React.Component {
                                 </button>
                             </div>
                         </div>
-                        <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.user_id} poster_id={this.state.modalPost.user_id} />
+                        <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.user_id} poster_id={this.state.modalPost.user_id} handleDeletion={this.onCommentDeletion} />
                         <form className="row mt-0 ml-0 pl-0" name="newCommentForm">
                             <div className="ml-0 pl-0" id="newcommenttextarea">
                                 <textarea name="newCommentTA" type="text" className="form-control mb-3" placeholder="add a comment" id="newcomment"
