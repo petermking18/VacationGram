@@ -32,7 +32,7 @@ export class Search extends React.Component {
         super(props)
         this.checkEsc = this.checkEsc.bind(this);
         this.state = {
-            user_id: this.props.location.curr_user_id,
+            user_id: this.props.match.params.id,
             curr_username: "get username from api using user_id",
             username: "",
             origin: "",
@@ -143,6 +143,7 @@ export class Search extends React.Component {
         });
     }
     componentDidMount() {
+        window.scrollTo(0,0);
         document.addEventListener("keydown", this.checkEsc, false);
         console.log("Search mounted, user id: " + this.state.user_id);
         this.setState({ results: [this.dummyPost2, this.dummyPost2, this.dummyPost2, this.dummyPost2] });
@@ -151,13 +152,7 @@ export class Search extends React.Component {
     render() {
         return (
             <>
-                {this.state.viewOtherProfile && 
-                <Redirect to={{
-                    pathname: "/otherprofile/",
-                    curr_user_id: this.state.user_id,
-                    other_user_id: this.state.otherProfileId,
-                    prevPath: "/search/"
-                }}/>}
+                {this.state.viewOtherProfile && <Redirect to={'/otherprofile/'+this.state.user_id+'/'+this.state.otherProfileId}/>}
                 <NavBar id={this.state.user_id} />
                 <div className="container">
                     <div className="card mt-4 mb-3">

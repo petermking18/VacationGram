@@ -29,17 +29,14 @@ export default class NavBar extends React.Component {
     goToSearch = e => {
         this.setState({ search: true });
     }
-    componentDidMount(){
+    componentDidMount() {
         console.log("NavBar mounted, user id: " + this.state.id);
     }
 
     render() {
         return <>
             <header className="header">
-                <Link to={{
-                    pathname: '/home/',
-                    curr_user_id: this.state.id
-                }} id="title" className="logo">
+                <Link to={{ pathname: '/home/' + this.state.id }} id="title" className="logo">
                     <img src={logo} alt="Avatar" className="avatarNav"></img>
                     TravelGram
                 </Link>
@@ -47,32 +44,20 @@ export default class NavBar extends React.Component {
                 <label className="menu-icon" htmlFor="menu-btn"><span className="navicon"></span></label>
                 <ul className="menu">
                     <li>
-                        <Link to={{
-                            pathname: '/home/',
-                            curr_user_id: this.state.id
-                        }}>Feed</Link>
+                        <Link to={{ pathname: '/home/' + this.state.id }}>Feed</Link>
                     </li>
                     <li>
-                        <Link to={{
-                            pathname: '/profile/',
-                            curr_user_id: this.state.id
-                        }}>Profile</Link>
+                        <Link to={{ pathname: '/profile/' + this.state.id }}>Profile</Link>
                     </li>
                     <li>
-                        <Link to={{
-                            pathname: '/search/',
-                            curr_user_id: this.state.id
-                        }}>Search</Link>
+                        <Link to={{ pathname: '/search/' + this.state.id }}>Search</Link>
                     </li>
                     <li>
-                        <Link to={{
-                            pathname: '/',
-                            curr_user_id: this.state.id
-                        }}>Logout</Link>
+                        <Link to={{ pathname: '/' }}>Logout</Link>
                     </li>
                 </ul>
             </header>
-            <div id="spacer"/>
+            <div id="spacer" />
         </>
     }
 }

@@ -11,7 +11,7 @@ export default class ProfilePage extends React.Component {
     {
         super(props)
         this.state = {
-            id:'',
+            id:this.props.match.params.id,
             name: '',
             email: '',
             password: '',
@@ -23,11 +23,14 @@ export default class ProfilePage extends React.Component {
     goPostPage = e => {
         this.setState({postPage: true});
     }
+    componentDidMount(){
+        console.log("Profile Settings mounted, user id: " + this.props.match.params.id);
+    }
 
     render() {
         return (
             <>
-                <NavBar id={this.props.match.params.id}/>
+                <NavBar id={this.state.id}/>
                 {/* <div className = "container boostrap-snippet header-container"> */}
                 <div className="container">
                     <div className = "bg-white">

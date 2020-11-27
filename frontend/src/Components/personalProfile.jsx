@@ -35,10 +35,10 @@ export class PersonalProfile extends React.Component {
         super(props)
         this.checkEsc = this.checkEsc.bind(this);
         this.state = {
-            user_id: this.props.location.curr_user_id,
-            username: this.props.location.username,
-            email: this.props.location.email,
-            password: this.props.location.password,
+            user_id: this.props.match.params.id,
+            username: "",
+            email: "",
+            password: "",
             postForm: false,
             origin: "",
             destination: "",
@@ -190,7 +190,7 @@ export class PersonalProfile extends React.Component {
     }
     componentDidMount() {
         document.addEventListener("keydown", this.checkEsc, false);
-        console.log("PersonalProfile mounted, user id: " + this.props.location.curr_user_id);
+        console.log("PersonalProfile mounted, user id: " + this.props.match.params.id);
     }
 
     render() {
@@ -217,7 +217,7 @@ export class PersonalProfile extends React.Component {
                             </li>
                             <li className="nav-item">
                             <a onClick = {this.goSettingsPage} className="nav-link py-4" href="#"><img src = "https://icon-library.net/images/white-gear-icon-png/white-gear-icon-png-13.jpg" id = "gearIcon"/></a>
-                            {this.state.settingsPage && <Redirect to={"/settings"}/>}
+                            {this.state.settingsPage && <Redirect to={'/settings/'+this.state.user_id}/>}
                             </li>
                         </ul>
                     </div>
