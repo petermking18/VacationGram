@@ -43,6 +43,8 @@ export default class Saved extends React.Component {
             posts: this.dummyPosts,
             postPage: false,
             settingsPage: false,
+            otherProfileId: null,
+            viewOtherProfile: false,
         }
     }
 
@@ -107,8 +109,8 @@ export default class Saved extends React.Component {
             //unsave in database
             post.curr_user_saved = false;
             this.setState({ modalPostSaved: false });
-            for(let i = 0; i < this.state.posts.length; i++){
-                if(post.id === this.state.posts[i].id) this.state.posts.splice(i,1);
+            for (let i = 0; i < this.state.posts.length; i++) {
+                if (post.id === this.state.posts[i].id) this.state.posts.splice(i, 1);
             }
         } else {
             //save in database
@@ -122,8 +124,9 @@ export default class Saved extends React.Component {
             }
         }
     }
-    openOtherProfile() {
-
+    openOtherProfile = (user_id) => {
+        console.log("Should open other profile now: " + user_id);
+        this.setState({ otherProfileId: user_id, viewOtherProfile: true });
     }
     onCommentDeletion = (postid, comments) => {
         var postsArr = this.state.posts;
@@ -150,13 +153,14 @@ export default class Saved extends React.Component {
         }
     }
     componentDidMount() {
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
         document.addEventListener("keydown", this.checkEsc, false);
         console.log("Saved mounted, user id: " + this.props.match.params.id);
     }
 
     render() {
         return <>
+            {this.state.viewOtherProfile && <Redirect to={'/otherprofile/' + this.state.user_id + '/' + this.state.otherProfileId} />}
             <NavBar id={this.state.user_id} />
             <div className="container boostrap-snippet header-container">
                 <div className="bg-white">
