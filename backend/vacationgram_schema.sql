@@ -37,12 +37,12 @@ CREATE TABLE IF NOT EXISTS `db`.`user` (
     UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
     UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE,
     UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE
-  ) ENGINE = InnoDB AUTO_INCREMENT = 10 DEFAULT CHARACTER SET = utf8;
+  ) ENGINE = InnoDB AUTO_INCREMENT = 32 DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
-  -- Table `db`.`lkp_trip_sentiment`
+  -- Table `db`.`lkp_trip_reaction`
   -- -----------------------------------------------------
-  DROP TABLE IF EXISTS `db`.`lkp_trip_sentiment`;
-CREATE TABLE IF NOT EXISTS `db`.`lkp_trip_sentiment` (
+  DROP TABLE IF EXISTS `db`.`lkp_trip_reaction`;
+CREATE TABLE IF NOT EXISTS `db`.`lkp_trip_reaction` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(45) NOT NULL,
     PRIMARY KEY (`id`),
@@ -62,17 +62,17 @@ CREATE TABLE IF NOT EXISTS `db`.`trip` (
     `origin` VARCHAR(45) NULL DEFAULT NULL,
     `destination` VARCHAR(45) NOT NULL,
     `rating` INT NOT NULL,
-    `sentiment_id` INT NULL DEFAULT NULL,
+    `reaction_id` INT NULL DEFAULT NULL,
     `is_public` BIT(1) NOT NULL DEFAULT b '1',
     `date_created` DATETIME NOT NULL,
     `date_last_updated` DATETIME NULL DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
     INDEX `user_id_idx` (`user_id` ASC) VISIBLE,
-    INDEX `sentiment_id_idx` (`sentiment_id` ASC) VISIBLE,
-    CONSTRAINT `fk_user_trip_id` FOREIGN KEY (`user_id`) REFERENCES `db`.`user` (`id`),
-    CONSTRAINT `sentiment_id` FOREIGN KEY (`sentiment_id`) REFERENCES `db`.`lkp_trip_sentiment` (`id`)
-  ) ENGINE = InnoDB AUTO_INCREMENT = 3 DEFAULT CHARACTER SET = utf8;
+    INDEX `sentiment_id_idx` (`reaction_id` ASC) VISIBLE,
+    CONSTRAINT `fk_user_trip_id` FOREIGN KEY (`user_id`) REFERENCES `db`.`user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `reaction_id` FOREIGN KEY (`reaction_id`) REFERENCES `db`.`lkp_trip_reaction` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  ) ENGINE = InnoDB AUTO_INCREMENT = 13 DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
   -- Table `db`.`comment`
   -- -----------------------------------------------------
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `db`.`comment` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `trip_id` INT NOT NULL,
     `user_id` INT NOT NULL,
-    `parent_comment_id` INT NULL COMMENT 'parent comment id, if null it is root comment\\\\\\\\\\\\\\\\n\\\\\\\\\\\\\\\\nused for replies',
+    `parent_comment_id` INT NULL DEFAULT NULL COMMENT 'parent comment id, if null it is root comment\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\n\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\nused for replies',
     `is_question` BIT(1) NOT NULL DEFAULT b '0',
     `date_created` DATETIME NOT NULL,
     `body` VARCHAR(240) NOT NULL,
@@ -90,10 +90,10 @@ CREATE TABLE IF NOT EXISTS `db`.`comment` (
     INDEX `trip_id_idx` (`trip_id` ASC) VISIBLE,
     INDEX `user_id_idx` (`user_id` ASC) VISIBLE,
     INDEX `parent_id_idx` (`parent_comment_id` ASC) VISIBLE,
-    CONSTRAINT `fk_trip_comment_id` FOREIGN KEY (`trip_id`) REFERENCES `db`.`trip` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    CONSTRAINT `fk_user_comment_id` FOREIGN KEY (`user_id`) REFERENCES `db`.`user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    CONSTRAINT `fk_parent_comment_id` FOREIGN KEY (`parent_comment_id`) REFERENCES `db`.`comment` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-  ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
+    CONSTRAINT `fk_parent_comment_id` FOREIGN KEY (`parent_comment_id`) REFERENCES `db`.`comment` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `fk_trip_comment_id` FOREIGN KEY (`trip_id`) REFERENCES `db`.`trip` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `fk_user_comment_id` FOREIGN KEY (`user_id`) REFERENCES `db`.`user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  ) ENGINE = InnoDB AUTO_INCREMENT = 14 DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
   -- Table `db`.`like_on_comment`
   -- -----------------------------------------------------
@@ -107,8 +107,8 @@ CREATE TABLE IF NOT EXISTS `db`.`like_on_comment` (
     UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
     INDEX `comment_id_idx` (`comment_id` ASC) VISIBLE,
     INDEX `liked_by_user_id_idx` (`liked_by_user_id` ASC) VISIBLE,
-    CONSTRAINT `fk_comment_like_on_comment_id` FOREIGN KEY (`comment_id`) REFERENCES `db`.`comment` (`id`),
-    CONSTRAINT `liked_by_user_id` FOREIGN KEY (`liked_by_user_id`) REFERENCES `db`.`user` (`id`)
+    CONSTRAINT `fk_comment_like_on_comment_id` FOREIGN KEY (`comment_id`) REFERENCES `db`.`comment` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `liked_by_user_id` FOREIGN KEY (`liked_by_user_id`) REFERENCES `db`.`user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
   ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
   -- Table `db`.`like_on_trip`
@@ -122,9 +122,9 @@ CREATE TABLE IF NOT EXISTS `db`.`like_on_trip` (
     UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
     INDEX `liked_by_user_idx` (`liked_by_user` ASC) VISIBLE,
     INDEX `trip_id_idx` (`trip_id` ASC) VISIBLE,
-    CONSTRAINT `fk_trip_like_on_trip_id` FOREIGN KEY (`trip_id`) REFERENCES `db`.`trip` (`id`),
-    CONSTRAINT `liked_by_user` FOREIGN KEY (`liked_by_user`) REFERENCES `db`.`user` (`id`)
-  ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
+    CONSTRAINT `fk_trip_like_on_trip_id` FOREIGN KEY (`trip_id`) REFERENCES `db`.`trip` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `liked_by_user` FOREIGN KEY (`liked_by_user`) REFERENCES `db`.`user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  ) ENGINE = InnoDB AUTO_INCREMENT = 2 DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
   -- Table `db`.`user_saved_trip`
   -- -----------------------------------------------------
@@ -138,8 +138,8 @@ CREATE TABLE IF NOT EXISTS `db`.`user_saved_trip` (
     UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
     INDEX `trip_id_idx` (`trip_id` ASC) VISIBLE,
     INDEX `saved_by_user_id_idx` (`saved_by_user_id` ASC) VISIBLE,
-    CONSTRAINT `fk_trip_user_saved_id` FOREIGN KEY (`trip_id`) REFERENCES `db`.`trip` (`id`),
-    CONSTRAINT `saved_by_user_id` FOREIGN KEY (`saved_by_user_id`) REFERENCES `db`.`user` (`id`)
+    CONSTRAINT `fk_trip_user_saved_id` FOREIGN KEY (`trip_id`) REFERENCES `db`.`trip` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `saved_by_user_id` FOREIGN KEY (`saved_by_user_id`) REFERENCES `db`.`user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
   ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
 SET
   SQL_MODE = @OLD_SQL_MODE;

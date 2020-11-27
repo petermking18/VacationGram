@@ -8,8 +8,9 @@ const HOST = "0.0.0.0";
 app.listen(PORT, HOST);
 console.log("API server started on: " + PORT);
 
-app.use(bodyParser.urlencoded({
-    extended: true
+app.use(bodyParser.urlencoded(
+{
+  extended: true
 }));
 app.use(bodyParser.json());
 
