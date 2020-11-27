@@ -29,7 +29,7 @@ module.exports = function(app)
   app.route("/api/trip").get(tripController.get_trips);
   app.route("/api/trip").post(tripController.create_trip);
   app.route("/api/trip/:id/likes").get(tripController.get_likes);
-  app.route("/api/trip/:id/liked_by/:userId").get(tripController.did_user_like);
+  app.route("/api/trip/:id/likes/:userId").get(tripController.did_user_like);
 
   // COMMENT
   app.route("/api/trip/:id/comments").get(commentController.get_comments);
