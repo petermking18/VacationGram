@@ -23,7 +23,6 @@ class Login extends React.Component {
                 this.setState({ authenticated: false });
             }
         });
-
     }
     registerUser = e => {
         this.setState({ register: true });
