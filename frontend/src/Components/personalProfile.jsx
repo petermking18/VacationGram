@@ -218,11 +218,11 @@ export class PersonalProfile extends React.Component {
                             <a className="nav-link py-4 active"><img src = "https://cdn.icon-icons.com/icons2/1875/PNG/512/imagegallery_120168.png" id = "galleryIcon"/></a>
                             </li>
                             <li className="nav-item">
-                            <a onClick={this.goSavedPage} className="nav-link py-4"><img src = "https://www.flaticon.com/svg/static/icons/svg/84/84510.svg" id = "bookMarkIcon"/></a>
+                            <a onClick={this.goSavedPage} className="nav-link py-4"><img src = /*"https://www.flaticon.com/svg/static/icons/svg/84/84510.svg"*/"https://cdn4.iconfinder.com/data/icons/web-ui-ux/32/072-Bookmark-512.png" id = "bookMarkIcon"/></a>
                             {this.state.savedPage && <Redirect to={'/saved/'+this.state.user_id}/>}
                             </li>
                             <li className="nav-item">
-                            <a onClick = {this.goSettingsPage} className="nav-link py-4"><img src = "https://icon-library.net/images/white-gear-icon-png/white-gear-icon-png-13.jpg" id = "gearIcon"/></a>
+                            <a onClick = {this.goSettingsPage} className="nav-link py-4"><img src = /*"https://icon-library.net/images/white-gear-icon-png/white-gear-icon-png-13.jpg"*/"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQVNTFXkwjZn4yoPDOY3BR8LJ87HErI7YuYQ&usqp=CAU" id = "gearIcon"/></a>
                             {this.state.settingsPage && <Redirect to={'/settings/'+this.state.user_id}/>}
                             </li>
                         </ul>

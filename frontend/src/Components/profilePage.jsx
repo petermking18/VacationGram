@@ -53,11 +53,11 @@ export default class ProfilePage extends React.Component {
                             {this.state.postPage && <Redirect to={"/profile/" + this.state.id}/>}
                             </li>
                             <li className="nav-item">
-                            <a onClick={this.goSavedPage} className="nav-link py-4"><img src = "https://www.flaticon.com/svg/static/icons/svg/84/84510.svg" id="bookMarkIcon" alt="Saved"/></a>
+                            <a onClick={this.goSavedPage} className="nav-link py-4"><img src = "https://cdn4.iconfinder.com/data/icons/web-ui-ux/32/072-Bookmark-512.png" id="bookMarkIcon" alt="Saved"/></a>
                             {this.state.savedPage && <Redirect to={'/saved/'+this.state.id}/>}
                             </li>
                             <li className="nav-item">
-                            <a className="nav-link py-4 active"><img src = "https://icon-library.net/images/white-gear-icon-png/white-gear-icon-png-13.jpg" id = "gearIcon" alt="Settings"/></a>
+                            <a className="nav-link py-4 active"><img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQVNTFXkwjZn4yoPDOY3BR8LJ87HErI7YuYQ&usqp=CAU" id = "gearIcon" alt="Settings"/></a>
                             </li>
                         </ul>
                     </div>

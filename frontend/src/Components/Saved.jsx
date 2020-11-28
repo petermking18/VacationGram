@@ -179,10 +179,10 @@ export default class Saved extends React.Component {
                             {this.state.postPage && <Redirect to={'/profile/' + this.state.user_id} />}
                         </li>
                         <li className="nav-item">
-                            <a onClick={this.goSavedPage} className="nav-link py-4 active"><img src="https://www.flaticon.com/svg/static/icons/svg/84/84510.svg" id="bookMarkIcon" /></a>
+                            <a onClick={this.goSavedPage} className="nav-link py-4 active"><img src="https://cdn4.iconfinder.com/data/icons/web-ui-ux/32/072-Bookmark-512.png" id="bookMarkIcon" /></a>
                         </li>
                         <li className="nav-item">
-                            <a onClick={this.goSettingsPage} className="nav-link py-4"><img src="https://icon-library.net/images/white-gear-icon-png/white-gear-icon-png-13.jpg" id="gearIcon" /></a>
+                            <a onClick={this.goSettingsPage} className="nav-link py-4"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQVNTFXkwjZn4yoPDOY3BR8LJ87HErI7YuYQ&usqp=CAU" id="gearIcon" /></a>
                             {this.state.settingsPage && <Redirect to={'/settings/' + this.state.user_id} />}
                         </li>
                     </ul>
