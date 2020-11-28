@@ -23,7 +23,7 @@ export class Home extends React.Component {
     dummyPost1 = new post_card(1, 2, "Mark Fontenot", "Nov 9 2020",
         "Dallas", "Hawaii", "https://lp-cms-production.imgix.net/2019-06/c05b829af5ee38ab1917f335d937f8e1-hawaii.jpg?auto=compress&fit=crop&fm=auto&sharp=10&vib=20&w=1200",
         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        "$$$", "happy", "4 stars", [this.dummyComment1,this.dummyComment2], true, 12, false);
+        "$$$", "happy", "4 stars", [this.dummyComment1, this.dummyComment2], true, 12, false);
     dummyPost2 = new post_card(2, 1, "Peter King", "Nov 10 2020",
         "Texas", "Washington, DC", "https://dcist.com/wp-content/uploads/sites/3/2020/07/washington-monument-5266903_1920-1500x1000.jpg",
         "I walked around the National Mall and saw some cool buildings!",
@@ -167,7 +167,7 @@ export class Home extends React.Component {
     }
     openOtherProfile = (user_id) => {
         console.log("Should open other profile now: " + user_id);
-        this.setState({otherProfileId: user_id, viewOtherProfile: true});
+        this.setState({ otherProfileId: user_id, viewOtherProfile: true });
     }
     checkEsc(event) {
         if (event.keyCode === 27) {
@@ -185,15 +185,15 @@ export class Home extends React.Component {
     }
     onCommentDeletion = (postid, comments) => {
         var postsArr = this.state.posts;
-        for(let p = 0; p < postsArr.length; p++){//find the post
-            if(postsArr[p].id === postid){
+        for (let p = 0; p < postsArr.length; p++) {//find the post
+            if (postsArr[p].id === postid) {
                 postsArr[p].comments = comments;
             }
         }
-        this.setState({posts: postsArr});
+        this.setState({ posts: postsArr });
     }
     componentDidMount() {
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
         document.addEventListener("keydown", this.checkEsc, false);
         console.log("Home mounted, user id: " + this.state.user_id);
     }
@@ -201,13 +201,13 @@ export class Home extends React.Component {
     render() {
         return (
             <>
-                {this.state.viewOtherProfile && <Redirect to={'/otherprofile/'+this.state.user_id+'/'+this.state.otherProfileId}/>}
+                {this.state.viewOtherProfile && <Redirect to={'/otherprofile/' + this.state.user_id + '/' + this.state.otherProfileId} />}
                 <NavBar id={this.state.user_id} />
                 <button id="newpostbutton" type="button" onClick={e => this.postFormOpen(e)}>
                     New Post
                 </button>
-                <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton}/>
-                <div id="bottomspacer"/>
+                <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} />
+                <div id="bottomspacer" />
                 <PostForm show={this.state.postForm} handleClose={e => this.postFormClose(e)}>
                     <div className="pt-4" id="modalcontainer">
                         <h2>Make a Post</h2>
@@ -311,7 +311,7 @@ export class Home extends React.Component {
                                 </button>
                             </div>
                         </div>
-                        <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.user_id} poster_id={this.state.modalPost.user_id} post_id={this.state.modalPost.post_id} handleDeletion={this.onCommentDeletion}/>
+                        <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.user_id} poster_id={this.state.modalPost.user_id} post_id={this.state.modalPost.post_id} handleDeletion={this.onCommentDeletion} />
                         <form className="row mt-0 ml-0 pl-0" name="newCommentForm">
                             <div className="ml-0 pl-0" id="newcommenttextarea">
                                 <textarea name="newCommentTA" type="text" className="form-control mb-3" placeholder="add a comment" id="newcomment"
