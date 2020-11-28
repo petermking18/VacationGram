@@ -1,3 +1,5 @@
+**MUST USE NODE VERSION 15.2.1 & NPM VERSION 7.0.8**
+
 ## VacationGram
 A simple vacation sharing social website to document and discover new trips around the globe.
 
