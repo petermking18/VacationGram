@@ -1,0 +1,23 @@
+#commentListDiv{
+    padding-right: 1rem;
+    max-height: 215px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-radius: .25rem;
+}
+
+#likecomment{
+    border-radius: 3rem;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+#deletecomment{
+    border-radius: 3rem;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+#numlikesoncomment p{
+    display: inline;
+}

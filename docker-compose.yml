@@ -29,7 +29,7 @@ services:
     restart: always
     # working directory in container to place files
     working_dir: /usr/src/app
-    # startup command 
+    # startup command
     command: bash -c "yarn start"
     # map code volumes from local to inside working directory, changes made locally will update into the container
     volumes:

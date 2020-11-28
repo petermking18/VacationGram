@@ -1,0 +1,71 @@
+#backdiv{
+    filter: blur(4px);
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    margin-top: 0;
+    margin-left: 0;
+    backdrop-filter: blur(5px);
+    background-color: rgba(150,150,150,0.25);
+}
+
+#postformdiv{
+    backdrop-filter: blur(10px);
+    background: white;
+    width: 95vw;
+    height: 85vh;
+    /* margin-top: auto; */
+    margin-top: 5vh;
+    margin-bottom: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 1rem;
+    padding-left: 2rem;
+    padding-right: 1rem;
+    /* min-height: 800px; */
+    overflow-y: auto;/**/
+    overflow-x: hidden;
+    max-width: 400px;
+    max-height: 575px;
+}
+
+#closeModalButton{
+    color: gray;
+    background: white;
+    border-radius: .75rem;
+    font-size: 2rem;
+    padding-top: 0;
+    padding-bottom: 0;
+    border: none;
+    margin-top: 0;
+}
+
+#newpostform{
+    margin-top: 1rem;
+    padding-left: 0;
+}
+
+#postButton{
+    color: white;
+    background: royalblue;
+    margin-top: 2rem;
+    font-size: 1.25rem;
+    padding-top: .2rem;
+    padding-bottom: .2rem;
+    margin-left: 40%;
+    margin-bottom: 2rem;
+}
+
+#text{
+    resize: none;
+}
+
+#postlink p{
+    color: #212529;
+}
+#postlink:hover{text-decoration: none;}
+
+#postheader{
+    cursor: pointer;
+}

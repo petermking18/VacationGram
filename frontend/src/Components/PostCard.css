@@ -1,0 +1,43 @@
+#origindest{
+    font-size: 1.25rem;
+}
+
+#postcardimgcol{
+    display: block;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+#postcardimg{
+    width: 153px;
+    border-radius: .3rem;
+    display: block;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+#likebutton{ 
+    color: white;
+    background: royalblue;
+    border-radius: 3rem;
+}
+
+#commentbutton{
+    color: white;
+    background: royalblue;
+    border-radius: 3rem;
+}
+
+#savebutton{
+    color: white;
+    background: royalblue;
+    border-radius: 3rem;
+}
+
+#numcomments:hover{
+    cursor: pointer;
+}
+
+#numlikes:hover{
+    cursor: pointer;
+}

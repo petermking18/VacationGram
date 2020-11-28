@@ -1,13 +1,8 @@
-# Here we set up the build for the REACT.JS container
-# We simply set the working directory within docker and also expose the port to our API, 3000
-# Docker compose handles all the cross platform persistence via volumes so we don't need to worry about
-#   copying over any of the actual code files for the frontend.
-
-# We are using node version 14
-FROM node:14
+# We are using node version 8
+FROM node:12
 
 # Set the working directory within docker image
 WORKDIR /usr/src/app
 
-# expose port 3000
+# expose port 8000
 EXPOSE 3000
