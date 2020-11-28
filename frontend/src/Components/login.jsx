@@ -12,11 +12,11 @@ class Login extends React.Component {
 
     onLogin() {
         this.apiClient.login(this.state.email, this.state.password).then(user => {
-            console.log(user.id)
-            if (user.id !== undefined) {
+            console.log(user.info[0].id)
+            if (user.info[0].id !== undefined) {
                 this.setState({ authenticated: true });
-                console.log(user);
-                this.setState({ id: user.id });
+                console.log(user.info[0]);
+                this.setState({ id: user.info[0].id });
             }
             else {
                 this.setState({ authenticated: false });

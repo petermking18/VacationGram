@@ -28,7 +28,7 @@ export class VacationGramAPIClient
             "password": password,
           }
         )
-        .then(response => alert(response.data))
+        .then(response => resolve(response.data))
         .catch(error => alert(error));
     });
   }
