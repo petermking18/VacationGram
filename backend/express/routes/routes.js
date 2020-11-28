@@ -19,7 +19,7 @@ module.exports = function(app)
   app.route("/api/users/:id").get(userController.get_user);
   app.route("/api/users/:id").delete(userController.delete_user);
   app.route("/api/users/:id/trips").get(userController.get_trips);
-  app.route("/api/login").get(userController.login_user);
+  app.route("/api/login").post(userController.login_user);
 
   // SAVED TRIPS
   app.route("/api/users/:id/saved").get(savedTripController.get_saved_trips);

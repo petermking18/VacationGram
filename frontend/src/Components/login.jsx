@@ -73,7 +73,7 @@ class Login extends React.Component {
                     <button className="btn btn-primary btn-lg btn-block" type="button">Register</button>
                 </Link>
             </div>
-            <Link to={'/home/'+this.state.id}>Skip to Home</Link>
+            <Link to={'/home/' + this.state.id}>Skip to Home</Link>
         </>;
     }
 
