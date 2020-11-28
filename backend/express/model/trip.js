@@ -12,7 +12,7 @@ var Trip = function(trip)
   this.origin = trip.origin;
   this.price = trip.price;
   this.rating = trip.rating;
-  this.sentiment_id = trip.sentiment_id;
+  this.reaction_id = trip.reaction_id;
   this.title = trip.title;
   this.user_id = trip.user_id;
 };
@@ -40,18 +40,24 @@ exports.create_trip = function(req, res)
 
       function(sqlErr, sqlRes)
       {
-        if (sqlErr)
+        if (sql.isSuccessfulQuery(sqlErr, res))
         {
-          sql.respondSqlError(sqlErr, res);
-        }
-        else
-        {
-          res.status(200).send(
-          {
-            success: true,
-            response: "Successfully created trip",
-            info: sqlRes.insertId,
-          })
+          sql.connection.query(
+            "SELECT * FROM `trip` WHERE `id` = ?;",
+            sqlRes.insertId,
+            function(subErr, subRes)
+            {
+              if (sql.isSuccessfulQuery(subErr, res))
+              {
+                res.status(200).send(
+                {
+                  success: true,
+                  response: "Successfully created trip",
+                  info: subRes,
+                });
+              }
+            }
+          );
         }
       }
     );
@@ -65,21 +71,78 @@ exports.get_trips = function(req, res)
     null,
     function(sqlErr, sqlRes)
     {
-      if (sqlErr)
-      {
-        sql.respondSqlError(sqlErr, res);
-      }
-      else
+      if (sql.isSuccessfulQuery(sqlErr, res))
       {
         res.status(200).send(
         {
           success: true,
+          count: Object.keys(sqlRes).length,
           info: sqlRes,
         });
       }
     }
   );
 };
+
+exports.get_trip = function(req, res)
+{
+  sql.connection.query(
+    "SELECT * FROM `trip` WHERE `id` = ?;",
+    req.params.id,
+    function(sqlErr, sqlRes)
+    {
+      if (sql.isSuccessfulQuery(sqlErr, res))
+      {
+        if (sqlRes.length <= 0)
+        {
+          res.status(200).send(
+          {
+            success: false,
+            response: "Couldn't find trip " + req.params.id,
+          });
+        }
+        else
+        {
+          res.status(200).send(
+          {
+            success: true,
+            info: sqlRes,
+          });
+        }
+      }
+    }
+  );
+};
+
+exports.delete_trip = function(req, res)
+{
+  sql.connection.query(
+    "DELETE FROM `trip` WHERE `id` = ?;",
+    req.params.id,
+    function(sqlErr, sqlRes)
+    {
+      if (sql.isSuccessfulQuery(sqlErr, res))
+      {
+        if (sqlRes.affectedRows == 0)
+        {
+          res.status(200).send(
+          {
+            success: false,
+            response: "Could not find trip " + req.params.id,
+          });
+        }
+        else
+        {
+          res.status(200).send(
+          {
+            success: true,
+            resposne: "Successfully deleted trip",
+          });
+        }
+      }
+    }
+  );
+}
 
 exports.get_likes = function(req, res)
 {
@@ -88,15 +151,12 @@ exports.get_likes = function(req, res)
     req.params.id,
     function(sqlErr, sqlRes)
     {
-      if (sqlErr)
-      {
-        sql.respondSqlError(sqlErr, res);
-      }
-      else
+      if (sql.isSuccessfulQuery(sqlErr, res))
       {
         res.status(200).send(
         {
           success: true,
+          count: Object.keys(sqlRes).length,
           info: sqlRes,
         });
       }
@@ -111,11 +171,7 @@ exports.did_user_like = function(req, res)
     [req.params.id, req.params.userId],
     function(sqlErr, sqlRes)
     {
-      if (sqlErr)
-      {
-        sql.respondSqlError(sqlErr, res);
-      }
-      else
+      if (sql.isSuccessfulQuery(sqlErr, res))
       {
         res.status(200).send(
         {

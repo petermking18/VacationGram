@@ -71,14 +71,21 @@ exports.propertyCheck = function(req, res, propertyNameList)
   return success;
 };
 
-exports.respondSqlError = function(sqlErr, res)
+exports.isSuccessfulQuery = function(sqlErr, res)
 {
-  res.status(400).send(
+  if (sqlErr)
   {
-    success: false,
-    response: sqlErr.sqlMessage,
-    info: sqlErr,
-  });
+    res.status(400).send(
+    {
+      success: false,
+      response: sqlErr.sqlMessage,
+      info: sqlErr,
+    });
+
+    return false;
+  }
+
+  return true;
 };
 
 exports.connection = connection;

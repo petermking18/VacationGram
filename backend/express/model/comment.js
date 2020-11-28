@@ -5,7 +5,6 @@ var Comment = function(comment)
 {
   this.date_created = comment.date_created;
   this.id = comment.id;
-  this.is_question = comment.is_question;
   this.parent_comment_id = comment.parent_comment_id;
   this.trip_id = comment.trip_id;
   this.user_id = comment.user_id;
@@ -25,18 +24,25 @@ exports.create_comment = function(req, res)
       newComment,
       function(sqlErr, sqlRes)
       {
-        if (sqlErr)
+        if (sql.isSuccessfulQuery(sqlErr, res))
         {
-          sql.respondSqlError(sqlErr, res);
-        }
-        else
-        {
-          res.status(200).send(
-          {
-            success: true,
-            response: "Successfully created comment",
-            info: sqlRes.insertId,
-          });
+          sql.connection.query(
+            "SELECT * FROM `comment` WHERE `id` = ?;",
+            sqlRes.insertId,
+            function(subErr, subRes)
+            {
+              if (sql.isSuccessfulQuery(subErr, res))
+              {
+                res.status(200).send(
+                {
+                  success: true,
+                  response: "Successfully created comment",
+                  info: subRes,
+                });
+              }
+            }
+          )
+
         }
       }
     );
@@ -60,26 +66,26 @@ exports.get_comments = function(req, res)
       req.params.id,
       function(sqlErr, sqlRes)
       {
-        if (sqlErr)
+        if (sql.isSuccessfulQuery(sqlErr, res))
         {
-          sql.respondSqlError(sqlErr, res);
-        }
-        else if (sqlRes.length <= 0)
-        {
-          res.status(200).send(
+          if (sqlRes.length <= 0)
           {
-            success: false,
-            response: "No commments found for post " + req.params.id,
-          })
-        }
-        else
-        {
-          res.status(200).send(
+            res.status(200).send(
+            {
+              success: false,
+              response: "No commments found for post " + req.params.id,
+            })
+          }
+          else
           {
-            success: true,
-            response: "Successfully found comments for trip " + req.params.id,
-            info: sqlRes,
-          });
+            res.status(200).send(
+            {
+              success: true,
+              response: "Successfully found comments for trip " + req.params.id,
+              count: Object.keys(sqlRes).length,
+              info: sqlRes,
+            });
+          }
         }
       }
     );

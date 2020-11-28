@@ -10,7 +10,6 @@ var User = function(user)
   this.email = user.email;
   this.password = user.password;
   this.date_joined = user.date_joined;
-  this.username = user.username;
 };
 
 exports.get_users = function(req, res)
@@ -20,15 +19,12 @@ exports.get_users = function(req, res)
     null,
     function(sqlErr, sqlRes)
     {
-      if (sqlErr)
-      {
-        sql.respondSqlError(sqlErr, res);
-      }
-      else
+      if (sql.isSuccessfulQuery(sqlErr, res))
       {
         res.status(200).send(
         {
           success: true,
+          count: Object.keys(sqlRes).length,
           info: sqlRes,
         });
       }
@@ -38,7 +34,7 @@ exports.get_users = function(req, res)
 
 exports.create_user = function(req, res)
 {
-  if (sql.propertyCheck(req, res, ["name", "email", "password", "username"]))
+  if (sql.propertyCheck(req, res, ["name", "email", "password"]))
   {
     var newUser = new User(req.body);
     newUser.date_joined = new Date();
@@ -48,18 +44,24 @@ exports.create_user = function(req, res)
       newUser,
       function(sqlErr, sqlRes)
       {
-        if (sqlErr)
+        if (sql.isSuccessfulQuery(sqlErr, res))
         {
-          sql.respondSqlError(sqlErr, res);
-        }
-        else
-        {
-          res.status(200).send(
-          {
-            success: true,
-            response: "Succesfully created user",
-            info: sqlRes.insertId,
-          });
+          sql.connection.query(
+            "SELECT * FROM `user` WHERE `id` = ?;",
+            sqlRes.insertId,
+            function(subErr, subRes)
+            {
+              if (sql.isSuccessfulQuery(subErr, res))
+              {
+                res.status(200).send(
+                {
+                  success: true,
+                  response: "Succesfully created user",
+                  info: subRes,
+                });
+              }
+            }
+          );
         }
       }
     );
@@ -77,11 +79,7 @@ exports.login_user = function(req, res)
       loginUser.email,
       function(sqlErr, sqlRes)
       {
-        if (sqlErr)
-        {
-          sql.respondSqlError(sqlErr, res);
-        }
-        else
+        if (sql.isSuccessfulQuery(sqlErr, res))
         {
           if (!Object.keys(sqlRes).length)
           {
@@ -134,26 +132,25 @@ exports.get_user = function(req, res)
       req.params.id,
       function(sqlErr, sqlRes)
       {
-        if (sqlErr)
+        if (sql.isSuccessfulQuery(sqlErr, res))
         {
-          sql.respondSqlError(sqlErr, res);
-        }
-        else if (sqlRes.length <= 0)
-        {
-          res.status(200).send(
+          if (sqlRes.length <= 0)
           {
-            success: false,
-            response: "Couldn't find user " + req.params.id,
-          });
-        }
-        else
-        {
-          res.status(200).send(
+            res.status(200).send(
+            {
+              success: false,
+              response: "Couldn't find user " + req.params.id,
+            });
+          }
+          else
           {
-            success: true,
-            response: "Successfully found user " + req.params.id,
-            info: sqlRes,
-          });
+            res.status(200).send(
+            {
+              success: true,
+              response: "Successfully found user " + req.params.id,
+              info: sqlRes,
+            });
+          }
         }
       }
     );
@@ -173,30 +170,29 @@ exports.delete_user = function(req, res)
   else
   {
     sql.connection.query(
-      "DELETE FROM `user` WHERE id = ?;",
+      "DELETE FROM `user` WHERE `id` = ?;",
       req.params.id,
       function(sqlErr, sqlRes)
       {
-        if (sqlErr)
+        if (sql.isSuccessfulQuery(sqlErr, res))
         {
-          sql.respondSqlError(sqlErr, res);
-        }
-        else if (sqlRes.affectedRows == 0)
-        {
-          res.status(200).send(
+          if (sqlRes.affectedRows == 0)
           {
-            success: false,
-            response: "No user with id " + req.params.id + " found, nothing deleted",
-          });
-        }
-        else
-        {
-          res.status(200).send(
+            res.status(200).send(
+            {
+              success: false,
+              response: "No user with id " + req.params.id + " found, nothing deleted",
+            });
+          }
+          else
           {
-            success: true,
-            response: "Successfully deleted user",
-            info: sqlRes,
-          });
+            res.status(200).send(
+            {
+              success: true,
+              response: "Successfully deleted user",
+              info: sqlRes,
+            });
+          }
         }
       }
     );
@@ -210,63 +206,15 @@ exports.get_trips = function(req, res)
     req.params.id,
     function(sqlErr, sqlRes)
     {
-      if (sqlErr)
-      {
-        sql.respondSqlError(sqlErr, res);
-      }
-      else
+      if (sql.isSuccessfulQuery(sqlErr, res))
       {
         res.status(200).send(
         {
           success: true,
+          count: Object.keys(sqlRes).length,
           info: sqlRes,
         });
       }
     }
   );
 };
-
-exports.get_saved_trips = function(req, res)
-{
-  sql.connection.query(
-    "SELECT * FROM `user_saved_trip` WHERE saved_by_user_id = ?;"
-    req.params.id,
-    function(sqlErr, sqlRes)
-    {
-      if (sqlErr)
-      {
-        sql.respondSqlError(sqlErr, sqlRes);
-      }
-      else
-      {
-        res.status(200).send(
-        {
-          success: true,
-          info: sqlRes,
-        });
-      }
-    }
-  );
-};
-
-exports.did_save_trip = function(req, res)
-{
-  sql.connection.query(
-    "SELECT * FROM `user_saved_trip` WHERE saved_by_user_id = ? AND trip_id = ?;" [req.params.id, req.params.tripId],
-    function(sqlErr, sqlRes)
-    {
-      if (sqlErr)
-      {
-        sql.respondSqlError(sqlErr, sqlRes);
-      }
-      else
-      {
-        res.status(200).send(
-        {
-          success: true,
-          did_save: sqlRes.length > 0,
-        });
-      }
-    }
-  );
-}
