@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export class TravelGramRepo
+export class VacationGramAPIClient
 {
 
   url = 'http://localhost:8000/api'
