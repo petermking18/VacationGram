@@ -8,6 +8,7 @@
 -    search use params, default pass
         
 ### DONE
+-    pluralize routes
 -    count response amount for returning all trips, likes, users, comments
 -    for responses on post, need to return full updated information
 -    remove username field, keep only name
