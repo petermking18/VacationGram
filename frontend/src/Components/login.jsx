@@ -2,17 +2,16 @@ import React from 'react';
 import './login.css'
 import { Redirect, Link } from 'react-router-dom';
 import logo from './logo.png';
-import { TravelGramRepo } from '../Api/TravelGramRepo';
+import { VacationGramAPIClient } from '../Api/VacationGramAPIClient';
 import { LoginButton, ErrorMessage } from './loginButton';
 
 
 class Login extends React.Component {
 
-    travelGramRepo = new TravelGramRepo();
+    apiClient = new VacationGramAPIClient();
 
     onLogin() {
-        console.log(this.state.email, this.state.password);
-        this.travelGramRepo.login(this.state.email, this.state.password).then(user => {
+        this.apiClient.login(this.state.email, this.state.password).then(user => {
             console.log(user.id)
             if (user.id !== undefined) {
                 this.setState({ authenticated: true });
@@ -30,10 +29,10 @@ class Login extends React.Component {
     }
 
     state = {
-        id: '34',
-        username: "DummyUser",
-        email: "DummyEmail",
-        password: "DummyPassword",
+        id: '',
+        username: "",
+        email: "",
+        password: "",
         authenticated: null
     };
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { TravelGramRepo } from '../Api/TravelGramRepo';
+import { VacationGramAPIClient } from '../Api/VacationGramAPIClient';
 import NavBar from './NavBar';
 import './search.css';
 import Feed from './Feed';
@@ -17,7 +17,7 @@ const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
 
 export class Search extends React.Component {
 
-    travelGramRepo = new TravelGramRepo();
+    VacationGramAPIClient = new VacationGramAPIClient();
 
     blankPost = new post_card(
         0, 0, "", "", "", "", "", "", "", "", "", [], false, 0, false
@@ -137,7 +137,7 @@ export class Search extends React.Component {
 
     search(username, origin, destination, price, reaction, rating) {
         username = '"' + username + '"';
-        this.travelGramRepo.search(username, origin, destination, price, reaction, rating).then(returnResults => {
+        this.VacationGramAPIClient.search(username, origin, destination, price, reaction, rating).then(returnResults => {
             console.log(returnResults);
             this.setState({ results: returnResults });
         });

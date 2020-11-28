@@ -8,7 +8,7 @@ import { Price } from './Price';
 import CommentList from './CommentList';
 import './Saved.css';
 import Feed from './Feed';
-import { TravelGramRepo } from '../Api/TravelGramRepo';
+import { VacationGramAPIClient } from '../Api/VacationGramAPIClient';
 import PostModal from './PostModal';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -26,7 +26,7 @@ export default class Saved extends React.Component {
     blankPost = new post_card(
         0, 0, "", "", "", "", "", "", "", "", "", [], false, 0, false
     );
-    repo = new TravelGramRepo();
+    repo = new VacationGramAPIClient();
 
     constructor(props) {
         super(props)

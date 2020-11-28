@@ -2,7 +2,7 @@ import React from 'react';
 import './register.css'
 import logo from './logo.png';
 import User from './../models/user';
-import { TravelGramRepo } from './../Api/TravelGramRepo';
+import { VacationGramAPIClient } from './../Api/VacationGramAPIClient';
 import { RegisterButton } from './loginButton';
 import { Redirect } from 'react-router-dom';
 import {LoginButton, RegisterErrorMessage, RegisterErrorMessage2} from './loginButton';
@@ -10,7 +10,7 @@ import {LoginButton, RegisterErrorMessage, RegisterErrorMessage2} from './loginB
 
 export class RegisterPage extends React.Component {
 
-    travelGramRepo = new TravelGramRepo();
+    VacationGramAPIClient = new VacationGramAPIClient();
 
 
     state = {
@@ -31,11 +31,11 @@ export class RegisterPage extends React.Component {
         if(password === confirmPassword)
         {
             this.setState({confirm: true});
-            this.travelGramRepo.searchUser(email)
+            this.VacationGramAPIClient.searchUser(email)
             .then(resp => {
                 if(resp.data.length == 0)
                 {
-                    this.travelGramRepo.addUser(name, email, password)
+                    this.VacationGramAPIClient.addUser(name, email, password)
                     .then(accountId => {new User(accountId, name, email, password, this.state.birthday, this.state.medications, this.state.profilePicUrl)
                         console.log(accountId);
                         this.setState({id: accountId.id}); 

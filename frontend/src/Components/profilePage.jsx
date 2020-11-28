@@ -1,12 +1,12 @@
 import React from 'react';
-import {TravelGramRepo} from '../Api/TravelGramRepo';
+import {VacationGramAPIClient} from '../Api/VacationGramAPIClient';
 import { Redirect } from 'react-router-dom';
 import NavBar from "./NavBar";
 import "./profilePage.css"
 
 ///This page is settings page
 export default class ProfilePage extends React.Component {
-    repo = new TravelGramRepo();
+    repo = new VacationGramAPIClient();
     constructor(props)
     {
         super(props)
