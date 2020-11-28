@@ -1,4 +1,5 @@
 "use strict";
+const { json } = require("body-parser");
 var sql = require("./connection.js");
 
 var Comment = function(comment)
@@ -90,4 +91,34 @@ exports.get_comments = function(req, res)
       }
     );
   }
+}
+
+exports.delete_comment = function(req, res)
+{
+  sql.connection.query(
+    "DELETE FROM `comment` WHERE `trip_id` = ? AND `id` = ?;",
+    [req.params.id, req.params.commentId],
+    function(sqlErr, sqlRes)
+    {
+      if (sql.isSuccessfulQuery(sqlErr, res))
+      {
+        if (sqlRes.affectedRows == 0)
+        {
+          res.status(200).send(
+          {
+            success: false,
+            response: "No trip with id " + req.params.id + " & comment with id " + req.params.commentId + " found, comment not deleted",
+          });
+        }
+        else
+        {
+          res.status(200).send(
+          {
+            success: true,
+            response: "Successfully deleted comment " + req.params.commentId,
+          });
+        }
+      }
+    }
+  );
 }

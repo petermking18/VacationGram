@@ -42,6 +42,7 @@ module.exports = function(app)
   // COMMENT
   app.route("/api/trip/:id/comments").get(commentController.get_comments);
   app.route("/api/trip/:id/comments").post(commentController.create_comment);
+  app.route("/api/trip/:id/comments/:commentId").delete(commentController.delete_comment);
 
   // REACTIONS
   app.route("/api/reaction/:id").get(reactionController.get_reaction_name);
