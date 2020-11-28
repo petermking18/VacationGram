@@ -5,7 +5,8 @@ module.exports = function(app)
   var userController = require("../model/user");
   var tripController = require("../model/trip");
   var commentController = require("../model/comment");
-  var savedTripController = require("../model/user_saved_trip")
+  var savedTripController = require("../model/user_saved_trip");
+  var reactionController = require("../model/reaction");
 
   app.route("/").get(function(req, res)
   {
@@ -34,9 +35,14 @@ module.exports = function(app)
 
   // TRIP LIKES
   app.route("/api/trip/:id/likes").get(tripController.get_likes);
+  app.route("/api/trip/:id/likes").post(tripController.send_like);
   app.route("/api/trip/:id/likes/:userId").get(tripController.did_user_like);
+  app.route("/api/trip/:id/likes/:userId").delete(tripController.remove_like);
 
   // COMMENT
   app.route("/api/trip/:id/comments").get(commentController.get_comments);
   app.route("/api/trip/:id/comments").post(commentController.create_comment);
+
+  // REACTIONS
+  app.route("/api/reaction/:id").get(reactionController.get_reaction_name);
 };

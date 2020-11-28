@@ -136,7 +136,7 @@ exports.delete_trip = function(req, res)
           res.status(200).send(
           {
             success: true,
-            resposne: "Successfully deleted trip",
+            response: "Successfully deleted trip",
           });
         }
       }
@@ -153,21 +153,82 @@ exports.get_likes = function(req, res)
     {
       if (sql.isSuccessfulQuery(sqlErr, res))
       {
+        var idArray = [];
+        for (var i = 0; i < sqlRes.length; i++)
+        {
+          idArray.push(sqlRes[i].liked_by_user);
+        }
+
         res.status(200).send(
         {
           success: true,
           count: Object.keys(sqlRes).length,
-          info: sqlRes,
+          info: idArray,
         });
       }
     }
   );
 };
 
+exports.send_like = function(req, res)
+{
+  if (sql.propertyCheck(req, res, ["user_id"]))
+  {
+    sql.connection.query(
+      "INSERT INTO `like_on_trip` SET ?;",
+      {
+        liked_by_user: req.body.user_id,
+        trip_id: req.params.id,
+      },
+      function(sqlErr, sqlRes)
+      {
+        if (sql.isSuccessfulQuery(sqlErr, res))
+        {
+          res.status(200).send(
+          {
+            success: true,
+            response: "Successfully liked trip",
+          });
+        }
+      }
+    );
+  }
+};
+
+exports.remove_like = function(req, res)
+{
+  sql.connection.query(
+    "DELETE FROM `like_on_trip` WHERE `liked_by_user` = ? AND `trip_id` = ?;",
+    [req.params.userId, req.params.id],
+    function(sqlErr, sqlRes)
+    {
+      if (sql.isSuccessfulQuery(sqlErr, res))
+      {
+        if (sqlRes.affectedRows == 0)
+        {
+          res.status(200).send(
+          {
+            success: false,
+            response: "No trip with id " + req.params.id + " & user with id " + req.params.userId + " found, like not removed",
+          });
+        }
+        else
+        {
+          res.status(200).send(
+          {
+            success: true,
+            response: "Successfully unliked trip",
+          });
+        }
+      }
+    }
+  );
+}
+
 exports.did_user_like = function(req, res)
 {
   sql.connection.query(
-    "SELECT * FROM `like_on_trip` WHERE trip_id = ? AND liked_by_user = ?;",
+    "SELECT * FROM `like_on_trip` WHERE `trip_id` = ? AND `liked_by_user` = ?;",
     [req.params.id, req.params.userId],
     function(sqlErr, sqlRes)
     {
