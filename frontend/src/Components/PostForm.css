@@ -57,6 +57,19 @@
     margin-bottom: 2rem;
 }
 
+#postButtonInactive{
+    background: lightgray;
+    color: gray;
+    margin-top: 2rem;
+    font-size: 1.25rem;
+    padding-top: .2rem;
+    padding-bottom: .2rem;
+    margin-left: 40%;
+    margin-bottom: 2rem;
+    border: none;
+    cursor: not-allowed;
+}
+
 #text{
     resize: none;
 }

@@ -69,6 +69,18 @@ export class Home extends React.Component {
     ratings = ["1 star", "2 stars", "3 stars", "4 stars", "5 stars"];
     reactions = ["fun", "boring", "exciting", "scary"]
 
+    readyToPost(){
+        if(this.state.origin !== ""
+        && this.state.destination !== ""
+        && this.state.text !== ""
+        && this.state.price !== ""
+        && this.state.rating !== ""
+        && this.state.imgurl !== ""
+        && this.state.reaction !== ""){
+            return true;
+        }
+        return false;
+    }
     getPrice(dbPrice){
         return this.prices[dbPrice-1];
     }
@@ -183,7 +195,11 @@ export class Home extends React.Component {
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
     }
+    async postTrip(){
+        //this.apiClient.createTrip(this.state.text, this.state.destination,)
+    }
     onPost() {
+        this.postTrip();
         let dateObj = new Date();
         let date = months[dateObj.getMonth()] + " " + dateObj.getDate() + ", " + dateObj.getFullYear();
         let mypost = new post_card(
@@ -346,7 +362,10 @@ export class Home extends React.Component {
                                     </select>
                                 </div>
                             </div>
-                            <button type="button" className="btn" id="postButton" onClick={() => this.onPost()}>Post</button>
+                            {!this.readyToPost() &&
+                            <button type="button" className="btn btn-secondary" id="postButtonInactive">Post</button>}
+                            {this.readyToPost() &&
+                            <button type="button" className="btn" id="postButton" onClick={() => this.onPost()}>Post</button>}
                         </form>
                     </div>
                 </PostForm>
@@ -401,10 +420,10 @@ export class Home extends React.Component {
                                     onChange={e => this.setState({ newComment: e.target.value })} required />
                             </div>
                             <div className="col text-right">
-                                {this.state.newComment == "" &&
+                                {this.state.newComment === "" &&
                                     <button type="button" className="btn mt-2 mr-4" id="newCommentButtonInactive">Post Comment</button>
                                 }
-                                {this.state.newComment != "" &&
+                                {this.state.newComment !== "" &&
                                     <button type="button" className="btn btn-secondary mt-2 mr-4" id="newCommentButton" onClick={() => this.onNewComment()}>Post Comment</button>
                                 }
                             </div>
