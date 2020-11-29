@@ -37,3 +37,10 @@
 #numcomments:hover,#numlikes:hover{
     cursor: pointer;
 }
+
+#deletePostButton{
+    border-radius: 3rem;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-bottom: 0.1rem;
+}

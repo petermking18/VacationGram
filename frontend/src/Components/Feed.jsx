@@ -8,7 +8,7 @@ const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
 ];
 
 //Props: array posts, func openPost(post), func openProfile(user id), 
-//       func likePost(post), func savePost(post), boolean needsPaddingY
+//       func likePost(post), func savePost(post), func postIsDeletable(poster_id), func deletePost(post_id)
 export default class Feed extends React.Component {
     constructor(props) {
         super(props)
@@ -22,7 +22,8 @@ export default class Feed extends React.Component {
     componentWillReceiveProps(nextProps) {
         this.setState({ posts: nextProps.posts });
     }
-    prettyPrintDate(dbDate){
+
+    prettyPrintDate(dbDate) {
         let date = new Date(dbDate);
         let mydate = months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
         return mydate;
@@ -30,7 +31,7 @@ export default class Feed extends React.Component {
     render() {
         return <>
             <ul className="feed bg-white list-unstyled">
-                {this.state.posts.length === 0 && 
+                {this.state.posts.length === 0 &&
                     <div className="jumbotron text-muted mt-5 text-center">
                         <h2>Loading posts
                             <span>  </span>
@@ -70,12 +71,24 @@ export default class Feed extends React.Component {
                         {/* Middle area: image, text */}
                         <div className="pl-3 py-2">
                             <div className="row py-2">
-                                <div className="col" id="postcardimgcol">
+                                <div className="col-3" id="postcardimgcol">
                                     <img id="postcardimg" src={post.imgurl} alt="Trip" />
                                 </div>
+                                {!this.props.postIsDeletable(post.user_id) && 
                                 <div className="col-9 pl-1 pr-5">
                                     <p>{post.text}</p>
+                                </div>}
+                                {this.props.postIsDeletable(post.user_id) &&
+                                <div className="col-7 pl-1 pr-5">
+                                <p>{post.text}</p>
+                                </div>}
+                                {this.props.postIsDeletable(post.user_id) &&
+                                <div className="clearfix">
+                                    <button type="button" className="btn alert-secondary text-danger px-2 mr-4 mt-1 float-right" id="deletePostButton" onClick={() => this.props.deletePost(post.post_id)}>
+                                        Delete Post
+                                    </button>
                                 </div>
+                            }
                             </div>
                         </div>
                         {/* Bottom area: like button, comment button, save button, numlikes, numcomments */}

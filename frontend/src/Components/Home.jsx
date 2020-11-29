@@ -339,6 +339,24 @@ export class Home extends React.Component {
         }
         this.setState({ posts: postsArr });
     }
+    postIsDeletable = (poster_id) => {
+        if(poster_id == this.state.user_id) return true;
+        return false;
+    }
+    async deleteTrip(post_id){
+        await this.apiClient.deleteTrip(post_id);
+    }
+    deletePost = (post_id) => {
+        this.deleteTrip(post_id);
+        var postsArr = this.state.posts;
+        for(let i = 0; i < postsArr.length; i++){
+            let currPost = postsArr[i];
+            if(currPost.post_id == post_id){
+                postsArr.splice(i, 1);
+            }
+        }
+        this.setState({posts: postsArr});
+    }
     componentDidMount() {
         window.scrollTo(0, 0);
         document.addEventListener("keydown", this.checkEsc, false);
@@ -354,7 +372,7 @@ export class Home extends React.Component {
                 <button id="newpostbutton" type="button" onClick={e => this.postFormOpen(e)}>
                     New Post
                 </button>
-                <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} />
+                <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} postIsDeletable={this.postIsDeletable} deletePost={this.deletePost} />
                 <div id="bottomspacer" />
                 <PostForm show={this.state.postForm} handleClose={e => this.postFormClose(e)}>
                     <div className="pt-4" id="modalcontainer">
