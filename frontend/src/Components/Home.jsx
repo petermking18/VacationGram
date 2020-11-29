@@ -12,6 +12,7 @@ import { Rating } from './Rating';
 import { Price } from './Price';
 import CommentList from './CommentList';
 import { Redirect } from 'react-router-dom';
+import {VacationGramAPIClient} from '../Api/VacationGramAPIClient';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -33,6 +34,8 @@ export class Home extends React.Component {
     blankPost = new post_card(
         0, 0, "", "", "", "", "", "", "", "", "", [], false, 0, false
     );
+
+    apiClient = new VacationGramAPIClient();
 
     constructor(props) {
         super(props)
@@ -69,6 +72,24 @@ export class Home extends React.Component {
     prices = ["$", "$$", "$$$", "$$$$", "$$$$$"];
     ratings = ["1 star", "2 stars", "3 stars", "4 stars", "5 stars"];
     reactions = ["fun", "boring", "exciting", "scary"]
+
+    async loadPosts(){
+        var postsArr = [];
+        await this.apiClient.getAllTrips().then(trips => {
+            for(let t = 0; t < trips.count; t++){
+                var trip = trips.info[t];
+                var post = new post_card(
+                    trip.id, trip.user_id, /*get username*/"null", trip.date_created,
+                    trip.origin, trip.destination, trip.image_url, trip.body,
+                    trip.price, trip.reaction_id, trip.rating, /*get comments*/[], 
+                    /*get curr_user_liked*/false, /*get numlikes*/0,
+                    /*get curr_user_saved*/false
+                );
+                postsArr.push(post);
+            }
+        });
+        this.setState({posts: postsArr});
+    }
 
     postModalOpen = (post) => {
         this.setState({ postModal: true });
@@ -196,6 +217,7 @@ export class Home extends React.Component {
         window.scrollTo(0, 0);
         document.addEventListener("keydown", this.checkEsc, false);
         console.log("Home mounted, user id: " + this.state.user_id);
+        this.loadPosts();
     }
 
     render() {
