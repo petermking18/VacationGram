@@ -5,7 +5,7 @@ import User from './../models/user';
 import { VacationGramAPIClient } from './../Api/VacationGramAPIClient';
 import { RegisterButton } from './loginButton';
 import { Redirect } from 'react-router-dom';
-import {LoginButton, RegisterErrorMessage, RegisterErrorMessage2} from './loginButton';
+import { LoginButton, RegisterErrorMessage, RegisterErrorMessage2 } from './loginButton';
 
 
 export class RegisterPage extends React.Component {
@@ -15,101 +15,116 @@ export class RegisterPage extends React.Component {
 
     state = {
         id: '',
-        name: '',
+        username: '',
         email: '',
         password: '',
         confirmPassword: '',
-        birthday: '',
-        medications: '',
         profilePicUrl: '',
         registered: undefined,
         register2: undefined,
         confirm: null
     };
 
-    registerUser(name, email, password, confirmPassword){
-        if(password === confirmPassword)
-        {
-            this.setState({confirm: true});
+    registerUser(username, email, password, confirmPassword, profilePicUrl) {
+        if (password === confirmPassword) {
+            this.setState({ confirm: true });
             this.VacationGramAPIClient.searchUser(email)
-            .then(resp => {
-                if(resp.data.length == 0)
-                {
-                    this.VacationGramAPIClient.addUser(name, email, password)
-                    .then(accountId => {new User(accountId, name, email, password, this.state.birthday, this.state.medications, this.state.profilePicUrl)
-                        console.log(accountId);
-                        this.setState({id: accountId.id}); 
-                        this.setState({registered: true});
-                    });
-                }
-                else
-                {
-                this.setState({register2: false});
+                .then(resp => {
+                    if (resp.data.length == 0) {
+                        this.VacationGramAPIClient.addUser(username, email, password, profilePicUrl)
+                            .then(accountId => {
+                                new User(accountId, username, email, password, this.state.profilePicUrl)
+                                console.log(accountId);
+                                this.setState({ id: accountId.id });
+                                this.setState({ registered: true });
+                            });
+                    }
+                    else {
+                        this.setState({ register2: false });
 
-                }
-            });
+                    }
+                });
         }
-        else
-        {
-            this.setState({registered: false});
+        else {
+            this.setState({ registered: false });
         }
+    }
+
+    passwordsDoNotMatch(){
+        if(this.state.confirmPassword !== ''){
+            if(this.state.confirmPassword !== this.state.password){
+                return true;
+            }
+        }
+        return false;
     }
 
     render() {
         return <>
             <form className="container">
-            <div class="imgcontainer">
-                <h1>Register</h1>
-                <img src={logo} alt="Avatar" class="avatar"></img>
-            </div>
-            {this.state.registered == false && <RegisterErrorMessage/>}
-            {this.state.register2 == false && <RegisterErrorMessage2/>}
-            <div className="login-form">
-            <div className="form-group">
-                    <label htmlFor="search_name">Name</label>
+                <div class="imgcontainer">
+                    <h1>Register</h1>
+                    <img src={logo} alt="Avatar" class="avatar"></img>
+                </div>
+                {this.state.registered == false && <RegisterErrorMessage />}
+                {this.state.register2 == false && <RegisterErrorMessage2 />}
+                <div className="login-form">
+                    <div className="form-group">
+                        <label htmlFor="search_name">Username</label>
                         <input type="text"
                             name="Email"
                             className="form-control"
-                            value={ this.state.name }
-                            onChange={ e => this.setState( { name: e.target.value } ) } />
+                            value={this.state.username}
+                            onChange={e => this.setState({ username: e.target.value })} />
+                    </div>
                 </div>
-            </div>
-            
+
                 <div className="login-form">
-            <div className="form-group">
-                    <label htmlFor="search_name">Email</label>
+                    <div className="form-group">
+                        <label htmlFor="search_name">Email</label>
                         <input type="text"
                             name="Email"
                             className="form-control"
-                            value={ this.state.email }
-                            onChange={ e => this.setState( { email: e.target.value } ) } />
+                            value={this.state.email}
+                            onChange={e => this.setState({ email: e.target.value })} />
+                    </div>
                 </div>
-            </div>
-            <div className="login-form">
-            <div className="form-group">
-                    <label htmlFor="search_name">Password</label>
+                <div className="login-form">
+                    <div className="form-group">
+                        <label htmlFor="search_name">Password</label>
                         <input type="password"
                             name="Password"
                             className="form-control"
-                            value={ this.state.password }
-                            onChange={ e => this.setState( { password: e.target.value } ) } />
-                </div>
+                            value={this.state.password}
+                            onChange={e => this.setState({ password: e.target.value })} />
+                    </div>
                 </div>
 
                 <div className="login-form">
-            <div className="form-group">
-                    <label htmlFor="search_name">Confirm Password</label>
+                    <div className="form-group">
+                        <label htmlFor="search_name">Confirm Password</label>
+                        {this.passwordsDoNotMatch() && <p className="text-danger">Passwords do not match</p>}
                         <input type="password"
                             name="Password"
                             className="form-control"
-                            value={ this.state.currentPassword }
-                            onChange={ e => this.setState( { currentPassword: e.target.value } ) } />
-                </div>
+                            value={this.state.confirmPassword}
+                            onChange={e => this.setState({ confirmPassword: e.target.value })} />
+                    </div>
                 </div>
 
                 <div className="login-form">
-                    <button className = "btn btn-primary btn-lg btn-block" type="button"  onClick={() => this.registerUser(this.state.name, this.state.email, this.state.password, this.state.currentPassword)}>Register</button>
-                    {console.log(this.state.confirm), this.state.registered && <Redirect to={'/profile/' + this.state.id}/>}
+                    <div className="form-group">
+                        <label htmlFor="profPicUrl">Profile Picture URL</label>
+                        <input type="text"
+                        className="form-control"
+                        value={this.state.profilePicUrl}
+                        onChange={e => this.setState({profilePicUrl: e.target.value})}/>
+                    </div>
+                </div>
+
+                <div className="login-form">
+                    <button className="btn btn-primary btn-lg btn-block" type="button" onClick={() => this.registerUser(this.state.username, this.state.email, this.state.password, this.state.currentPassword, this.state.profilePicUrl)}>Register</button>
+                    {this.state.registered && <Redirect to={'/profile/' + this.state.id} />}
                 </div>
             </form>
         </>;
