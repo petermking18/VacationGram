@@ -21,6 +21,16 @@ export default class Feed extends React.Component {
     render() {
         return <>
             <ul className="feed bg-white list-unstyled">
+                {this.state.posts.length === 0 && 
+                    <div className="jumbotron text-muted mt-5 text-center">
+                        <h2>Loading posts
+                            <span>  </span>
+                            <div className="spinner-border text-primary" role="status">
+                                <span className="sr-only">Loading...</span>
+                            </div>
+                        </h2>
+                    </div>
+                }
                 {this.state.posts.map((post, index) => (
                     <li key={index} className="container rounded border border-secondary-50 border-top px-0 mt-3">
                         {/* Top area: origin, dest, username, date, rating, price */}
