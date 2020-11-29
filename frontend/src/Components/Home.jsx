@@ -177,6 +177,7 @@ export class Home extends React.Component {
             );
             postsArr.push(post);
         }
+        postsArr.sort((a,b) => (a.date < b.date) ? 1 : -1);//show newest posts first
         this.setState({ posts: postsArr });
     }
 
