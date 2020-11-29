@@ -70,7 +70,7 @@ export class RegisterPage extends React.Component {
                 {this.state.register2 == false && <RegisterErrorMessage2 />}
                 <div className="login-form">
                     <div className="form-group">
-                        <label htmlFor="search_name">Username</label>
+                        <label htmlFor="search_name" className="py-0">Username</label>
                         <input type="text"
                             name="Email"
                             className="form-control"
@@ -81,7 +81,7 @@ export class RegisterPage extends React.Component {
 
                 <div className="login-form">
                     <div className="form-group">
-                        <label htmlFor="search_name">Email</label>
+                        <label htmlFor="search_name" className="py-0">Email</label>
                         <input type="text"
                             name="Email"
                             className="form-control"
@@ -91,7 +91,7 @@ export class RegisterPage extends React.Component {
                 </div>
                 <div className="login-form">
                     <div className="form-group">
-                        <label htmlFor="search_name">Password</label>
+                        <label htmlFor="search_name" className="py-0">Password</label>
                         <input type="password"
                             name="Password"
                             className="form-control"
@@ -102,7 +102,7 @@ export class RegisterPage extends React.Component {
 
                 <div className="login-form">
                     <div className="form-group">
-                        <label htmlFor="search_name">Confirm Password</label>
+                        <label htmlFor="search_name" className="py-0">Confirm Password</label>
                         {this.passwordsDoNotMatch() && <p className="text-danger">Passwords do not match</p>}
                         <input type="password"
                             name="Password"
@@ -114,7 +114,7 @@ export class RegisterPage extends React.Component {
 
                 <div className="login-form">
                     <div className="form-group">
-                        <label htmlFor="profPicUrl">Profile Picture URL</label>
+                        <label htmlFor="profPicUrl" className="py-0">Profile Picture URL</label>
                         <input type="text"
                         className="form-control"
                         value={this.state.profilePicUrl}
