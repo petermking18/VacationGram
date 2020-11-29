@@ -157,6 +157,57 @@ exports.get_user = function(req, res)
   }
 }
 
+exports.update_user = function(req, res)
+{
+  if (req.body.length <= 0)
+  {
+    res.status(400).send(
+    {
+      success: false,
+      response: "Empty request body",
+    });
+  }
+  else
+  {
+    sql.connection.query(
+      "UPDATE `user` SET ? WHERE `id` = ?;",
+      [req.body, req.params.id],
+      function(sqlErr, sqlRes)
+      {
+        if (sql.isSuccessfulQuery(sqlErr, res))
+        {
+          if (sqlRes.affectedRows == 0)
+          {
+            res.status(200).send(
+            {
+              success: false,
+              response: "User with id " + req.params.id + " not found, nothing was updated",
+            });
+          }
+          else
+          {
+            sql.connection.query(
+              "SELECT * FROM `user` WHERE `id` = ?;",
+              req.params.id,
+              function(subErr, subRes)
+              {
+                if (sql.isSuccessfulQuery(subErr, res))
+                {
+                  res.status(200).send(
+                  {
+                    success: true,
+                    response: "Successfully updated user " + req.params.id,
+                  });
+                }
+              }
+            );
+          }
+        }
+      }
+    );
+  }
+}
+
 exports.delete_user = function(req, res)
 {
   if (!("id" in req.params))
