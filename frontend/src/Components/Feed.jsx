@@ -3,6 +3,10 @@ import './Feed.css';
 import { Rating } from './Rating';
 import { Price } from './Price';
 
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+];
+
 //Props: array posts, func openPost(post), func openProfile(user id), 
 //       func likePost(post), func savePost(post), boolean needsPaddingY
 export default class Feed extends React.Component {
@@ -17,6 +21,11 @@ export default class Feed extends React.Component {
     }
     componentWillReceiveProps(nextProps) {
         this.setState({ posts: nextProps.posts });
+    }
+    prettyPrintDate(dbDate){
+        let date = new Date(dbDate);
+        let mydate = months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
+        return mydate;
     }
     render() {
         return <>
@@ -52,8 +61,9 @@ export default class Feed extends React.Component {
                                 </div>
                             </div>
                             <div className="row" onClick={() => this.props.openPost(post)}>
-                                <div className="col text-muted">
-                                    {post.date}
+                                <div className="col text-muted pb-1">
+                                    {/* {post.date} */}
+                                    {this.prettyPrintDate(post.date)}
                                 </div>
                             </div>
                         </div>

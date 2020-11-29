@@ -321,6 +321,11 @@ export class Home extends React.Component {
             document.body.style.overflow = "visible";
         }
     }
+    prettyPrintDate(dbDate){
+        let date = new Date(dbDate);
+        let mydate = months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
+        return mydate;
+    }
     async deleteComment(trip_id, comment_id){
         await this.apiClient.deleteComment(trip_id, comment_id);
     }
@@ -427,7 +432,8 @@ export class Home extends React.Component {
                         </div>
                         <div className="row">
                             <div className="col text-muted">
-                                <h6>{this.state.modalPost.date}</h6>
+                                {/* <h6>{this.state.modalPost.date}</h6> */}
+                                <h6>{this.prettyPrintDate(this.state.modalPost.date)}</h6>
                             </div>
                             <div className="col text-right text-muted">
                                 <Price value={this.state.modalPost.price} />

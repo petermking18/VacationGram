@@ -1,6 +1,10 @@
 import React from 'react';
 import './CommentList.css';
 
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+];
+
 //export const CommentList = (props) => (
 export default class CommentList extends React.Component {
     constructor(props){
@@ -45,6 +49,11 @@ export default class CommentList extends React.Component {
         }
         this.setState({comments: commentsArr});
     }
+    prettyPrintDate(dbDate){
+        let date = new Date(dbDate);
+        let mydate = months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
+        return mydate;
+    }
 
     componentDidMount(){
         this.setState({comments: this.props.comments});
@@ -73,7 +82,8 @@ export default class CommentList extends React.Component {
                                             {comment.username}
                                         </div>
                                         <div className="col text-right">
-                                            {comment.date_created}
+                                            {/* {comment.date_created} */}
+                                            {this.prettyPrintDate(comment.date_created)}
                                         </div>
                                     </div>
                                 </div>
