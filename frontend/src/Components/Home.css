@@ -55,12 +55,6 @@
     cursor: not-allowed;
 }
 
-#postButtonInactive{
-    background: lightgray;
-    color: gray;
-    cusor: not-allowed;
-}
-
 #numlikesnumcomments p{
     display: inline;
 }
