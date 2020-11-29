@@ -1,14 +1,11 @@
 //use for our project
 
 export class User {
-    constructor(id, name, location, bio, email, password, date_joined, profilePicUrl){
+    constructor(id, username, email, password, profilePicUrl){
         this.id = id;
-        this.name = name;
-        this.location = location;
-        this.bio = bio;
+        this.username = username;
         this.email = email;
         this.password = password;
-        this.date_joined = date_joined;
         //not in schema currently
         this.profilePicUrl = profilePicUrl;
     }
