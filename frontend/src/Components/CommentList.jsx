@@ -23,7 +23,7 @@ export default class CommentList extends React.Component {
         }
         this.setState({comments: comments});
         this.setState({numComments: this.state.numComments-1});
-        this.props.handleDeletion(this.props.post_id,comments);
+        this.props.handleDeletion(this.props.post_id,comments,commentid);
     }
     likeCommentButton = (commentid) => {
         //like in database

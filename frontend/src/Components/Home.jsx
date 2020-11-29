@@ -169,6 +169,7 @@ export class Home extends React.Component {
                     commentsArr.push(newComment);
                 }
             }
+            commentsArr.sort((a,b) => (a.date_created < b.date_created) ? 1 : -1);//show newest comments first
 
             ///Construct post
             var post = new post_card(
@@ -235,13 +236,16 @@ export class Home extends React.Component {
         this.setState(this.state);
         this.postFormClose();
     }
+    async postComment(){
+        await this.apiClient.postComment(this.state.modalPost.post_id, this.state.user_id, this.state.newComment).then(comment => {
+            return comment.info[0];
+        });
+    }
     onNewComment() {
-        let dateObj = new Date();
-        let date = months[dateObj.getMonth()] + " " + dateObj.getDate() + ", " + dateObj.getFullYear();
-        console.log("commenter: " + this.state.user_id);
+        var commentReturn = this.postComment();
         let mycomment = new Comment(
-            null/*change to new comment id*/, this.state.modalPost.id, this.state.user_id, this.state.username,
-            null/*parent id?*/, null/*is question?*/, date, this.state.newComment, 0, false
+            commentReturn.id, this.state.modalPost.post_id, this.state.user_id, this.state.username,
+            null/*parent id?*/, null/*is question?*/, commentReturn.date_created, this.state.newComment, 0, false
         );
         this.state.modalPost.comments.unshift(mycomment);
         this.postModalClose();
@@ -317,7 +321,11 @@ export class Home extends React.Component {
             document.body.style.overflow = "visible";
         }
     }
-    onCommentDeletion = (postid, comments) => {
+    async deleteComment(trip_id, comment_id){
+        await this.apiClient.deleteComment(trip_id, comment_id);
+    }
+    onCommentDeletion = (postid, comments, commentid) => {
+        this.deleteComment(postid, commentid);
         var postsArr = this.state.posts;
         for (let p = 0; p < postsArr.length; p++) {//find the post
             if (postsArr[p].id === postid) {
