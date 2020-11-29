@@ -13,6 +13,23 @@ module.exports = function(app)
     res.status(200).send({ response: new Date(), });
   });
 
+  app.route("/reset").get(function(req, res)
+  {
+    var sql = require("../model/connection");
+    sql.connection.query("CALL reset;", null, function(sqlErr, sqlRes)
+    {
+      if (sql.isSuccessfulQuery(sqlErr, res))
+      {
+        res.status(200).send(
+        {
+          success: true,
+          response: "Database reset",
+          info: sqlRes,
+        });
+      }
+    });
+  });
+
   // USER
   app.route("/api/users/").get(userController.get_users);
   app.route("/api/users/").post(userController.create_user);
