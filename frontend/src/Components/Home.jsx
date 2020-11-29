@@ -159,12 +159,18 @@ export class Home extends React.Component {
 
                     //get comment numcommentlikes and curr_user_liked_comment
                     var numCommentLikes;
-                    // await this.apiClient.
+                    var curr_user_liked_comment = false;
+                    await this.apiClient.getCommentLikes(trip.id, comment.id).then(likes => {
+                        numCommentLikes = likes.count;
+                        for(let i = 0; i < numCommentLikes; i++){
+                            if(this.state.user_id == likes.info[i]) curr_user_liked_comment = true;
+                        }
+                    });
 
                     var newComment = new Comment(
                         comment.id, comment.trip_id, comment.user_id, commenter,
-                        null, null, comment.date_created, comment.body, /*get numcommentlikes*/0,
-                        /*get curr_user_liked_comment*/false
+                        null, null, comment.date_created, comment.body, numCommentLikes,
+                        curr_user_liked_comment
                     );
                     commentsArr.push(newComment);
                 }
