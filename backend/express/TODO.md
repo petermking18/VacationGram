@@ -1,6 +1,4 @@
 ### TO DO
--    optionial constraits
--    axios wrapper for automated api calls
 -    identify calls where user_id doesn't exist and don't return success (/api/user/:id/trips, for example)
 
 ### PLANNING NOTES
