@@ -87,8 +87,25 @@ export class Home extends React.Component {
     getRating(dbRating){
         return this.ratings[dbRating-1];
     }
+    getReaction(dbReaction){
+        return this.reactions[dbReaction-1];
+    }
+    getDbPrice(price){
+        return this.prices.indexOf(price)+1;
+    }
+    getDbRating(rating){
+        return this.ratings.indexOf(rating)+1;
+    }
+    getDbReaction(reaction){
+        return this.reactions.indexOf(reaction)+1;
+    }
 
     async loadPosts() {
+        //get current username
+        await this.apiClient.getUserInfo(this.state.user_id).then(user => {
+            this.setState({username: user.info[0].name});
+        })
+
         var postsArr = [];
         var trips;
         await this.apiClient.getAllTrips().then(tripsReturned => {
@@ -196,14 +213,19 @@ export class Home extends React.Component {
         document.documentElement.scrollTop = 0;
     }
     async postTrip(){
-        //this.apiClient.createTrip(this.state.text, this.state.destination,)
+        var new_trip_id;
+        await this.apiClient.createTrip(this.state.text, this.state.origin, this.state.destination, this.getDbRating(this.state.rating), this.getDbPrice(this.state.price),
+            "", this.state.user_id, this.getDbReaction(this.state.reaction), this.state.imgurl).then(trip => {
+                new_trip_id = trip.info[0].id;
+            });
+        return new_trip_id;
     }
     onPost() {
-        this.postTrip();
+        var new_trip_id = this.postTrip();
         let dateObj = new Date();
         let date = months[dateObj.getMonth()] + " " + dateObj.getDate() + ", " + dateObj.getFullYear();
         let mypost = new post_card(
-            1, this.state.user_id, this.state.username, date, this.state.origin, this.state.destination, this.state.imgurl,
+            new_trip_id, this.state.user_id, this.state.username, date, this.state.origin, this.state.destination, this.state.imgurl,
             this.state.text, this.state.price, this.state.reaction, this.state.rating, [], false, 0, false
         );
         this.state.posts.unshift(mypost);//later this step will post to database
