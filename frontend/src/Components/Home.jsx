@@ -12,6 +12,7 @@ import { Rating } from './Rating';
 import { Price } from './Price';
 import CommentList from './CommentList';
 import { Redirect } from 'react-router-dom';
+import { VacationGramAPIClient } from '../Api/VacationGramAPIClient';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -34,15 +35,13 @@ export class Home extends React.Component {
         0, 0, "", "", "", "", "", "", "", "", "", [], false, 0, false
     );
 
+    apiClient = new VacationGramAPIClient();
+
     constructor(props) {
         super(props)
         this.checkEsc = this.checkEsc.bind(this);
         this.state = {
-            // user_id: this.props.location.curr_user_id,
             user_id: this.props.match.params.id,
-            // username: this.props.location.username,
-            // email: this.props.location.email,
-            // password: this.props.location.password,
             username: "",
             email: "",
             password: "",
@@ -60,7 +59,7 @@ export class Home extends React.Component {
             modalPostLiked: false,
             modalPostNumLikes: 0,
             modalPostSaved: false,
-            posts: this.dummyPosts,//get from api
+            posts: [],//get from api
             viewOtherProfile: false,
             otherProfileId: null,
         }
@@ -69,6 +68,88 @@ export class Home extends React.Component {
     prices = ["$", "$$", "$$$", "$$$$", "$$$$$"];
     ratings = ["1 star", "2 stars", "3 stars", "4 stars", "5 stars"];
     reactions = ["fun", "boring", "exciting", "scary"]
+
+    getPrice(dbPrice){
+        return this.prices[dbPrice-1];
+    }
+    getRating(dbRating){
+        return this.ratings[dbRating-1];
+    }
+
+    async loadPosts() {
+        var postsArr = [];
+        var trips;
+        await this.apiClient.getAllTrips().then(tripsReturned => {
+            trips = tripsReturned;
+        });
+        for (let t = 0; t < trips.count; t++) {
+            var trip = trips.info[t];
+
+            ///get username
+            var username;
+            await this.apiClient.getUserInfo(trip.user_id).then(user => {
+                username = user.info[0].name;
+            });
+
+            ///get comments
+            var comments;
+            var commentsArr = [];
+            await this.apiClient.getComments(trip.id).then(commentsReturned => {
+                comments = commentsReturned;
+            });
+
+            ///get curr_user_liked
+            var curr_user_liked;
+            await this.apiClient.didUserLikeTrip(trip.id, this.state.user_id).then(resp => {
+                curr_user_liked = resp.did_like;
+            });
+
+            ///get numlikes
+            var numlikes;
+            await this.apiClient.getLikes(trip.id).then(likes => {
+                numlikes = likes.count;
+            });
+
+            ///get curr_user_saved
+            var curr_user_saved;
+            await this.apiClient.didUserSaveTrip(this.state.user_id, trip.id).then(resp => {
+                curr_user_saved = resp.did_save;
+            })
+
+
+            ///Construct comments
+            if (comments.success) {
+                for (let c = 0; c < comments.count; c++) {
+                    var comment = comments.info[c];
+
+                    ///get commenter username
+                    var commenter;
+                    await this.apiClient.getUserInfo(comment.user_id).then(user => {
+                        commenter = user.info[0].name;
+                    });
+
+                    //get comment numcommentlikes and curr_user_liked_comment
+
+                    var newComment = new Comment(
+                        comment.id, comment.trip_id, comment.user_id, commenter,
+                        null, null, comment.date_created, comment.body, /*get numcommentlikes*/0,
+                        /*get curr_user_liked_comment*/false
+                    );
+                    commentsArr.push(newComment);
+                }
+            }
+
+            ///Construct post
+            var post = new post_card(
+                trip.id, trip.user_id, username, trip.date_created,
+                trip.origin, trip.destination, trip.image_url, trip.body,
+                this.getPrice(trip.price), trip.reaction_id, this.getRating(trip.rating), commentsArr,
+                curr_user_liked, numlikes, curr_user_saved
+            );
+            postsArr.push(post);
+        }
+        this.setState({ posts: postsArr });
+    }
 
     postModalOpen = (post) => {
         this.setState({ postModal: true });
@@ -196,6 +277,7 @@ export class Home extends React.Component {
         window.scrollTo(0, 0);
         document.addEventListener("keydown", this.checkEsc, false);
         console.log("Home mounted, user id: " + this.state.user_id);
+        this.loadPosts();
     }
 
     render() {
