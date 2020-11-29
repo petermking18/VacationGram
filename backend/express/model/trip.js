@@ -8,13 +8,13 @@ var Trip = function(trip)
   this.date_last_updated = trip.date_last_updated;
   this.destination = trip.destination;
   this.id = trip.id;
-  this.is_public = trip.is_public;
   this.origin = trip.origin;
   this.price = trip.price;
   this.rating = trip.rating;
   this.reaction_id = trip.reaction_id;
   this.title = trip.title;
   this.user_id = trip.user_id;
+  this.is_public = trip.is_public != 0 && trip.is_public != 1 ? 0 : trip.is_public;
 };
 
 exports.create_trip = function(req, res)
