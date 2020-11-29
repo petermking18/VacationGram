@@ -158,6 +158,8 @@ export class Home extends React.Component {
                     });
 
                     //get comment numcommentlikes and curr_user_liked_comment
+                    var numCommentLikes;
+                    // await this.apiClient.
 
                     var newComment = new Comment(
                         comment.id, comment.trip_id, comment.user_id, commenter,
@@ -253,15 +255,21 @@ export class Home extends React.Component {
         this.postModalOpen(post);
         this.scrollToAddComment();
     }
+    async likeTrip(trip_id){
+        await this.apiClient.likeTrip(trip_id, this.state.user_id);
+    }
+    async unlikeTrip(trip_id){
+        await this.apiClient.unlikeTrip(trip_id, this.state.user_id);
+    }
     onClickFeedLikeButton = (post) => {
         if (post.curr_user_liked) {
-            //unlike in database
+            this.unlikeTrip(post.post_id);
             post.curr_user_liked = false;
             post.numlikes--;
             this.setState({ modalPostLiked: false });
             this.setState({ modalPostNumLikes: this.state.modalPostNumLikes - 1 });
         } else {
-            //like in database
+            this.likeTrip(post.post_id);
             post.curr_user_liked = true;
             post.numlikes++;
             this.setState({ modalPostLiked: true });
