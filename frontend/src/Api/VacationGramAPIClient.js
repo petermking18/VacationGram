@@ -250,6 +250,45 @@ export class VacationGramAPIClient
     });
   }
 
+  getCommentLikes(trip_id, comment_id)
+  {
+    return new Promise((resolve, reject) =>
+    {
+      axios.get(
+          `${this.url}/trips/${trip_id}/comments/${comment_id}/likes`,
+        )
+        .then(response => resolve(response.data))
+        .catch(error => alert(error));
+    });
+  }
+
+  likeComment(trip_id, comment_id, user_id)
+  {
+    return new Promise((resolve, reject) =>
+    {
+      axios.post(
+          `${this.url}/trips/${trip_id}/comments/${comment_id}/likes`,
+          {
+            "user_id": user_id
+          }
+        )
+        .then(response => resolve(response.data))
+        .catch(error => alert(error));
+    });
+  }
+
+  unlikeComment(trip_id, comment_id, user_id)
+  {
+    return new Promise((resolve, reject) =>
+    {
+      axios.delete(
+          `${this.url}/trips/${trip_id}/comments/${comment_id}/likes/${user_id}`,
+        )
+        .then(response => resolve(response.data))
+        .catch(error => alert(error));
+    });
+  }
+
   getLikes(trip_id)
   {
     return new Promise((resolve, reject) =>
