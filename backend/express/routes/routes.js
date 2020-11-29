@@ -61,6 +61,11 @@ module.exports = function(app)
   app.route("/api/trips/:id/comments").post(commentController.create_comment);
   app.route("/api/trips/:id/comments/:commentId").delete(commentController.delete_comment);
 
+  // COMMENT LIKES
+  app.route("/api/trips/:id/comments/:commentId/likes").get(commentController.get_likes);
+  app.route("/api/trips/:id/comments/:commentId/likes").post(commentController.like_comment);
+  app.route("/api/trips/:id/comments/:commentId/likes/:userId").delete(commentController.unlike_comment);
+
   // REACTIONS
   app.route("/api/reactions/:id").get(reactionController.get_reaction_name);
 };

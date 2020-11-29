@@ -122,3 +122,84 @@ exports.delete_comment = function(req, res)
     }
   );
 }
+
+exports.get_likes = function(req, res)
+{
+  sql.connection.query(
+    "SELECT * FROM `like_on_comment` WHERE `comment_id` = ? GROUP BY `liked_by_user_id`;",
+    req.params.commentId,
+    function(sqlErr, sqlRes)
+    {
+      if (sql.isSuccessfulQuery(sqlErr, res))
+      {
+        var idArray = [];
+        for (var i = 0; i < sqlRes.length; i++)
+        {
+          idArray.push(sqlRes[i].liked_by_user_id);
+        }
+
+        res.status(200).send(
+        {
+          success: true,
+          count: Object.keys(sqlRes).length,
+          info: idArray,
+        });
+      }
+    }
+  );
+};
+
+exports.like_comment = function(req, res)
+{
+  if (sql.propertyCheck(req, res, ["user_id"]))
+  {
+    sql.connection.query(
+      "INSERT INTO `like_on_comment` SET ?;",
+      {
+        liked_by_user_id: req.body.user_id,
+        comment_id: req.params.commentId,
+      },
+      function(sqlErr, sqlRes)
+      {
+        if (sql.isSuccessfulQuery(sqlErr, res))
+        {
+          res.status(200).send(
+          {
+            success: true,
+            response: "Successfully liked comment",
+          });
+        }
+      }
+    )
+  }
+}
+
+exports.unlike_comment = function(req, res)
+{
+  sql.connection.query(
+    "DELETE FROM `like_on_comment` WHERE `liked_by_user_id` = ? AND `comment_id` = ?;",
+    [req.params.userId, req.params.commentId],
+    function(sqlErr, sqlRes)
+    {
+      if (sql.isSuccessfulQuery(sqlErr, res))
+      {
+        if (sqlRes.affectedRows == 0)
+        {
+          res.status(200).send(
+          {
+            success: false,
+            response: "No comment with id " + req.params.commentId + " & user with id " + req.params.userId + " found, like not removed",
+          });
+        }
+        else
+        {
+          res.status(200).send(
+          {
+            success: true,
+            response: "Successfully unliked comment",
+          });
+        }
+      }
+    }
+  )
+}
