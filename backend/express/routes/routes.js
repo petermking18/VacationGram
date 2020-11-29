@@ -34,6 +34,7 @@ module.exports = function(app)
   app.route("/api/users/").get(userController.get_users);
   app.route("/api/users/").post(userController.create_user);
   app.route("/api/users/:id").get(userController.get_user);
+  app.route("/api/users/:id").put(userController.update_user);
   app.route("/api/users/:id").delete(userController.delete_user);
   app.route("/api/users/:id/trips").get(userController.get_trips);
   app.route("/api/login").post(userController.login_user);
