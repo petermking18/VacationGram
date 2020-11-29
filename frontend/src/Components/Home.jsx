@@ -356,6 +356,7 @@ export class Home extends React.Component {
             }
         }
         this.setState({posts: postsArr});
+        this.postModalClose();
     }
     componentDidMount() {
         window.scrollTo(0, 0);
@@ -456,6 +457,11 @@ export class Home extends React.Component {
                             <div className="col text-right text-muted">
                                 <Price value={this.state.modalPost.price} />
                             </div>
+                        </div>
+                        <div className="clearfix">
+                            <button type="button" className="btn alert-secondary text-danger float-right" id="deletePostButton" onClick={() => this.deletePost(this.state.modalPost.post_id)}>
+                                Delete Post
+                            </button>
                         </div>
                         <div className="row py-1">
                             <img id="modalimg" src={this.state.modalPost.imgurl} />
