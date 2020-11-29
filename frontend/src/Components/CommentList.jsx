@@ -11,10 +11,14 @@ export default class CommentList extends React.Component {
     }
 
     isDeletable(comment){
-        return (comment.user_id === this.props.curr_user_id) || (this.props.curr_user_id === this.props.poster_id);
+        ///DO NOT CHANGE TO ===, IDK WHY BUT IT BREAKS THE WHOLE DELETE COMMENT THING
+        if(comment.user_id == this.props.curr_user_id) return true;
+        if(this.props.curr_user_id == this.props.poster_id) return true;
+        return false;
     }
     deleteComment = (commentid) => {
         //delete in database
+        let cid = commentid;
         var comments = this.state.comments;
         for(let c = 0; c < comments.length; c++){
             if(comments[c].id === commentid){
@@ -23,7 +27,7 @@ export default class CommentList extends React.Component {
         }
         this.setState({comments: comments});
         this.setState({numComments: this.state.numComments-1});
-        this.props.handleDeletion(this.props.post_id,comments,commentid);
+        this.props.handleDeletion(this.props.post_id,comments,cid);
     }
     likeCommentButton = (commentid) => {
         //like in database
