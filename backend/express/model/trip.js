@@ -14,7 +14,7 @@ var Trip = function(trip)
   this.reaction_id = trip.reaction_id;
   this.title = trip.title;
   this.user_id = trip.user_id;
-  this.is_public = trip.is_public != 0 && trip.is_public != 1 ? 0 : trip.is_public;
+  this.is_public = trip.is_public !== 0 && trip.is_public !== 1 ? 0 : trip.is_public;
 };
 
 exports.create_trip = function(req, res)
@@ -26,7 +26,6 @@ exports.create_trip = function(req, res)
       "rating",
       "title",
       "user_id",
-      "is_public",
     ])
   )
   {
