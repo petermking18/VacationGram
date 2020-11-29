@@ -10,7 +10,7 @@ import { LoginButton, RegisterErrorMessage, RegisterErrorMessage2 } from './logi
 
 export class RegisterPage extends React.Component {
 
-    VacationGramAPIClient = new VacationGramAPIClient();
+    apiClient = new VacationGramAPIClient();
 
 
     state = {
@@ -25,13 +25,13 @@ export class RegisterPage extends React.Component {
         confirm: null
     };
 
-    registerUser(username, email, password, confirmPassword, profilePicUrl) {
+    /* registerUser(username, email, password, confirmPassword, profilePicUrl) {
         if (password === confirmPassword) {
             this.setState({ confirm: true });
             this.VacationGramAPIClient.searchUser(email)
                 .then(resp => {
                     if (resp.data.length == 0) {
-                        this.VacationGramAPIClient.addUser(username, email, password, profilePicUrl)
+                        this.VacationGramAPIClient.addUser(username, email, password)//add profilePicUrl
                             .then(accountId => {
                                 new User(accountId, username, email, password, this.state.profilePicUrl)
                                 console.log(accountId);
@@ -48,6 +48,18 @@ export class RegisterPage extends React.Component {
         else {
             this.setState({ registered: false });
         }
+    } */
+
+    registerUser(username, email, password, confirmPassword, profilePicUrl){
+        if(password === confirmPassword){
+            this.setState({confirm: true});
+            this.apiClient.register(username, email, password)
+                .then(user => {
+                    console.log(user.info[0].id);
+                    this.setState({id: user.info[0].id});
+                    this.setState({registered: true});
+                });
+        }
     }
 
     passwordsDoNotMatch(){
@@ -62,9 +74,9 @@ export class RegisterPage extends React.Component {
     render() {
         return <>
             <form className="container">
-                <div class="imgcontainer">
+                <div className="imgcontainer">
                     <h1>Register</h1>
-                    <img src={logo} alt="Avatar" class="avatar"></img>
+                    <img src={logo} alt="Avatar" className="avatar"></img>
                 </div>
                 {this.state.registered == false && <RegisterErrorMessage />}
                 {this.state.register2 == false && <RegisterErrorMessage2 />}
@@ -123,7 +135,7 @@ export class RegisterPage extends React.Component {
                 </div>
 
                 <div className="login-form">
-                    <button className="btn btn-primary btn-lg btn-block" type="button" onClick={() => this.registerUser(this.state.username, this.state.email, this.state.password, this.state.currentPassword, this.state.profilePicUrl)}>Register</button>
+                    <button className="btn btn-primary btn-lg btn-block" type="button" onClick={() => this.registerUser(this.state.username, this.state.email, this.state.password, this.state.confirmPassword, this.state.profilePicUrl)}>Register</button>
                     {this.state.registered && <Redirect to={'/profile/' + this.state.id} />}
                 </div>
             </form>
