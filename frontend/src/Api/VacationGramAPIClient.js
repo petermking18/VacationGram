@@ -64,6 +64,19 @@ export class VacationGramAPIClient
     });
   }
 
+  updateUser(user_id, updateJSON)
+  {
+    return new Promise((resolve, reject) =>
+    {
+      axios.put(
+          `${this.url}/users/${user_id}`,
+          updateJSON
+        )
+        .then(response => resolve(response.data))
+        .catch(error => alert(error));
+    });
+  }
+
   deleteUser(user_id)
   {
     return new Promise((resolve, reject) =>
