@@ -163,7 +163,7 @@ export class VacationGramAPIClient
     });
   }
 
-  createTrip(body, destination, rating, title, user_id)
+  createTrip(body, origin, destination, rating, price, title, user_id, reaction_id, image_url)
   {
     return new Promise((resolve, reject) =>
     {
@@ -175,6 +175,10 @@ export class VacationGramAPIClient
             "rating": rating,
             "title": title,
             "user_id": user_id,
+            "price": price,
+            "origin": origin,
+            "reaction_id": reaction_id,
+            "image_url": image_url,
           },
         )
         .then(response => resolve(response.data))
