@@ -49,11 +49,19 @@ export class RegisterPage extends React.Component {
             this.setState({ registered: false });
         }
     } */
+    readyToRegister(){
+        if(this.state.username !== ''
+        && this.state.email !== ''
+        && this.state.password !== ''
+        && this.state.confirmPassword === this.state.password) return true;
+        return false;
+    }
 
     registerUser(username, email, password, confirmPassword, profilePicUrl){
-        if(password === confirmPassword){
+        if(profilePicUrl === '') profilePicUrl = "https://st.depositphotos.com/1779253/5140/v/600/depositphotos_51405259-stock-illustration-male-avatar-profile-picture-use.jpg";
+        if(this.readyToRegister()){
             this.setState({confirm: true});
-            this.apiClient.register(username, email, password)
+            this.apiClient.register(username, email, password, profilePicUrl)
                 .then(user => {
                     console.log(user.info[0].id);
                     this.setState({id: user.info[0].id});
@@ -83,6 +91,7 @@ export class RegisterPage extends React.Component {
                 <div className="login-form">
                     <div className="form-group">
                         <label htmlFor="search_name" className="py-0">Username</label>
+                        <span className="text-danger"> *</span>
                         <input type="text"
                             name="Email"
                             className="form-control"
@@ -94,6 +103,7 @@ export class RegisterPage extends React.Component {
                 <div className="login-form">
                     <div className="form-group">
                         <label htmlFor="search_name" className="py-0">Email</label>
+                        <span className="text-danger"> *</span>
                         <input type="text"
                             name="Email"
                             className="form-control"
@@ -104,6 +114,7 @@ export class RegisterPage extends React.Component {
                 <div className="login-form">
                     <div className="form-group">
                         <label htmlFor="search_name" className="py-0">Password</label>
+                        <span className="text-danger"> *</span>
                         <input type="password"
                             name="Password"
                             className="form-control"
@@ -115,6 +126,7 @@ export class RegisterPage extends React.Component {
                 <div className="login-form">
                     <div className="form-group">
                         <label htmlFor="search_name" className="py-0">Confirm Password</label>
+                        <span className="text-danger"> *</span>
                         {this.passwordsDoNotMatch() && <p className="text-danger">Passwords do not match</p>}
                         <input type="password"
                             name="Password"
