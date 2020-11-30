@@ -162,9 +162,11 @@ export class PersonalProfile extends React.Component {
     }
     onNewComment() {
         var commentReturn = this.postComment();
+        let date = new Date();
+        let mydate = months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
         let mycomment = new Comment(
             commentReturn.id, this.state.modalPost.id, this.state.user_id, this.state.username,
-            null/*parent id?*/, null/*is question?*/, commentReturn.date_created, this.state.newComment, 0, false
+            null/*parent id?*/, null/*is question?*/, mydate, this.state.newComment, 0, false
         );
         this.state.modalPost.comments.unshift(mycomment);
         this.postModalClose();
