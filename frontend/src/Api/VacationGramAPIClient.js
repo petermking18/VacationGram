@@ -165,18 +165,6 @@ export class VacationGramAPIClient
     });
   }
 
-  getAllTrips()
-  {
-    return new Promise((resolve, reject) =>
-    {
-      axios.get(
-          `${this.url}/trips`,
-        )
-        .then(response => resolve(response.data))
-        .catch(error => alert(error));
-    });
-  }
-
   createTrip(body, origin, destination, rating, price, title, user_id, reaction_id, image_url)
   {
     return new Promise((resolve, reject) =>

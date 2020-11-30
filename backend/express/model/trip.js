@@ -69,8 +69,6 @@ exports.get_trips = function(req, res)
   var query = "SELECT `trip`.* FROM `trip` JOIN `user` ON `trip`.user_id = `user`.id";
   var searchTerms = [];
 
-  console.log(req.query);
-
   if (Object.keys(req.query).length > 0)
   {
     query += " WHERE ";
