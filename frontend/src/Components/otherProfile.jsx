@@ -27,7 +27,7 @@ export default class OtherProfile extends React.Component {
     blankPost = new post_card(
         0, 0, "", "", "", "", "", "", "", "", "", [], false, 0, false
     );
-    dummmyUser1 = new User(35, "Mark Fontenot", "Dallas", "I'm a professor and I have two dogs!", "", "", "", "https://s2.smu.edu/~mfonten/img/FontenotSM.jpg");
+    dummmyUser1 = new User(35, "", "Dallas", "I'm a professor and I have two dogs!", "", "", "", "https://s2.smu.edu/~mfonten/img/FontenotSM.jpg");
 
     apiClient = new VacationGramAPIClient();
 
@@ -95,15 +95,21 @@ export default class OtherProfile extends React.Component {
         document.newCommentForm.newCommentTA.focus();
         document.getElementById("newcommenttextarea").scrollIntoView();
     }
+    async likeTrip(trip_id) {
+        await this.apiClient.likeTrip(trip_id, this.state.curr_user_id);
+    }
+    async unlikeTrip(trip_id) {
+        await this.apiClient.unlikeTrip(trip_id, this.state.curr_user_id);
+    }
     onClickFeedLikeButton = (post) => {
         if (post.curr_user_liked) {
-            //unlike in database
+            this.unlikeTrip(post.post_id);
             post.curr_user_liked = false;
             post.numlikes--;
             this.setState({ modalPostLiked: false });
             this.setState({ modalPostNumLikes: this.state.modalPostNumLikes - 1 });
         } else {
-            //like in database
+            this.likeTrip(post.post_id);
             post.curr_user_liked = true;
             post.numlikes++;
             this.setState({ modalPostLiked: true });
@@ -160,6 +166,11 @@ export default class OtherProfile extends React.Component {
     }
     getDbReaction(reaction) {
         return this.reactions.indexOf(reaction) + 1;
+    }
+    prettyPrintDate(dbDate) {
+        let date = new Date(dbDate);
+        let mydate = months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
+        return mydate;
     }
 
     async loadPosts(){
@@ -297,7 +308,8 @@ export default class OtherProfile extends React.Component {
                     </div>
                     <div className="row">
                         <div className="col text-muted">
-                            <h6>{this.state.modalPost.date}</h6>
+                            {/* <h6>{this.state.modalPost.date}</h6> */}
+                            <h6>{this.prettyPrintDate(this.state.modalPost.date)}</h6>
                         </div>
                         <div className="col text-right text-muted">
                             <Price value={this.state.modalPost.price} />
