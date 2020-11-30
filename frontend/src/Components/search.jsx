@@ -34,12 +34,12 @@ export class Search extends React.Component {
         this.state = {
             user_id: this.props.match.params.id,
             curr_username: "",
-            username: "",
-            origin: "",
-            destination: "",
-            price: "",
-            reaction: "",
-            rating: "",
+            username: '',
+            origin: '',
+            destination: '',
+            price: '',
+            reaction: '',
+            rating: '',
             newComment: "",
             results: null,
             postModal: false,
@@ -177,13 +177,106 @@ export class Search extends React.Component {
         this.postModalClose();
     }
 
-    search(username, origin, destination, price, reaction, rating) {
-        username = '"' + username + '"';
-        this.VacationGramAPIClient.search(username, origin, destination, price, reaction, rating).then(returnResults => {
-            console.log(returnResults);
-            this.setState({ results: returnResults });
-        });
+    async search() {
+        this.setState({results: null});
         this.setState({hasSearched: true});
+        //this is also the load function, so get current username
+        await this.apiClient.getUserInfo(this.state.user_id).then(user => {
+            this.setState({curr_username: user.info[0].name});
+        });
+
+        var searchParams = {};
+        if(this.state.username !== ''){
+            //figure out username to search by
+        }
+        if(this.state.origin !== '') searchParams["origin"] = this.state.origin;
+        if(this.state.destination !== '') searchParams["destination"] = this.state.destination;
+        if(this.state.price !== '') searchParams["price"] = this.getDbPrice(this.state.price);
+        if(this.state.rating !== '') searchParams["rating"] = this.getDbRating(this.state.rating);
+        if(this.state.reaction !== '') searchParams["reaction_id"] = this.getDbReaction(this.state.reaction);
+
+        console.log(searchParams);
+
+        var searchResults = [];
+        var trips;
+        await this.apiClient.getAllTrips(searchParams).then(tripsReturned => {
+            trips = tripsReturned;
+        });
+        for(let t = 0; t < trips.count; t++){
+            var trip = trips.info[t];
+
+            ///get poster username
+            var username;
+            await this.apiClient.getUserInfo(trip.user_id).then(user => {
+                username = user.info[0].name;
+            });
+
+            ///get comments
+            var comments;
+            var commentsArr = [];
+            await this.apiClient.getComments(trip.id).then(commentsReturned => {
+                comments = commentsReturned;
+            });
+
+            ///get curr_user_liked
+            var curr_user_liked;
+            await this.apiClient.didUserLikeTrip(trip.id, this.state.user_id).then(resp => {
+                curr_user_liked = resp.did_like;
+            });
+
+            ///get numlikes
+            var numlikes;
+            await this.apiClient.getLikes(trip.id).then(likes => {
+                numlikes = likes.count;
+            });
+
+            ///get curr_user_saved
+            var curr_user_saved;
+            await this.apiClient.didUserSaveTrip(this.state.user_id, trip.id).then(resp => {
+                curr_user_saved = resp.did_save;
+            });
+
+            ///Construct Comments
+            if(comments.success){
+                for(let c = 0; c < comments.count; c++){
+                    var comment = comments.info[c];
+
+                    ///get commenter username
+                    var commenter;
+                    await this.apiClient.getUserInfo(comment.user_id).then(user => {
+                        commenter = user.info[0].name;
+                    });
+
+                    ///get numCommentLikes and curr_user_liked_comment
+                    var numCommentLikes;
+                    var curr_user_liked_comment = false;
+                    await this.apiClient.getCommentLikes(trip.id, comment.id).then(likes => {
+                        numCommentLikes = likes.count;
+                        for(let i = 0; i < numCommentLikes; i++){
+                            if(this.state.user_id == likes.info[i]) curr_user_liked_comment = true;
+                        }
+                    });
+
+                    var newComment = new Comment(
+                        comment.id, comment.trip_id, comment.user_id, commenter, null, null,
+                        comment.date_created, comment.body, numCommentLikes, curr_user_liked_comment
+                    );
+                    commentsArr.push(newComment);
+                }
+            }
+            commentsArr.sort((a,b) => (a.date_created < b.date_created) ? 1 : -1);
+
+            ///Construct Post
+            var post = new post_card(
+                trip.id, trip.user_id, username, trip.date_created,
+                trip.origin, trip.destination, trip.image_url, trip.body,
+                this.getPrice(trip.price), this.getReaction(trip.reaction_id), this.getRating(trip.rating), commentsArr,
+                curr_user_liked, numlikes, curr_user_saved
+            );
+            searchResults.push(post);
+        }
+        searchResults.sort((a,b) => (a.date < b.date) ? 1 : -1);
+        this.setState({results: searchResults});
     }
     componentDidMount() {
         window.scrollTo(0,0);
@@ -274,7 +367,7 @@ export class Search extends React.Component {
                                 </div>
                                 <div className="col" id="originRow">
                                     <br /><br />
-                                    <button type="button" id="searchButton" className="btn btn-primary" onClick={() => this.search(this.state.name, this.state.disease, this.state.symptom, this.state.minPrice, this.state.maxPrice, this.state.sideEffect, this.state.pharmacy)}>
+                                    <button type="button" id="searchButton" className="btn btn-primary" onClick={() => this.search()}>
                                         Search
                                     </button>
                                 </div>
