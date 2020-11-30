@@ -94,11 +94,17 @@ export class Search extends React.Component {
         document.body.style.overflow = "visible";
         this.setState({ results: this.state.results });//pull from api again
     }
+    async postComment() {
+        await this.apiClient.postComment(this.state.modalPost.post_id, this.state.user_id, this.state.newComment).then(comment => {
+            return comment.info[0];
+        });
+    }
     onNewComment() {
+        var commentReturn = this.postComment();
         let dateObj = new Date();
         let date = months[dateObj.getMonth()] + " " + dateObj.getDate() + ", " + dateObj.getFullYear();
         let mycomment = new Comment(
-            null, this.state.modalPost.id, this.state.user_id, this.state.curr_username, null, null, date, this.state.newComment, 0, false
+            commentReturn.id, this.state.modalPost.id, this.state.user_id, this.state.curr_username, null, null, date, this.state.newComment, 0, false
         );
         this.state.modalPost.comments.unshift(mycomment);
         this.postModalClose();
@@ -165,7 +171,11 @@ export class Search extends React.Component {
             this.postModalClose();
         }
     }
-    onCommentDeletion = (postid, comments) => {
+    async deleteComment(trip_id, comment_id) {
+        await this.apiClient.deleteComment(trip_id, comment_id);
+    }
+    onCommentDeletion = (postid, comments, commentid) => {
+        this.deleteComment(postid, commentid);
         var postsArr = this.state.results;
         for (let p = 0; p < postsArr.length; p++) {//find the post
             if (postsArr[p].id === postid) {
@@ -173,6 +183,25 @@ export class Search extends React.Component {
             }
         }
         this.setState({ results: postsArr });
+    }
+    async onLikeComment(comment_id) {
+        var curr_user_liked = false;
+        await this.apiClient.getCommentLikes(this.state.modalPost.post_id, comment_id).then(users => {
+            for (let u = 0; u < users.count; u++) {
+                let user = users.info[u];
+                if (user == this.state.user_id) {
+                    curr_user_liked = true;
+                }
+            }
+        });
+        if (curr_user_liked == true) {
+            await this.apiClient.unlikeComment(this.state.modalPost.post_id, comment_id, this.state.user_id);
+        } else if (curr_user_liked == false) {
+            await this.apiClient.likeComment(this.state.modalPost.post_id, comment_id, this.state.user_id);
+        }
+    }
+    onLikeCommentButton = (comment_id) => {
+        this.onLikeComment(comment_id);
     }
     postIsDeletable = (poster_id) => {
         if (poster_id == this.state.user_id) return true;
@@ -439,7 +468,7 @@ export class Search extends React.Component {
                                 </button>
                             </div>
                         </div>
-                        <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.user_id} poster_id={this.state.modalPost.user_id} post_id={this.state.modalPost.post_id} handleDeletion={this.onCommentDeletion} />
+                        <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.user_id} poster_id={this.state.modalPost.user_id} post_id={this.state.modalPost.post_id} handleDeletion={this.onCommentDeletion} onLikeCommentButton={this.onLikeCommentButton}/>
                         <form className="row mt-0 ml-0 pl-0" name="newCommentForm">
                             <div className="ml-0 pl-0" id="newcommenttextarea">
                                 <textarea name="newCommentTA" type="text" className="form-control mb-3" placeholder="add a comment" id="newcomment"
