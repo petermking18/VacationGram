@@ -66,7 +66,7 @@ exports.create_trip = function(req, res)
 
 exports.get_trips = function(req, res)
 {
-  var query = "SELECT * FROM `trip`";
+  var query = "SELECT `trip`.* FROM `trip` JOIN `user` ON `trip`.user_id = `user`.id";
   var searchTerms = [];
 
   console.log(req.query);
@@ -77,9 +77,19 @@ exports.get_trips = function(req, res)
 
     for (const [key, value] of Object.entries(req.query))
     {
-      query += "?? = ? AND ";
-      searchTerms.push(key);
-      searchTerms.push(value);
+      if (key == "name")
+      {
+        // THIS IS VUNERABLE TO INJECTIONS
+        query += "`user`.?? LIKE ? AND "
+        searchTerms.push(key);
+        searchTerms.push(value);
+      }
+      else
+      {
+        query += "`trip`.?? = ? AND ";
+        searchTerms.push(key);
+        searchTerms.push(value);
+      }
     }
 
     query = query.slice(0, -5); // remove last AND
