@@ -221,7 +221,7 @@ export default class OtherProfile extends React.Component {
             otherUser = user.info[0];
         })
         var newOtherUser = new User(
-            otherUser.id, otherUser.name, otherUser.email, otherUser.password, "https://st.depositphotos.com/1779253/5140/v/600/depositphotos_51405259-stock-illustration-male-avatar-profile-picture-use.jpg"/*change later*/
+            otherUser.id, otherUser.name, otherUser.email, otherUser.password, otherUser.image_url
         );
         this.setState({user: newOtherUser});
 
