@@ -23,7 +23,7 @@ export class VacationGramAPIClient
     });
   }
 
-  register(name, email, password)
+  register(name, email, password, image_url)
   {
     return new Promise((resolve, reject) =>
     {
@@ -33,6 +33,7 @@ export class VacationGramAPIClient
             "name": name,
             "email": email,
             "password": password,
+            "image_url": image_url,
           },
         )
         .then(response => resolve(response.data))

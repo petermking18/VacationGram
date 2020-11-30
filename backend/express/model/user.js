@@ -10,6 +10,7 @@ var User = function(user)
   this.email = user.email;
   this.password = user.password;
   this.date_joined = user.date_joined;
+  this.image_url = user.image_url;
 };
 
 exports.get_users = function(req, res)

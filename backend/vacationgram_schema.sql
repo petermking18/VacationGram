@@ -9,7 +9,7 @@ SET
   @OLD_SQL_MODE = @ @SQL_MODE,
   SQL_MODE = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 -- -----------------------------------------------------
-  -- Schema mydb
+  -- Schema
   -- -----------------------------------------------------
   -- -----------------------------------------------------
   -- Schema db
@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS `db`.`user` (
     `email` VARCHAR(45) NOT NULL,
     `password` VARCHAR(45) NOT NULL,
     `date_joined` DATETIME NOT NULL,
+    `image_url` VARCHAR(45) NULL,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
     UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE
@@ -159,7 +160,8 @@ INSERT INTO
     `bio`,
     `email`,
     `password`,
-    `date_joined`
+    `date_joined`,
+    `image_url`
   )
 VALUES
   (
@@ -170,7 +172,8 @@ VALUES
     'Loading...',
     'nathan@gage.com',
     'password',
-    '2020-11-28T19:23:31.000Z'
+    '2020-11-28T19:23:31.000Z',
+    NULL
   );
 INSERT INTO
   `db`.`user` (
@@ -181,7 +184,8 @@ INSERT INTO
     `bio`,
     `email`,
     `password`,
-    `date_joined`
+    `date_joined`,
+    `image_url`
   )
 VALUES
   (
@@ -192,7 +196,8 @@ VALUES
     'I\'m just a dood',
     'smith@smith.com',
     'password',
-    '2020-11-28T19:23:31.000Z'
+    '2020-11-28T19:23:31.000Z',
+    NULL
   );
 COMMIT;
 -- -----------------------------------------------------
