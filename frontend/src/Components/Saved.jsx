@@ -317,6 +317,25 @@ export default class Saved extends React.Component {
         postsArr.sort((a, b) => (a.date < b.date) ? 1 : -1);
         this.setState({ posts: postsArr });
     }
+    async onLikeComment(comment_id) {
+        var curr_user_liked = false;
+        await this.apiClient.getCommentLikes(this.state.modalPost.post_id, comment_id).then(users => {
+            for (let u = 0; u < users.count; u++) {
+                let user = users.info[u];
+                if (user == this.state.user_id) {
+                    curr_user_liked = true;
+                }
+            }
+        });
+        if (curr_user_liked == true) {
+            await this.apiClient.unlikeComment(this.state.modalPost.post_id, comment_id, this.state.user_id);
+        } else if (curr_user_liked == false) {
+            await this.apiClient.likeComment(this.state.modalPost.post_id, comment_id, this.state.user_id);
+        }
+    }
+    onLikeCommentButton = (comment_id) => {
+        this.onLikeComment(comment_id);
+    }
     componentDidMount() {
         window.scrollTo(0, 0);
         document.addEventListener("keydown", this.checkEsc, false);
@@ -405,7 +424,7 @@ export default class Saved extends React.Component {
                             </button>
                         </div>
                     </div>
-                    <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.user_id} poster_id={this.state.modalPost.user_id} post_id={this.state.modalPost.post_id} handleDeletion={this.onCommentDeletion} />
+                    <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.user_id} poster_id={this.state.modalPost.user_id} post_id={this.state.modalPost.post_id} handleDeletion={this.onCommentDeletion} onLikeCommentButton={this.onLikeCommentButton} />
                     <form className="row mt-0 ml-0 pl-0" name="newCommentForm">
                         <div className="ml-0 pl-0" id="newcommenttextarea">
                             <textarea name="newCommentTA" type="text" className="form-control mb-3" placeholder="add a comment" id="newcomment"
