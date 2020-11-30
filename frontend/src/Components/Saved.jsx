@@ -387,7 +387,8 @@ export default class Saved extends React.Component {
                     </div>
                     <div className="row">
                         <div className="col text-muted">
-                            <h6>{this.state.modalPost.date}</h6>
+                            {/* <h6>{this.state.modalPost.date}</h6> */}
+                            <h6>{this.prettyPrintDate(this.state.modalPost.date)}</h6>
                         </div>
                         <div className="col text-right text-muted">
                             <Price value={this.state.modalPost.price} />
