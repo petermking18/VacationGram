@@ -17,7 +17,7 @@ const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
 
 export class Search extends React.Component {
 
-    VacationGramAPIClient = new VacationGramAPIClient();
+    apiClient = new VacationGramAPIClient();
 
     blankPost = new post_card(
         0, 0, "", "", "", "", "", "", "", "", "", [], false, 0, false
@@ -33,7 +33,7 @@ export class Search extends React.Component {
         this.checkEsc = this.checkEsc.bind(this);
         this.state = {
             user_id: this.props.match.params.id,
-            curr_username: "get username from api using user_id",
+            curr_username: "",
             username: "",
             origin: "",
             destination: "",
@@ -41,7 +41,7 @@ export class Search extends React.Component {
             reaction: "",
             rating: "",
             newComment: "",
-            results: [],
+            results: null,
             postModal: false,
             modalPost: this.blankPost,
             modalPostLiked: false,
@@ -49,9 +49,32 @@ export class Search extends React.Component {
             modalPostSaved: false,
             viewOtherProfile: false,
             otherProfileId: null,
+            hasSearched: false
         }
     }
 
+    prices = ["$", "$$", "$$$", "$$$$", "$$$$$"];
+    ratings = ["1 star", "2 stars", "3 stars", "4 stars", "5 stars"];
+    reactions = ["fun", "boring", "exciting", "scary"]
+
+    getPrice(dbPrice) {
+        return this.prices[dbPrice - 1];
+    }
+    getRating(dbRating) {
+        return this.ratings[dbRating - 1];
+    }
+    getReaction(dbReaction) {
+        return this.reactions[dbReaction - 1];
+    }
+    getDbPrice(price) {
+        return this.prices.indexOf(price) + 1;
+    }
+    getDbRating(rating) {
+        return this.ratings.indexOf(rating) + 1;
+    }
+    getDbReaction(reaction) {
+        return this.reactions.indexOf(reaction) + 1;
+    }
     postModalOpen = (post) => {
         this.setState({ postModal: true });
         this.setState({ modalPost: post });
@@ -134,6 +157,25 @@ export class Search extends React.Component {
         }
         this.setState({ results: postsArr });
     }
+    postIsDeletable = (poster_id) => {
+        if (poster_id == this.state.user_id) return true;
+        return false;
+    }
+    async deleteTrip(post_id) {
+        await this.apiClient.deleteTrip(post_id);
+    }
+    deletePost = (post_id) => {
+        this.deleteTrip(post_id);
+        var postsArr = this.state.results;
+        for (let i = 0; i < postsArr.length; i++) {
+            let currPost = postsArr[i];
+            if (currPost.post_id == post_id) {
+                postsArr.splice(i, 1);
+            }
+        }
+        this.setState({ results: postsArr });
+        this.postModalClose();
+    }
 
     search(username, origin, destination, price, reaction, rating) {
         username = '"' + username + '"';
@@ -141,12 +183,12 @@ export class Search extends React.Component {
             console.log(returnResults);
             this.setState({ results: returnResults });
         });
+        this.setState({hasSearched: true});
     }
     componentDidMount() {
         window.scrollTo(0,0);
         document.addEventListener("keydown", this.checkEsc, false);
         console.log("Search mounted, user id: " + this.state.user_id);
-        this.setState({ results: [this.dummyPost2, this.dummyPost2, this.dummyPost2, this.dummyPost2] });
     }
 
     render() {
@@ -240,7 +282,9 @@ export class Search extends React.Component {
                         </div>
                     </div>
                 </div>
-                <Feed posts={this.state.results} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} />
+                {this.state.hasSearched &&
+                    <Feed posts={this.state.results} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} postIsDeletable={this.postIsDeletable} deletePost={this.deletePost}/>
+                }
                 <PostModal id="postmodal" show={this.state.postModal} handleClose={e => this.postModalClose(e)}>
                     <div className="" id="modalcontainer">
                         <h3>{this.state.modalPost.origin} ✈ {this.state.modalPost.destination}</h3>

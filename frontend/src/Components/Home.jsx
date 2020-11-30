@@ -99,7 +99,6 @@ export class Home extends React.Component {
     getDbReaction(reaction) {
         return this.reactions.indexOf(reaction) + 1;
     }
-
     async loadPosts() {
         //get current username
         await this.apiClient.getUserInfo(this.state.user_id).then(user => {
@@ -189,7 +188,6 @@ export class Home extends React.Component {
         postsArr.sort((a, b) => (a.date < b.date) ? 1 : -1);//show newest posts first
         this.setState({ posts: postsArr });
     }
-
     postModalOpen = (post) => {
         this.setState({ postModal: true });
         this.setState({ modalPost: post });
@@ -204,7 +202,6 @@ export class Home extends React.Component {
         document.body.style.overflow = "visible";
         this.setState({ posts: this.state.posts });//pull from api again
     }
-
     postFormOpen() {
         this.setState({ postForm: true });
         document.body.style.overflow = "hidden";
