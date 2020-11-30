@@ -23,22 +23,35 @@ exports.get_saved_trips = function(req, res)
           idArray.push(sqlRes[i].trip_id);
         }
 
-        sql.connection.query(
-          "SELECT * FROM `trip` WHERE `id` IN (?);",
-          [idArray],
-          function(subErr, subRes)
-          {
-            if (sql.isSuccessfulQuery(subErr, res))
+        if (idArray.length > 0)
+        {
+          sql.connection.query(
+            "SELECT * FROM `trip` WHERE `id` IN (?);",
+            [idArray],
+            function(subErr, subRes)
             {
-              res.status(200).send(
+              if (sql.isSuccessfulQuery(subErr, res))
               {
-                success: true,
-                count: Object.keys(subRes).length,
-                info: subRes,
-              });
+                res.status(200).send(
+                {
+                  success: true,
+                  count: Object.keys(subRes).length,
+                  info: subRes,
+                });
+              }
             }
-          }
-        );
+          );
+        }
+        else
+        {
+          res.status(200).send(
+          {
+            success: true,
+            count: 0,
+            info: [],
+          })
+        }
+
       }
     }
   );
