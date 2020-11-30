@@ -155,13 +155,16 @@ export class PersonalProfile extends React.Component {
         this.setState(this.state);
         this.postFormClose();
     }
+    async postComment() {
+        await this.apiClient.postComment(this.state.modalPost.post_id, this.state.user_id, this.state.newComment).then(comment => {
+            return comment.info[0];
+        });
+    }
     onNewComment() {
-        let dateObj = new Date();
-        let date = months[dateObj.getMonth()] + " " + dateObj.getDate() + ", " + dateObj.getFullYear();
-        console.log("commenter: " + this.state.user_id);
+        var commentReturn = this.postComment();
         let mycomment = new Comment(
-            null/*change to new comment id*/, this.state.modalPost.id, this.state.user_id, this.state.username,
-            null/*parent id?*/, null/*is question?*/, date, this.state.newComment, 0, false
+            commentReturn.id, this.state.modalPost.id, this.state.user_id, this.state.username,
+            null/*parent id?*/, null/*is question?*/, commentReturn.date_created, this.state.newComment, 0, false
         );
         this.state.modalPost.comments.unshift(mycomment);
         this.postModalClose();
@@ -223,7 +226,11 @@ export class PersonalProfile extends React.Component {
     openOtherProfile(){
         
     }
-    onCommentDeletion = (postid, comments) => {
+    async deleteComment(trip_id, comment_id) {
+        await this.apiClient.deleteComment(trip_id, comment_id);
+    }
+    onCommentDeletion = (postid, comments, commentid) => {
+        this.deleteComment(postid, commentid);
         var postsArr = this.state.posts;
         for(let p = 0; p < postsArr.length; p++){//find the post
             if(postsArr[p].id === postid){
@@ -512,7 +519,7 @@ export class PersonalProfile extends React.Component {
                                 </button>
                             </div>
                         </div>
-                        <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.user_id} poster_id={this.state.modalPost.user_id} handleDeletion={this.onCommentDeletion} />
+                        <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.user_id} poster_id={this.state.modalPost.user_id} post_id={this.state.modalPost.post_id} handleDeletion={this.onCommentDeletion} onLikeCommentButton={this.onLikeCommentButton}/>
                         <form className="row mt-0 ml-0 pl-0" name="newCommentForm">
                             <div className="ml-0 pl-0" id="newcommenttextarea">
                                 <textarea name="newCommentTA" type="text" className="form-control mb-3" placeholder="add a comment" id="newcomment"
