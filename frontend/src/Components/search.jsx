@@ -232,9 +232,7 @@ export class Search extends React.Component {
         });
 
         var searchParams = {};
-        if(this.state.username !== ''){
-            //figure out username to search by
-        }
+        if(this.state.username !== '') searchParams["name"] = this.state.username;
         if(this.state.origin !== '') searchParams["origin"] = this.state.origin;
         if(this.state.destination !== '') searchParams["destination"] = this.state.destination;
         if(this.state.price !== '') searchParams["price"] = this.getDbPrice(this.state.price);
