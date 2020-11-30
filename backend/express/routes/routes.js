@@ -16,7 +16,7 @@ module.exports = function(app)
   app.route("/reset").get(function(req, res)
   {
     var sql = require("../model/connection");
-    sql.connection.query("CALL reset;", null, function(sqlErr, sqlRes)
+    sql.connection.query("CALL sp_reset;", null, function(sqlErr, sqlRes)
     {
       if (sql.isSuccessfulQuery(sqlErr, res))
       {
