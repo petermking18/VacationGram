@@ -143,10 +143,10 @@ export default class Saved extends React.Component {
             this.setState({ modalPostNumLikes: this.state.modalPostNumLikes + 1 });
         }
     }
-    async save(post_id){
+    async save(post_id) {
         await this.apiClient.addSavedTrip(this.state.user_id, post_id);
     }
-    async unSave(post_id){
+    async unSave(post_id) {
         await this.apiClient.removeSavedTrip(this.state.user_id, post_id);
     }
     onClickSaveButton = (post) => {
@@ -162,13 +162,13 @@ export default class Saved extends React.Component {
             post.curr_user_saved = true;
             this.setState({ modalPostSaved: true });
             var found = false;
-            for(let i = 0; i < this.state.posts.length; i++){
-                if(this.state.posts[i].post_id === post.post_id) found = true;
+            for (let i = 0; i < this.state.posts.length; i++) {
+                if (this.state.posts[i].post_id === post.post_id) found = true;
             }
-            if(!found){
+            if (!found) {
                 var postsArr = this.state.posts;
                 postsArr.push(post);
-                postsArr.sort((a,b) => (a.date < b.date) ? 1 : -1);
+                postsArr.sort((a, b) => (a.date < b.date) ? 1 : -1);
             }
         }
         let p;
@@ -232,7 +232,7 @@ export default class Saved extends React.Component {
         await this.apiClient.getUserInfo(this.state.user_id).then(user => {
             this.setState({ username: user.info[0].name });
             // this.setState({profImgUrl: user.info[0].img_url});
-            this.setState({ profImgUrl: user.info[0].image_url});
+            this.setState({ profImgUrl: user.info[0].image_url });
         });
 
         var postsArr = [];
@@ -240,80 +240,82 @@ export default class Saved extends React.Component {
         await this.apiClient.getUserSavedTrips(this.state.user_id).then(tripsReturned => {
             trips = tripsReturned;
         });
-        for (let t = 0; t < trips.count; t++) {
-            var trip = trips.info[t];
+        if (trips.success) {
+            for (let t = 0; t < trips.count; t++) {
+                var trip = trips.info[t];
 
-            ///get username of poster
-            var username;
-            await this.apiClient.getUserInfo(trip.user_id).then(user => {
-                username = user.info[0].name;
-            });
+                ///get username of poster
+                var username;
+                await this.apiClient.getUserInfo(trip.user_id).then(user => {
+                    username = user.info[0].name;
+                });
 
-            ///get comments on trip
-            var comments;
-            var commentsArr = [];
-            await this.apiClient.getComments(trip.id).then(commentsReturned => {
-                comments = commentsReturned;
-            });
+                ///get comments on trip
+                var comments;
+                var commentsArr = [];
+                await this.apiClient.getComments(trip.id).then(commentsReturned => {
+                    comments = commentsReturned;
+                });
 
-            ///get curr_user_liked for trip
-            var curr_user_liked;
-            await this.apiClient.didUserLikeTrip(trip.id, this.state.user_id).then(resp => {
-                curr_user_liked = resp.did_like;
-            });
+                ///get curr_user_liked for trip
+                var curr_user_liked;
+                await this.apiClient.didUserLikeTrip(trip.id, this.state.user_id).then(resp => {
+                    curr_user_liked = resp.did_like;
+                });
 
-            ///get numlikes for trip
-            var numlikes;
-            await this.apiClient.getLikes(trip.id).then(likes => {
-                numlikes = likes.count;
-            });
+                ///get numlikes for trip
+                var numlikes;
+                await this.apiClient.getLikes(trip.id).then(likes => {
+                    numlikes = likes.count;
+                });
 
-            ///get curr_user_saved for trip
-            var curr_user_saved;
-            await this.apiClient.didUserSaveTrip(this.state.user_id, trip.id).then(resp => {
-                curr_user_saved = resp.did_save;
-            });
+                ///get curr_user_saved for trip
+                var curr_user_saved;
+                await this.apiClient.didUserSaveTrip(this.state.user_id, trip.id).then(resp => {
+                    curr_user_saved = resp.did_save;
+                });
 
-            ///Construct comments
-            if (comments.success) {
-                for (let c = 0; c < comments.count; c++) {
-                    var comment = comments.info[c];
+                ///Construct comments
+                if (comments.success) {
+                    for (let c = 0; c < comments.count; c++) {
+                        var comment = comments.info[c];
 
-                    ///get commenter username
-                    var commenter;
-                    await this.apiClient.getUserInfo(comment.user_id).then(user => {
-                        commenter = user.info[0].name;
-                    });
+                        ///get commenter username
+                        var commenter;
+                        await this.apiClient.getUserInfo(comment.user_id).then(user => {
+                            commenter = user.info[0].name;
+                        });
 
-                    ///get numcommentlikes and curr_user_liked_comment
-                    var numCommentLikes;
-                    var curr_user_liked_comment = false;
-                    await this.apiClient.getCommentLikes(trip.id, comment.id).then(likes => {
-                        numCommentLikes = likes.count;
-                        for (let i = 0; i < numCommentLikes; i++) {
-                            if (this.state.user_id == likes.info[i]) curr_user_liked_comment = true;
-                        }
-                    });
+                        ///get numcommentlikes and curr_user_liked_comment
+                        var numCommentLikes;
+                        var curr_user_liked_comment = false;
+                        await this.apiClient.getCommentLikes(trip.id, comment.id).then(likes => {
+                            numCommentLikes = likes.count;
+                            for (let i = 0; i < numCommentLikes; i++) {
+                                if (this.state.user_id == likes.info[i]) curr_user_liked_comment = true;
+                            }
+                        });
 
-                    var newComment = new Comment(
-                        comment.id, comment.trip_id, comment.user_id, commenter, null, null,
-                        comment.date_created, comment.body, numCommentLikes, curr_user_liked_comment
-                    );
-                    commentsArr.push(newComment);
+                        var newComment = new Comment(
+                            comment.id, comment.trip_id, comment.user_id, commenter, null, null,
+                            comment.date_created, comment.body, numCommentLikes, curr_user_liked_comment
+                        );
+                        commentsArr.push(newComment);
+                    }
                 }
-            }
-            commentsArr.sort((a, b) => (a.date_created < b.date_created) ? 1 : -1);
+                commentsArr.sort((a, b) => (a.date_created < b.date_created) ? 1 : -1);
 
-            ///Construct post
-            var post = new post_card(
-                trip.id, trip.user_id, username, trip.date_created, trip.origin,
-                trip.destination, trip.image_url, trip.body, this.getPrice(trip.price),
-                trip.reaction_id, this.getRating(trip.rating), commentsArr,
-                curr_user_liked, numlikes, curr_user_saved
-            );
-            postsArr.push(post);
+                ///Construct post
+                var post = new post_card(
+                    trip.id, trip.user_id, username, trip.date_created, trip.origin,
+                    trip.destination, trip.image_url, trip.body, this.getPrice(trip.price),
+                    trip.reaction_id, this.getRating(trip.rating), commentsArr,
+                    curr_user_liked, numlikes, curr_user_saved
+                );
+                postsArr.push(post);
+            }
+            postsArr.sort((a, b) => (a.date < b.date) ? 1 : -1);
         }
-        postsArr.sort((a, b) => (a.date < b.date) ? 1 : -1);
         this.setState({ posts: postsArr });
     }
     async onLikeComment(comment_id) {
@@ -372,7 +374,7 @@ export default class Saved extends React.Component {
                     </ul>
                 </div>
             </div>
-            <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} postIsDeletable={this.postIsDeletable} deletePost={this.deletePost}/>
+            <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} postIsDeletable={this.postIsDeletable} deletePost={this.deletePost} />
             <PostModal id="postmodal" show={this.state.postModal} handleClose={e => this.postModalClose(e)}>
                 <div className="" id="modalcontainer">
                     <h3>{this.state.modalPost.origin} ✈ {this.state.modalPost.destination}</h3>
@@ -394,12 +396,12 @@ export default class Saved extends React.Component {
                         </div>
                     </div>
                     {this.postIsDeletable(this.state.modalPost.user_id) &&
-                            <div className="clearfix">
-                                <button type="button" className="btn alert-secondary text-danger float-right" id="deletePostButton" onClick={() => this.deletePost(this.state.modalPost.post_id)}>
-                                    Delete Post
+                        <div className="clearfix">
+                            <button type="button" className="btn alert-secondary text-danger float-right" id="deletePostButton" onClick={() => this.deletePost(this.state.modalPost.post_id)}>
+                                Delete Post
                                 </button>
-                            </div>
-                        }
+                        </div>
+                    }
                     <div className="row py-1">
                         <img id="modalimg" src={this.state.modalPost.imgurl} />
                     </div>
