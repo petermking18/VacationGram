@@ -112,15 +112,21 @@ export default class Saved extends React.Component {
         this.scrollToAddComment();
         console.log(this.state.user_id);
     }
+    async likeTrip(trip_id) {
+        await this.apiClient.likeTrip(trip_id, this.state.user_id);
+    }
+    async unlikeTrip(trip_id) {
+        await this.apiClient.unlikeTrip(trip_id, this.state.user_id);
+    }
     onClickFeedLikeButton = (post) => {
         if (post.curr_user_liked) {
-            //unlike in database
+            this.unlikeTrip(post.post_id);
             post.curr_user_liked = false;
             post.numlikes--;
             this.setState({ modalPostLiked: false });
             this.setState({ modalPostNumLikes: this.state.modalPostNumLikes - 1 });
         } else {
-            //like in database
+            this.likeTrip(post.post_id);
             post.curr_user_liked = true;
             post.numlikes++;
             this.setState({ modalPostLiked: true });
