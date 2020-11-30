@@ -34,6 +34,7 @@ export default class Saved extends React.Component {
         this.state = {
             user_id: this.props.match.params.id,
             username: "",
+            profImgUrl: "",
             newComment: "",
             postModal: false,
             modalPost: this.blankPost,
@@ -48,6 +49,28 @@ export default class Saved extends React.Component {
         }
     }
 
+    prices = ["$", "$$", "$$$", "$$$$", "$$$$$"];
+    ratings = ["1 star", "2 stars", "3 stars", "4 stars", "5 stars"];
+    reactions = ["fun", "boring", "exciting", "scary"];
+
+    getPrice(dbPrice) {
+        return this.prices[dbPrice - 1];
+    }
+    getRating(dbRating) {
+        return this.ratings[dbRating - 1];
+    }
+    getReaction(dbReaction) {
+        return this.reactions[dbReaction - 1];
+    }
+    getDbPrice(price) {
+        return this.prices.indexOf(price) + 1;
+    }
+    getDbRating(rating) {
+        return this.ratings.indexOf(rating) + 1;
+    }
+    getDbReaction(reaction) {
+        return this.reactions.indexOf(reaction) + 1;
+    }
     goPostPage = e => {
         this.setState({ postPage: true });
     }
@@ -104,18 +127,33 @@ export default class Saved extends React.Component {
             this.setState({ modalPostNumLikes: this.state.modalPostNumLikes + 1 });
         }
     }
+    async save(post_id){
+        await this.apiClient.addSavedTrip(this.state.user_id, post_id);
+    }
+    async unSave(post_id){
+        await this.apiClient.removeSavedTrip(this.state.user_id, post_id);
+    }
     onClickSaveButton = (post) => {
         if (post.curr_user_saved) {
-            //unsave in database
+            this.unSave(post.post_id);
             post.curr_user_saved = false;
             this.setState({ modalPostSaved: false });
             for (let i = 0; i < this.state.posts.length; i++) {
-                if (post.id === this.state.posts[i].id) this.state.posts.splice(i, 1);
+                if (post.post_id === this.state.posts[i].post_id) this.state.posts.splice(i, 1);
             }
         } else {
-            //save in database
+            this.save(post.post_id);
             post.curr_user_saved = true;
             this.setState({ modalPostSaved: true });
+            var found = false;
+            for(let i = 0; i < this.state.posts.length; i++){
+                if(this.state.posts[i].post_id === post.post_id) found = true;
+            }
+            if(!found){
+                var postsArr = this.state.posts;
+                postsArr.push(post);
+                postsArr.sort((a,b) => (a.date < b.date) ? 1 : -1);
+            }
         }
         let p;
         for (p in this.state.posts) {
@@ -170,10 +208,100 @@ export default class Saved extends React.Component {
         if (poster_id == this.state.user_id) return true;
         return false;
     }
+    async loadPosts() {
+        //get current username & profile image url
+        await this.apiClient.getUserInfo(this.state.user_id).then(user => {
+            this.setState({ username: user.info[0].name });
+            // this.setState({profImgUrl: user.info[0].img_url});
+            this.setState({ profImgUrl: "https://st.depositphotos.com/1779253/5140/v/600/depositphotos_51405259-stock-illustration-male-avatar-profile-picture-use.jpg" });//change once we add profimgurl to schema
+        });
+
+        var postsArr = [];
+        var trips;
+        await this.apiClient.getUserSavedTrips(this.state.user_id).then(tripsReturned => {
+            trips = tripsReturned;
+        });
+        for (let t = 0; t < trips.count; t++) {
+            var trip = trips.info[t];
+
+            ///get username of poster
+            var username;
+            await this.apiClient.getUserInfo(trip.user_id).then(user => {
+                username = user.info[0].name;
+            });
+
+            ///get comments on trip
+            var comments;
+            var commentsArr = [];
+            await this.apiClient.getComments(trip.id).then(commentsReturned => {
+                comments = commentsReturned;
+            });
+
+            ///get curr_user_liked for trip
+            var curr_user_liked;
+            await this.apiClient.didUserLikeTrip(trip.id, this.state.user_id).then(resp => {
+                curr_user_liked = resp.did_like;
+            });
+
+            ///get numlikes for trip
+            var numlikes;
+            await this.apiClient.getLikes(trip.id).then(likes => {
+                numlikes = likes.count;
+            });
+
+            ///get curr_user_saved for trip
+            var curr_user_saved;
+            await this.apiClient.didUserSaveTrip(this.state.user_id, trip.id).then(resp => {
+                curr_user_saved = resp.did_save;
+            });
+
+            ///Construct comments
+            if (comments.success) {
+                for (let c = 0; c < comments.count; c++) {
+                    var comment = comments.info[c];
+
+                    ///get commenter username
+                    var commenter;
+                    await this.apiClient.getUserInfo(comment.user_id).then(user => {
+                        commenter = user.info[0].name;
+                    });
+
+                    ///get numcommentlikes and curr_user_liked_comment
+                    var numCommentLikes;
+                    var curr_user_liked_comment = false;
+                    await this.apiClient.getCommentLikes(trip.id, comment.id).then(likes => {
+                        numCommentLikes = likes.count;
+                        for (let i = 0; i < numCommentLikes; i++) {
+                            if (this.state.user_id == likes.info[i]) curr_user_liked_comment = true;
+                        }
+                    });
+
+                    var newComment = new Comment(
+                        comment.id, comment.trip_id, comment.user_id, commenter, null, null,
+                        comment.date_created, comment.body, numCommentLikes, curr_user_liked_comment
+                    );
+                    commentsArr.push(newComment);
+                }
+            }
+            commentsArr.sort((a, b) => (a.date_created < b.date_created) ? 1 : -1);
+
+            ///Construct post
+            var post = new post_card(
+                trip.id, trip.user_id, username, trip.date_created, trip.origin,
+                trip.destination, trip.image_url, trip.body, this.getPrice(trip.price),
+                trip.reaction_id, this.getRating(trip.rating), commentsArr,
+                curr_user_liked, numlikes, curr_user_saved
+            );
+            postsArr.push(post);
+        }
+        postsArr.sort((a, b) => (a.date < b.date) ? 1 : -1);
+        this.setState({ posts: postsArr });
+    }
     componentDidMount() {
         window.scrollTo(0, 0);
         document.addEventListener("keydown", this.checkEsc, false);
         console.log("Saved mounted, user id: " + this.props.match.params.id);
+        this.loadPosts();
     }
 
     render() {
@@ -184,10 +312,10 @@ export default class Saved extends React.Component {
                 <div className="bg-white">
                     <div className="container pt-0">
                         <div className="media col-md-10 cold-lg-8 col-xl-7 p-0 mb-4 mx-auto">
-                            <img src="https://www.smu.edu/-/media/Images/News/Experts/Mark-Fontenot.jpg?la=en" className="d-block ui-w-100 rounded circle mt-4" id="profImg" />
+                            <img src={this.state.profImgUrl} className="d-block ui-w-100 rounded circle mt-4" id="profImg" />
                         </div>
                         <div className="profUsername">
-                            <h4 className="font-weight-bold mb-4">Mark Fontenot</h4>
+                            <h4 className="font-weight-bold mb-4">{this.state.username}</h4>
                         </div>
                     </div>
                     <hr className="m-0" />
