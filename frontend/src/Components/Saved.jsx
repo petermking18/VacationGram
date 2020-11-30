@@ -340,7 +340,7 @@ export default class Saved extends React.Component {
                     </ul>
                 </div>
             </div>
-            <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} postIsDeletable={this.postIsDeletable} />
+            <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} postIsDeletable={this.postIsDeletable} deletePost={this.deletePost}/>
             <PostModal id="postmodal" show={this.state.postModal} handleClose={e => this.postModalClose(e)}>
                 <div className="" id="modalcontainer">
                     <h3>{this.state.modalPost.origin} ✈ {this.state.modalPost.destination}</h3>
@@ -360,6 +360,13 @@ export default class Saved extends React.Component {
                             <Price value={this.state.modalPost.price} />
                         </div>
                     </div>
+                    {this.postIsDeletable(this.state.modalPost.user_id) &&
+                            <div className="clearfix">
+                                <button type="button" className="btn alert-secondary text-danger float-right" id="deletePostButton" onClick={() => this.deletePost(this.state.modalPost.post_id)}>
+                                    Delete Post
+                                </button>
+                            </div>
+                        }
                     <div className="row py-1">
                         <img id="modalimg" src={this.state.modalPost.imgurl} />
                     </div>
