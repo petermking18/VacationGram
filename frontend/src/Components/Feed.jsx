@@ -39,6 +39,7 @@ export default class Feed extends React.Component {
                                 <span className="sr-only">Loading...</span>
                             </div>
                         </h2>
+                        <p>(no posts may exist yet)</p>
                     </div>
                 }
                 {this.state.posts.map((post, index) => (
