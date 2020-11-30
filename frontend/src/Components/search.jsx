@@ -75,6 +75,11 @@ export class Search extends React.Component {
     getDbReaction(reaction) {
         return this.reactions.indexOf(reaction) + 1;
     }
+    prettyPrintDate(dbDate) {
+        let date = new Date(dbDate);
+        let mydate = months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
+        return mydate;
+    }
     postModalOpen = (post) => {
         this.setState({ postModal: true });
         this.setState({ modalPost: post });
@@ -107,28 +112,40 @@ export class Search extends React.Component {
         this.postModalOpen(post);
         this.scrollToAddComment();
     }
+    async likeTrip(trip_id) {
+        await this.apiClient.likeTrip(trip_id, this.state.user_id);
+    }
+    async unlikeTrip(trip_id) {
+        await this.apiClient.unlikeTrip(trip_id, this.state.user_id);
+    }
     onClickFeedLikeButton = (post) => {
         if (post.curr_user_liked) {
-            //unlike in database
+            this.unlikeTrip(post.post_id);
             post.curr_user_liked = false;
             post.numlikes--;
             this.setState({ modalPostLiked: false });
             this.setState({ modalPostNumLikes: this.state.modalPostNumLikes - 1 });
         } else {
-            //like in database
+            this.likeTrip(post.post_id);
             post.curr_user_liked = true;
             post.numlikes++;
             this.setState({ modalPostLiked: true });
             this.setState({ modalPostNumLikes: this.state.modalPostNumLikes + 1 });
         }
     }
+    async saveTrip(trip_id) {
+        await this.apiClient.addSavedTrip(this.state.user_id, trip_id);
+    }
+    async unsaveTrip(trip_id) {
+        await this.apiClient.removeSavedTrip(this.state.user_id, trip_id);
+    }
     onClickSaveButton = (post) => {
         if (post.curr_user_saved) {
-            //unsave in database
+            this.unsaveTrip(post.post_id);
             post.curr_user_saved = false;
             this.setState({ modalPostSaved: false });
         } else {
-            //save in database
+            this.saveTrip(post.post_id);
             post.curr_user_saved = true;
             this.setState({ modalPostSaved: true });
         }
@@ -391,7 +408,8 @@ export class Search extends React.Component {
                         </div>
                         <div className="row">
                             <div className="col text-muted">
-                                <h6>{this.state.modalPost.date}</h6>
+                                {/* <h6>{this.state.modalPost.date}</h6> */}
+                                <h6>{this.prettyPrintDate(this.state.modalPost.date)}</h6>
                             </div>
                             <div className="col text-right text-muted">
                                 <Price value={this.state.modalPost.price} />
