@@ -146,7 +146,11 @@ export default class OtherProfile extends React.Component {
             }
         }
     }
-    onCommentDeletion = (postid, comments) => {
+    async deleteComment(trip_id, comment_id) {
+        await this.apiClient.deleteComment(trip_id, comment_id);
+    }
+    onCommentDeletion = (postid, comments, commentid) => {
+        this.deleteComment(postid, commentid);
         var postsArr = this.state.posts;
         for (let p = 0; p < postsArr.length; p++) {//find the post
             if (postsArr[p].id === postid) {
@@ -352,7 +356,7 @@ export default class OtherProfile extends React.Component {
                             </button>
                         </div>
                     </div>
-                    <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.user_id} poster_id={this.state.modalPost.user_id} post_id={this.state.modalPost.post_id} handleDeletion={this.onCommentDeletion} />
+                    <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.curr_user_id} poster_id={this.state.modalPost.user_id} post_id={this.state.modalPost.post_id} handleDeletion={this.onCommentDeletion} />
                     <form className="row mt-0 ml-0 pl-0" name="newCommentForm">
                         <div className="ml-0 pl-0" id="newcommenttextarea">
                             <textarea name="newCommentTA" type="text" className="form-control mb-3" placeholder="add a comment" id="newcomment"
