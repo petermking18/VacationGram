@@ -238,7 +238,7 @@ export class Home extends React.Component {
             new_trip_id, this.state.user_id, this.state.username, date, this.state.origin, this.state.destination, this.state.imgurl,
             this.state.text, this.state.price, this.state.reaction, this.state.rating, [], false, 0, false
         );
-        this.state.posts.unshift(mypost);//later this step will post to database
+        this.state.posts.unshift(mypost);
         this.setState(this.state);
         this.postFormClose();
     }

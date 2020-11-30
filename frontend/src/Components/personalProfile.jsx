@@ -59,6 +59,7 @@ export class PersonalProfile extends React.Component {
             posts: [],//get from api
             savedPage: false,
             settingsPage: false,
+            profImgUrl: null
         }
     }
 
@@ -66,6 +67,18 @@ export class PersonalProfile extends React.Component {
     ratings = ["1 star", "2 stars", "3 stars", "4 stars", "5 stars"];
     reactions = ["fun", "boring", "exciting", "scary"]
 
+    readyToPost() {
+        if (this.state.origin !== ""
+            && this.state.destination !== ""
+            && this.state.text !== ""
+            && this.state.price !== ""
+            && this.state.rating !== ""
+            && this.state.imgurl !== ""
+            && this.state.reaction !== "") {
+            return true;
+        }
+        return false;
+    }
     goSettingsPage = e => {
         this.setState({settingsPage: true});
     }
@@ -122,14 +135,23 @@ export class PersonalProfile extends React.Component {
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
     }
+    async postTrip() {
+        var new_trip_id;
+        await this.apiClient.createTrip(this.state.text, this.state.origin, this.state.destination, this.getDbRating(this.state.rating), this.getDbPrice(this.state.price),
+            "", this.state.user_id, this.getDbReaction(this.state.reaction), this.state.imgurl).then(trip => {
+                new_trip_id = trip.info[0].id;
+            });
+        return new_trip_id;
+    }
     onPost() {
+        var new_trip_id = this.postTrip();
         let dateObj = new Date();
         let date = months[dateObj.getMonth()] + " " + dateObj.getDate() + ", " + dateObj.getFullYear();
         let mypost = new post_card(
-            1, this.state.user_id, this.state.username, date, this.state.origin, this.state.destination, this.state.imgurl,
+            new_trip_id, this.state.user_id, this.state.username, date, this.state.origin, this.state.destination, this.state.imgurl,
             this.state.text, this.state.price, this.state.reaction, this.state.rating, [], false, 0, false
         );
-        this.state.posts.unshift(mypost);//later this step will post to database
+        this.state.posts.unshift(mypost);
         this.setState(this.state);
         this.postFormClose();
     }
@@ -154,15 +176,21 @@ export class PersonalProfile extends React.Component {
         this.scrollToAddComment();
         console.log(this.state.user_id);
     }
+    async likeTrip(trip_id) {
+        await this.apiClient.likeTrip(trip_id, this.state.user_id);
+    }
+    async unlikeTrip(trip_id) {
+        await this.apiClient.unlikeTrip(trip_id, this.state.user_id);
+    }
     onClickFeedLikeButton = (post) => {
         if (post.curr_user_liked) {
-            //unlike in database
+            this.unlikeTrip(post.post_id);
             post.curr_user_liked = false;
             post.numlikes--;
             this.setState({ modalPostLiked: false });
             this.setState({ modalPostNumLikes: this.state.modalPostNumLikes - 1 });
         } else {
-            //like in database
+            this.likeTrip(post.post_id);
             post.curr_user_liked = true;
             post.numlikes++;
             this.setState({ modalPostLiked: true });
@@ -235,6 +263,7 @@ export class PersonalProfile extends React.Component {
         //get current username
         await this.apiClient.getUserInfo(this.state.user_id).then(user => {
             this.setState({username: user.info[0].name});
+            this.setState({profImgUrl: "https://st.depositphotos.com/1779253/5140/v/600/depositphotos_51405259-stock-illustration-male-avatar-profile-picture-use.jpg"});//change once we add profimgurl to schema
         })
 
         var postsArr = [];
@@ -242,7 +271,7 @@ export class PersonalProfile extends React.Component {
         await this.apiClient.getUserTrips(this.state.user_id).then(tripsReturned => {
             trips = tripsReturned;
         });
-        for(let t = 0; t < trips.cout; t++){
+        for(let t = 0; t < trips.count; t++){
             var trip = trips.info[t];
 
             ///get username
@@ -309,7 +338,7 @@ export class PersonalProfile extends React.Component {
 
             ///Construct post
             var post = new post_card(
-                trip.id, trip.user_id, trip.date_created,
+                trip.id, trip.user_id, username, trip.date_created,
                 trip.origin, trip.destination, trip.image_url, trip.body,
                 this.getPrice(trip.price), trip.reaction_id, this.getRating(trip.rating), commentsArr,
                 curr_user_liked, numlikes, curr_user_saved
@@ -318,6 +347,11 @@ export class PersonalProfile extends React.Component {
         }
         postsArr.sort((a,b) => (a.date < b.date) ? 1 : -1);
         this.setState({posts: postsArr});
+    }
+    prettyPrintDate(dbDate) {
+        let date = new Date(dbDate);
+        let mydate = months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
+        return mydate;
     }
     componentDidMount() {
         window.scrollTo(0,0);
@@ -333,10 +367,10 @@ export class PersonalProfile extends React.Component {
                     <div className = "bg-white">
                         <div className = "container pt-0">
                             <div className = "media col-md-10 cold-lg-8 col-xl-7 p-0 mb-4 mx-auto">
-                                <img src = "https://www.smu.edu/-/media/Images/News/Experts/Mark-Fontenot.jpg?la=en" className = "d-block ui-w-100 rounded circle mt-4" id = "profImg"/>
+                                <img src={this.state.profImgUrl} className = "d-block ui-w-100 rounded circle mt-4" id = "profImg"/>
                             </div>
                             <div className = "profUsername">
-                                    <h4 className = "font-weight-bold mb-4">Mark Fontenot</h4>
+                                    <h4 className = "font-weight-bold mb-4">{this.state.username}</h4>
                             </div>
                         </div>
                         <hr className = "m-0"/>
@@ -358,7 +392,7 @@ export class PersonalProfile extends React.Component {
                 <button id="newpostbutton" type="button" onClick={e => this.postFormOpen(e)}>
                     New Post
                 </button>
-                <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} postIsDeletable={this.postIsDeletable}/>
+                <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} postIsDeletable={this.postIsDeletable} deletePost={this.deletePost}/>
                 <PostForm show={this.state.postForm} handleClose={e => this.postFormClose(e)}>
                     <div className="mt-3 pt-4">
                         <h2>Make a Post</h2>
@@ -415,7 +449,10 @@ export class PersonalProfile extends React.Component {
                                     </select>
                                 </div>
                             </div>
-                            <button type="button" className="btn" id="postButton" onClick={() => this.onPost()}>Post</button>
+                            {!this.readyToPost() &&
+                                <button type="button" className="btn btn-secondary" id="postButtonInactive">Post</button>}
+                            {this.readyToPost() &&
+                                <button type="button" className="btn" id="postButton" onClick={() => this.onPost()}>Post</button>}
                         </form>
                     </div>
                 </PostForm>
@@ -432,12 +469,19 @@ export class PersonalProfile extends React.Component {
                         </div>
                         <div className="row">
                             <div className="col text-muted">
-                                <h6>{this.state.modalPost.date}</h6>
+                                <h6>{this.prettyPrintDate(this.state.modalPost.date)}</h6>
                             </div>
                             <div className="col text-right text-muted">
                                 <Price value={this.state.modalPost.price} />
                             </div>
                         </div>
+                        {this.postIsDeletable(this.state.modalPost.user_id) &&
+                            <div className="clearfix">
+                                <button type="button" className="btn alert-secondary text-danger float-right" id="deletePostButton" onClick={() => this.deletePost(this.state.modalPost.post_id)}>
+                                    Delete Post
+                                </button>
+                            </div>
+                        }
                         <div className="row py-1">
                             <img id="modalimg" src={this.state.modalPost.imgurl} />
                         </div>
