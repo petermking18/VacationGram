@@ -5,7 +5,6 @@ import logo from './logo.png';
 import { VacationGramAPIClient } from '../Api/VacationGramAPIClient';
 import { LoginButton, ErrorMessage } from './loginButton';
 
-
 class Login extends React.Component {
 
     apiClient = new VacationGramAPIClient();
@@ -63,7 +62,8 @@ class Login extends React.Component {
                         name="Password"
                         className="form-control"
                         value={this.state.password}
-                        onChange={e => this.setState({ password: e.target.value })} />
+                        onChange={e => this.setState({ password: e.target.value })}
+                        />
                 </div>
                 <button className="btn btn-primary btn-lg btn-block" type="button"
                     onClick={() => this.onLogin()}>Log In</button>
