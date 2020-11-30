@@ -10,6 +10,7 @@ import { Price } from './Price';
 import Feed from './Feed';
 import { User } from '../models/user';
 import {Comment} from '../models/comment';
+import {VacationGramAPIClient} from '../Api/VacationGramAPIClient';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -28,6 +29,7 @@ export default class OtherProfile extends React.Component {
     );
     dummmyUser1 = new User(35, "Mark Fontenot", "Dallas", "I'm a professor and I have two dogs!", "", "", "", "https://s2.smu.edu/~mfonten/img/FontenotSM.jpg");
 
+    apiClient = new VacationGramAPIClient();
 
     constructor(props) {
         super(props)
@@ -35,7 +37,7 @@ export default class OtherProfile extends React.Component {
         this.state = {
             curr_user_id: this.props.match.params.curr_id,
             other_user_id: this.props.match.params.other_id,
-            username: "get username from api using curr_user_id",
+            username: "",
             user: this.dummmyUser1,
             postModal: false,
             modalPost: this.blankPost,
@@ -50,9 +52,14 @@ export default class OtherProfile extends React.Component {
             reaction: "",
             rating: "",
             newComment: "",
-            posts: []
+            posts: null
         }
     }
+
+    prices = ["$", "$$", "$$$", "$$$$", "$$$$$"];
+    ratings = ["1 star", "2 stars", "3 stars", "4 stars", "5 stars"];
+    reactions = ["fun", "boring", "exciting", "scary"];
+
     checkEsc(event) {
         if (event.keyCode === 27) {
             this.postModalClose();
@@ -132,13 +139,132 @@ export default class OtherProfile extends React.Component {
     openOtherProfile() {
 
     }
+    postIsDeletable = (poster_id) => {
+        if (poster_id == this.state.curr_user_id) return true;
+        return false;
+    }
+    getPrice(dbPrice) {
+        return this.prices[dbPrice - 1];
+    }
+    getRating(dbRating) {
+        return this.ratings[dbRating - 1];
+    }
+    getReaction(dbReaction) {
+        return this.reactions[dbReaction - 1];
+    }
+    getDbPrice(price) {
+        return this.prices.indexOf(price) + 1;
+    }
+    getDbRating(rating) {
+        return this.ratings.indexOf(rating) + 1;
+    }
+    getDbReaction(reaction) {
+        return this.reactions.indexOf(reaction) + 1;
+    }
 
+    async loadPosts(){
+        //get current username
+        await this.apiClient.getUserInfo(this.state.curr_user_id).then(user => {
+            this.setState({username: user.info[0].name});
+        });
+
+        var otherUser;
+        //get other user info
+        await this.apiClient.getUserInfo(this.state.other_user_id).then(user => {
+            otherUser = user.info[0];
+        })
+        var newOtherUser = new User(
+            otherUser.id, otherUser.name, otherUser.email, otherUser.password, "https://st.depositphotos.com/1779253/5140/v/600/depositphotos_51405259-stock-illustration-male-avatar-profile-picture-use.jpg"/*change later*/
+        );
+        this.setState({user: newOtherUser});
+
+        ///get other user posts
+        var postsArr = [];
+        var trips;
+        await this.apiClient.getUserTrips(this.state.other_user_id).then(tripsReturned => {
+            trips = tripsReturned;
+        });
+        for(let t = 0; t < trips.count; t++){
+            var trip = trips.info[t];
+
+            ///get username of poster
+            var username;
+            await this.apiClient.getUserInfo(trip.user_id).then(user => {
+                username = user.info[0].name;
+            });
+
+            ///get comments on trip
+            var comments;
+            var commentsArr = [];
+            await this.apiClient.getComments(trip.id).then(commentsReturned => {
+                comments = commentsReturned;
+            });
+
+            ///get curr_user_liked for trip
+            var curr_user_liked;
+            await this.apiClient.didUserLikeTrip(trip.id, this.state.curr_user_id).then(resp => {
+                curr_user_liked = resp.did_like;
+            });
+
+            ///get numlikes for trip
+            var numlikes;
+            await this.apiClient.getLikes(trip.id).then(likes => {
+                numlikes = likes.count;
+            });
+
+            ///get curr_user_saved for trip
+            var curr_user_saved;
+            await this.apiClient.didUserSaveTrip(this.state.curr_user_id, trip.id).then(resp => {
+                curr_user_saved = resp.did_save;
+            });
+
+            ///Construct comments for trip
+            if(comments.success){
+                for(let c = 0; c < comments.count; c++){
+                    var comment = comments.info[c];
+
+                    ///get commenter username
+                    var commenter;
+                    await this.apiClient.getUserInfo(comment.user_id).then(user => {
+                        commenter = user.info[0].name;
+                    });
+
+                    ///get numCommentLikes and curr_user_liked_comment
+                    var numCommentLikes;
+                    var curr_user_liked_comment = false;
+                    await this.apiClient.getCommentLikes(trip.id, comment.id).then(likes => {
+                        numCommentLikes = likes.count;
+                        for(let i = 0; i < numCommentLikes; i++){
+                            if(this.state.curr_user_id == likes.info[i]) curr_user_liked_comment = true;
+                        }
+                    });
+
+                    var newComment = new Comment(
+                        comment.id, comment.trip_id, comment.user_id, commenter, null, null,
+                        comment.date_created, comment.body, numCommentLikes, curr_user_liked_comment
+                    );
+                    commentsArr.push(newComment);
+                }
+            }
+            commentsArr.sort((a,b) => (a.date_created < b.date_created) ? 1 : -1);
+
+            ///Construct post
+            var post = new post_card(
+                trip.id, trip.user_id, username, trip.date_created, trip.origin,
+                trip.destination, trip.image_url, trip.body, this.getPrice(trip.price),
+                trip.reaction_id, this.getRating(trip.rating), commentsArr,
+                curr_user_liked, numlikes, curr_user_saved
+            );
+            postsArr.push(post);
+        }
+        postsArr.sort((a,b) => (a.date < b.date) ? 1 : -1);
+        this.setState({posts: postsArr});
+    }
     componentDidMount() {
         window.scrollTo(0,0);
         document.addEventListener("keydown", this.checkEsc, false);
-        this.setState({ posts: [this.dummyPost1, this.dummyPost1, this.dummyPost1] });//fetch user and users posts
-        this.setState({ user: this.dummmyUser1 });
         console.log("Other Profile mounted, curr user: " + this.state.curr_user_id + ", other user: " + this.state.other_user_id);
+        this.loadPosts();
     }
 
     render() {
@@ -151,13 +277,13 @@ export default class OtherProfile extends React.Component {
                             <img src={this.state.user.profilePicUrl} className="d-block ui-w-100 rounded circle mt-4" id="profImg" />
                         </div>
                         <div className="profUsername">
-                            <h4 className="font-weight-bold mb-4">{this.state.user.name}</h4>
+                            <h4 className="font-weight-bold mb-4">{this.state.user.username}</h4>
                         </div>
                     </div>
                     <hr className="m-0" />
                 </div>
             </div>
-            <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} />
+            <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} postIsDeletable={this.postIsDeletable} />
             <PostModal id="postmodal" show={this.state.postModal} handleClose={e => this.postModalClose(e)}>
                 <div className="" id="modalcontainer">
                     <h3>{this.state.modalPost.origin} ✈ {this.state.modalPost.destination}</h3>
