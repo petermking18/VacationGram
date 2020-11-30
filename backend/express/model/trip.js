@@ -66,9 +66,30 @@ exports.create_trip = function(req, res)
 
 exports.get_trips = function(req, res)
 {
+  var query = "SELECT * FROM `trip`";
+  var searchTerms = [];
+
+  console.log(req.query);
+
+  if (Object.keys(req.query).length > 0)
+  {
+    query += " WHERE ";
+
+    for (const [key, value] of Object.entries(req.query))
+    {
+      query += "?? = ? AND ";
+      searchTerms.push(key);
+      searchTerms.push(value);
+    }
+
+    query = query.slice(0, -5); // remove last AND
+  }
+
+  query += ";";
+
   sql.connection.query(
-    "SELECT * FROM `trip`;",
-    null,
+    query,
+    searchTerms,
     function(sqlErr, sqlRes)
     {
       if (sql.isSuccessfulQuery(sqlErr, res))

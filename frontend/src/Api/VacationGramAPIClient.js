@@ -152,12 +152,12 @@ export class VacationGramAPIClient
     });
   }
 
-  getAllTrips()
+  getAllTrips(searchRestrictions = {})
   {
     return new Promise((resolve, reject) =>
     {
       axios.get(
-          `${this.url}/trips`,
+          `${this.url}/trips`, { params: searchRestrictions }
         )
         .then(response => resolve(response.data))
         .catch(error => alert(error));
