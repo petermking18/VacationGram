@@ -42,13 +42,21 @@ export default class ProfilePage extends React.Component {
         this.load();
     }
     updateUserInfo() {
-        //send JSON to API here
+        var updateInfo = {};
+        if(this.state.name !== '') updateInfo["name"] = this.state.name;
+        if(this.state.email !== '') updateInfo["email"] = this.state.email;
+        if(this.state.password !== '' && this.state.password === this.state.confirmPassword) updateInfo["password"] = this.state.password;
+        if(this.state.imageUrl !== '') updateInfo["image_url"] = this.state.imageUrl;
+
+        this.apiClient.updateUser(this.state.id, updateInfo);
+
         if (this.state.name !== '') {
             this.setState({ profUsername: this.state.name });
         }
         if (this.state.imageUrl !== '') {
             this.setState({ profImgUrl: this.state.imageUrl });
         }
+        this.setState({name: '', email: '', password: '', confirmPassword: '', imageUrl: ''});
     }
     passwordsDoNotMatch() {
         if (this.state.password !== '') {
