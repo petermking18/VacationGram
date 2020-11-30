@@ -21,7 +21,6 @@ export default class CommentList extends React.Component {
         return false;
     }
     deleteComment = (commentid) => {
-        //delete in database
         let cid = commentid;
         var comments = this.state.comments;
         for(let c = 0; c < comments.length; c++){
@@ -54,9 +53,9 @@ export default class CommentList extends React.Component {
         let mydate = months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
         return mydate;
     }
-
     componentDidMount(){
         this.setState({comments: this.props.comments});
+
     }
     componentWillReceiveProps(nextProps){
         this.setState({comments: nextProps.comments});
