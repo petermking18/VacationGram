@@ -173,7 +173,7 @@ VALUES
     'nathan@gage.com',
     'password',
     '2020-11-28T19:23:31.000Z',
-    NULL
+    'https://i.imgur.com/spQl1flh.jpg'
   );
 INSERT INTO
   `db`.`user` (
@@ -197,7 +197,7 @@ VALUES
     'smith@smith.com',
     'password',
     '2020-11-28T19:23:31.000Z',
-    NULL
+    'https://i.imgur.com/LClZtep.jpg'
   );
 COMMIT;
 -- -----------------------------------------------------
