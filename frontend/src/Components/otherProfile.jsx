@@ -11,6 +11,7 @@ import Feed from './Feed';
 import { User } from '../models/user';
 import {Comment} from '../models/comment';
 import {VacationGramAPIClient} from '../Api/VacationGramAPIClient';
+import {Reactions} from '../reactions';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -58,7 +59,8 @@ export default class OtherProfile extends React.Component {
 
     prices = ["$", "$$", "$$$", "$$$$", "$$$$$"];
     ratings = ["1 star", "2 stars", "3 stars", "4 stars", "5 stars"];
-    reactions = ["fun", "boring", "exciting", "scary"];
+    // reactions = ["fun", "boring", "exciting", "scary"];
+    reactions = Reactions;
 
     checkEsc(event) {
         if (event.keyCode === 27) {
@@ -208,6 +210,21 @@ export default class OtherProfile extends React.Component {
     onLikeCommentButton = (comment_id) => {
         this.onLikeComment(comment_id);
     }
+    async deleteTrip(post_id) {
+        await this.apiClient.deleteTrip(post_id);
+    }
+    deletePost = (post_id) => {
+        this.deleteTrip(post_id);
+        var postsArr = this.state.posts;
+        for (let i = 0; i < postsArr.length; i++) {
+            let currPost = postsArr[i];
+            if (currPost.post_id == post_id) {
+                postsArr.splice(i, 1);
+            }
+        }
+        this.setState({ posts: postsArr });
+        this.postModalClose();
+    }
 
     async loadPosts(){
         //get current username
@@ -299,7 +316,7 @@ export default class OtherProfile extends React.Component {
             var post = new post_card(
                 trip.id, trip.user_id, username, trip.date_created, trip.origin,
                 trip.destination, trip.image_url, trip.body, this.getPrice(trip.price),
-                trip.reaction_id, this.getRating(trip.rating), commentsArr,
+                this.getReaction(trip.reaction_id), this.getRating(trip.rating), commentsArr,
                 curr_user_liked, numlikes, curr_user_saved
             );
             postsArr.push(post);
@@ -331,7 +348,7 @@ export default class OtherProfile extends React.Component {
                     <hr className="m-0" />
                 </div>
             </div>
-            <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} postIsDeletable={this.postIsDeletable} />
+            <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} postIsDeletable={this.postIsDeletable} deletePost={this.deletePost}/>
             <PostModal id="postmodal" show={this.state.postModal} handleClose={e => this.postModalClose(e)}>
                 <div className="" id="modalcontainer">
                     <h3>{this.state.modalPost.origin} ✈ {this.state.modalPost.destination}</h3>
@@ -351,6 +368,9 @@ export default class OtherProfile extends React.Component {
                         <div className="col text-right text-muted">
                             <Price value={this.state.modalPost.price} />
                         </div>
+                    </div>
+                    <div className="row text-muted">
+                            <p className="col text-right">Reaction: {this.state.modalPost.reaction}</p>
                     </div>
                     <div className="row py-1">
                         <img id="modalimg" src={this.state.modalPost.imgurl} />

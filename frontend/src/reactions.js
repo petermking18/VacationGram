@@ -1,2 +1,2 @@
-export const Reactions = ["❤️","😂","☺️","😯","😢","😡"]
+export const Reactions = ["❤️","😂","💩","😢","😡","🔥"]
 export default Reactions;

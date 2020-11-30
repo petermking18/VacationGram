@@ -10,6 +10,7 @@ import {Comment} from '../models/comment';
 import {Rating} from './Rating';
 import {Price} from './Price';
 import {Redirect} from 'react-router-dom';
+import {Reactions} from '../reactions';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -55,7 +56,8 @@ export class Search extends React.Component {
 
     prices = ["$", "$$", "$$$", "$$$$", "$$$$$"];
     ratings = ["1 star", "2 stars", "3 stars", "4 stars", "5 stars"];
-    reactions = ["fun", "boring", "exciting", "scary"]
+    // reactions = ["fun", "boring", "exciting", "scary"]
+    reactions = Reactions;
 
     getPrice(dbPrice) {
         return this.prices[dbPrice - 1];
@@ -405,10 +407,7 @@ export class Search extends React.Component {
                                         value={this.state.reaction}
                                         onChange={e => this.setState({ reaction: e.target.value })}>
                                         <option> </option>
-                                        <option>fun</option>
-                                        <option>boring</option>
-                                        <option>exciting</option>
-                                        <option>scary</option>
+                                        {this.reactions.map((x,i) => <option key={i}>{x}</option>)}
                                     </select>
                                 </div>
                                 <div className="col" id="originRow">
@@ -444,6 +443,16 @@ export class Search extends React.Component {
                                 <Price value={this.state.modalPost.price} />
                             </div>
                         </div>
+                        <div className="row text-muted">
+                            <p className="col text-right">Reaction: {this.state.modalPost.reaction}</p>
+                        </div>
+                        {this.postIsDeletable(this.state.modalPost.user_id) &&
+                            <div className="clearfix">
+                                <button type="button" className="btn alert-secondary text-danger float-right" id="deletePostButton" onClick={() => this.deletePost(this.state.modalPost.post_id)}>
+                                    Delete Post
+                                </button>
+                            </div>
+                        }
                         <div className="row py-1">
                             <img id="modalimg" src={this.state.modalPost.imgurl} />
                         </div>
