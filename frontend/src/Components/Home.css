@@ -62,3 +62,7 @@
 #bottomspacer{
     height: 100px;
 }
+
+#modalUsername:hover{
+    cursor: pointer;
+}

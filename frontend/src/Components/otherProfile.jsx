@@ -308,6 +308,7 @@ export default class OtherProfile extends React.Component {
         this.setState({posts: postsArr});
     }
     componentDidMount() {
+        document.body.style.overflow = "visible";
         window.scrollTo(0,0);
         document.addEventListener("keydown", this.checkEsc, false);
         console.log("Other Profile mounted, curr user: " + this.state.curr_user_id + ", other user: " + this.state.other_user_id);

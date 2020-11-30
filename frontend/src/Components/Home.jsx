@@ -32,7 +32,7 @@ export class Home extends React.Component {
 
     dummyPosts = [this.dummyPost1, this.dummyPost2, this.dummyPost1];
     blankPost = new post_card(
-        0, 0, "", "", "", "", "", "", "", "", "", [], false, 0, false
+        0, 2, "", "", "", "", "", "", "", "", "", [], false, 0, false
     );
 
     apiClient = new VacationGramAPIClient();
@@ -312,7 +312,6 @@ export class Home extends React.Component {
         }
     }
     openOtherProfile = (user_id) => {
-        console.log("Should open other profile now: " + user_id);
         this.setState({ otherProfileId: user_id, viewOtherProfile: true });
     }
     checkEsc(event) {
@@ -469,8 +468,8 @@ export class Home extends React.Component {
                     <div className="" id="modalcontainer">
                         <h3>{this.state.modalPost.origin} ✈ {this.state.modalPost.destination}</h3>
                         <div className="row py-1">
-                            <div className="col">
-                                <h5>{this.state.modalPost.username}</h5>
+                            <div className="col-4">
+                                <h5 onClick={e => this.openOtherProfile(this.state.modalPost.user_id)} id="modalUsername">{this.state.modalPost.username}</h5>
                             </div>
                             <div className="col text-right text-muted">
                                 <Rating value={this.state.modalPost.rating} />
