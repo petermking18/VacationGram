@@ -366,6 +366,25 @@ export class PersonalProfile extends React.Component {
         let mydate = months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
         return mydate;
     }
+    async onLikeComment(comment_id){
+        var curr_user_liked = false;
+        await this.apiClient.getCommentLikes(this.state.modalPost.post_id, comment_id).then(users => {
+            for (let u = 0; u < users.count; u++) {
+                let user = users.info[u];
+                if (user == this.state.user_id) {
+                    curr_user_liked = true;
+                }
+            }
+        });
+        if (curr_user_liked == true) {
+            await this.apiClient.unlikeComment(this.state.modalPost.post_id, comment_id, this.state.user_id);
+        } else if (curr_user_liked == false) {
+            await this.apiClient.likeComment(this.state.modalPost.post_id, comment_id, this.state.user_id);
+        }
+    }
+    onLikeCommentButton = (comment_id) => {
+        this.onLikeCommentButton(comment_id);
+    }
     componentDidMount() {
         window.scrollTo(0,0);
         document.addEventListener("keydown", this.checkEsc, false);
