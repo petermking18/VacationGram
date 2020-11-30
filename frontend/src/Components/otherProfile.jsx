@@ -116,13 +116,19 @@ export default class OtherProfile extends React.Component {
             this.setState({ modalPostNumLikes: this.state.modalPostNumLikes + 1 });
         }
     }
+    async saveTrip(trip_id) {
+        await this.apiClient.addSavedTrip(this.state.curr_user_id, trip_id);
+    }
+    async unsaveTrip(trip_id) {
+        await this.apiClient.removeSavedTrip(this.state.curr_user_id, trip_id);
+    }
     onClickSaveButton = (post) => {
         if (post.curr_user_saved) {
-            //unsave in database
+            this.unsaveTrip(post.post_id);
             post.curr_user_saved = false;
             this.setState({ modalPostSaved: false });
         } else {
-            //save in database
+            this.saveTrip(post.post_id);
             post.curr_user_saved = true;
             this.setState({ modalPostSaved: true });
         }
