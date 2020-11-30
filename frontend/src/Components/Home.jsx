@@ -13,6 +13,7 @@ import { Price } from './Price';
 import CommentList from './CommentList';
 import { Redirect } from 'react-router-dom';
 import { VacationGramAPIClient } from '../Api/VacationGramAPIClient';
+import {Reactions} from '../reactions';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -67,7 +68,8 @@ export class Home extends React.Component {
 
     prices = ["$", "$$", "$$$", "$$$$", "$$$$$"];
     ratings = ["1 star", "2 stars", "3 stars", "4 stars", "5 stars"];
-    reactions = ["fun", "boring", "exciting", "scary"]
+    // reactions = ["fun", "boring", "exciting", "scary"]
+    reactions = Reactions;
 
     readyToPost() {
         if (this.state.origin !== ""
@@ -180,7 +182,7 @@ export class Home extends React.Component {
             var post = new post_card(
                 trip.id, trip.user_id, username, trip.date_created,
                 trip.origin, trip.destination, trip.image_url, trip.body,
-                this.getPrice(trip.price), trip.reaction_id, this.getRating(trip.rating), commentsArr,
+                this.getPrice(trip.price), this.getReaction(trip.reaction_id), this.getRating(trip.rating), commentsArr,
                 curr_user_liked, numlikes, curr_user_saved
             );
             postsArr.push(post);
@@ -480,6 +482,9 @@ export class Home extends React.Component {
                             <div className="col text-right text-muted">
                                 <Price value={this.state.modalPost.price} />
                             </div>
+                        </div>
+                        <div className="row text-muted">
+                            <p className="col text-right">Reaction: {this.state.modalPost.reaction}</p>
                         </div>
                         {this.postIsDeletable(this.state.modalPost.user_id) &&
                             <div className="clearfix">

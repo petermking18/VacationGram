@@ -78,6 +78,9 @@ export default class Feed extends React.Component {
                                     {/* {post.date} */}
                                     {this.prettyPrintDate(post.date)}
                                 </div>
+                                <div className="col text-right text-muted mr-1 pr-5">
+                                    <p>Reaction: {post.reaction}</p>
+                                </div>
                             </div>
                         </div>
                         {/* Middle area: image, text */}
