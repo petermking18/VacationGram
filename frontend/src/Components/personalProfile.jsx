@@ -278,7 +278,8 @@ export class PersonalProfile extends React.Component {
         //get current username & profile image url
         await this.apiClient.getUserInfo(this.state.user_id).then(user => {
             this.setState({username: user.info[0].name});
-            this.setState({profImgUrl: "https://st.depositphotos.com/1779253/5140/v/600/depositphotos_51405259-stock-illustration-male-avatar-profile-picture-use.jpg"});//change once we add profimgurl to schema
+            this.setState({profImgUrl: user.info[0].image_url});
+            console.log(user.info[0].image_url);
         })
 
         var postsArr = [];
