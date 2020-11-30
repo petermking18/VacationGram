@@ -69,41 +69,41 @@ export class Home extends React.Component {
     ratings = ["1 star", "2 stars", "3 stars", "4 stars", "5 stars"];
     reactions = ["fun", "boring", "exciting", "scary"]
 
-    readyToPost(){
-        if(this.state.origin !== ""
-        && this.state.destination !== ""
-        && this.state.text !== ""
-        && this.state.price !== ""
-        && this.state.rating !== ""
-        && this.state.imgurl !== ""
-        && this.state.reaction !== ""){
+    readyToPost() {
+        if (this.state.origin !== ""
+            && this.state.destination !== ""
+            && this.state.text !== ""
+            && this.state.price !== ""
+            && this.state.rating !== ""
+            && this.state.imgurl !== ""
+            && this.state.reaction !== "") {
             return true;
         }
         return false;
     }
-    getPrice(dbPrice){
-        return this.prices[dbPrice-1];
+    getPrice(dbPrice) {
+        return this.prices[dbPrice - 1];
     }
-    getRating(dbRating){
-        return this.ratings[dbRating-1];
+    getRating(dbRating) {
+        return this.ratings[dbRating - 1];
     }
-    getReaction(dbReaction){
-        return this.reactions[dbReaction-1];
+    getReaction(dbReaction) {
+        return this.reactions[dbReaction - 1];
     }
-    getDbPrice(price){
-        return this.prices.indexOf(price)+1;
+    getDbPrice(price) {
+        return this.prices.indexOf(price) + 1;
     }
-    getDbRating(rating){
-        return this.ratings.indexOf(rating)+1;
+    getDbRating(rating) {
+        return this.ratings.indexOf(rating) + 1;
     }
-    getDbReaction(reaction){
-        return this.reactions.indexOf(reaction)+1;
+    getDbReaction(reaction) {
+        return this.reactions.indexOf(reaction) + 1;
     }
 
     async loadPosts() {
         //get current username
         await this.apiClient.getUserInfo(this.state.user_id).then(user => {
-            this.setState({username: user.info[0].name});
+            this.setState({ username: user.info[0].name });
         })
 
         var postsArr = [];
@@ -162,8 +162,8 @@ export class Home extends React.Component {
                     var curr_user_liked_comment = false;
                     await this.apiClient.getCommentLikes(trip.id, comment.id).then(likes => {
                         numCommentLikes = likes.count;
-                        for(let i = 0; i < numCommentLikes; i++){
-                            if(this.state.user_id == likes.info[i]) curr_user_liked_comment = true;
+                        for (let i = 0; i < numCommentLikes; i++) {
+                            if (this.state.user_id == likes.info[i]) curr_user_liked_comment = true;
                         }
                     });
 
@@ -175,7 +175,7 @@ export class Home extends React.Component {
                     commentsArr.push(newComment);
                 }
             }
-            commentsArr.sort((a,b) => (a.date_created < b.date_created) ? 1 : -1);//show newest comments first
+            commentsArr.sort((a, b) => (a.date_created < b.date_created) ? 1 : -1);//show newest comments first
 
             ///Construct post
             var post = new post_card(
@@ -186,7 +186,7 @@ export class Home extends React.Component {
             );
             postsArr.push(post);
         }
-        postsArr.sort((a,b) => (a.date < b.date) ? 1 : -1);//show newest posts first
+        postsArr.sort((a, b) => (a.date < b.date) ? 1 : -1);//show newest posts first
         this.setState({ posts: postsArr });
     }
 
@@ -222,7 +222,7 @@ export class Home extends React.Component {
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
     }
-    async postTrip(){
+    async postTrip() {
         var new_trip_id;
         await this.apiClient.createTrip(this.state.text, this.state.origin, this.state.destination, this.getDbRating(this.state.rating), this.getDbPrice(this.state.price),
             "", this.state.user_id, this.getDbReaction(this.state.reaction), this.state.imgurl).then(trip => {
@@ -242,7 +242,7 @@ export class Home extends React.Component {
         this.setState(this.state);
         this.postFormClose();
     }
-    async postComment(){
+    async postComment() {
         await this.apiClient.postComment(this.state.modalPost.post_id, this.state.user_id, this.state.newComment).then(comment => {
             return comment.info[0];
         });
@@ -265,10 +265,10 @@ export class Home extends React.Component {
         this.postModalOpen(post);
         this.scrollToAddComment();
     }
-    async likeTrip(trip_id){
+    async likeTrip(trip_id) {
         await this.apiClient.likeTrip(trip_id, this.state.user_id);
     }
-    async unlikeTrip(trip_id){
+    async unlikeTrip(trip_id) {
         await this.apiClient.unlikeTrip(trip_id, this.state.user_id);
     }
     onClickFeedLikeButton = (post) => {
@@ -286,10 +286,10 @@ export class Home extends React.Component {
             this.setState({ modalPostNumLikes: this.state.modalPostNumLikes + 1 });
         }
     }
-    async saveTrip(trip_id){
+    async saveTrip(trip_id) {
         await this.apiClient.addSavedTrip(this.state.user_id, trip_id);
     }
-    async unsaveTrip(trip_id){
+    async unsaveTrip(trip_id) {
         await this.apiClient.removeSavedTrip(this.state.user_id, trip_id);
     }
     onClickSaveButton = (post) => {
@@ -327,12 +327,12 @@ export class Home extends React.Component {
             document.body.style.overflow = "visible";
         }
     }
-    prettyPrintDate(dbDate){
+    prettyPrintDate(dbDate) {
         let date = new Date(dbDate);
         let mydate = months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
         return mydate;
     }
-    async deleteComment(trip_id, comment_id){
+    async deleteComment(trip_id, comment_id) {
         await this.apiClient.deleteComment(trip_id, comment_id);
     }
     onCommentDeletion = (postid, comments, commentid) => {
@@ -345,23 +345,42 @@ export class Home extends React.Component {
         }
         this.setState({ posts: postsArr });
     }
+    async onLikeComment(comment_id) {
+        var curr_user_liked = false;
+        await this.apiClient.getCommentLikes(this.state.modalPost.post_id, comment_id).then(users => {
+            for (let u = 0; u < users.count; u++) {
+                let user = users.info[u];
+                if (user == this.state.user_id) {
+                    curr_user_liked = true;
+                }
+            }
+        });
+        if (curr_user_liked == true) {
+            await this.apiClient.unlikeComment(this.state.modalPost.post_id, comment_id, this.state.user_id);
+        } else if (curr_user_liked == false) {
+            await this.apiClient.likeComment(this.state.modalPost.post_id, comment_id, this.state.user_id);
+        }
+    }
+    onLikeCommentButton = (comment_id) => {
+        this.onLikeComment(comment_id);
+    }
     postIsDeletable = (poster_id) => {
-        if(poster_id == this.state.user_id) return true;
+        if (poster_id == this.state.user_id) return true;
         return false;
     }
-    async deleteTrip(post_id){
+    async deleteTrip(post_id) {
         await this.apiClient.deleteTrip(post_id);
     }
     deletePost = (post_id) => {
         this.deleteTrip(post_id);
         var postsArr = this.state.posts;
-        for(let i = 0; i < postsArr.length; i++){
+        for (let i = 0; i < postsArr.length; i++) {
             let currPost = postsArr[i];
-            if(currPost.post_id == post_id){
+            if (currPost.post_id == post_id) {
                 postsArr.splice(i, 1);
             }
         }
-        this.setState({posts: postsArr});
+        this.setState({ posts: postsArr });
         this.postModalClose();
     }
     componentDidMount() {
@@ -438,9 +457,9 @@ export class Home extends React.Component {
                                 </div>
                             </div>
                             {!this.readyToPost() &&
-                            <button type="button" className="btn btn-secondary" id="postButtonInactive">Post</button>}
+                                <button type="button" className="btn btn-secondary" id="postButtonInactive">Post</button>}
                             {this.readyToPost() &&
-                            <button type="button" className="btn" id="postButton" onClick={() => this.onPost()}>Post</button>}
+                                <button type="button" className="btn" id="postButton" onClick={() => this.onPost()}>Post</button>}
                         </form>
                     </div>
                 </PostForm>
@@ -464,11 +483,13 @@ export class Home extends React.Component {
                                 <Price value={this.state.modalPost.price} />
                             </div>
                         </div>
-                        <div className="clearfix">
-                            <button type="button" className="btn alert-secondary text-danger float-right" id="deletePostButton" onClick={() => this.deletePost(this.state.modalPost.post_id)}>
-                                Delete Post
-                            </button>
-                        </div>
+                        {this.postIsDeletable(this.state.modalPost.user_id) &&
+                            <div className="clearfix">
+                                <button type="button" className="btn alert-secondary text-danger float-right" id="deletePostButton" onClick={() => this.deletePost(this.state.modalPost.post_id)}>
+                                    Delete Post
+                                </button>
+                            </div>
+                        }
                         <div className="row py-1">
                             <img id="modalimg" src={this.state.modalPost.imgurl} />
                         </div>
@@ -493,7 +514,7 @@ export class Home extends React.Component {
                                 </button>
                             </div>
                         </div>
-                        <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.user_id} poster_id={this.state.modalPost.user_id} post_id={this.state.modalPost.post_id} handleDeletion={this.onCommentDeletion} />
+                        <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.user_id} poster_id={this.state.modalPost.user_id} post_id={this.state.modalPost.post_id} handleDeletion={this.onCommentDeletion} onLikeCommentButton={this.onLikeCommentButton} />
                         <form className="row mt-0 ml-0 pl-0" name="newCommentForm">
                             <div className="ml-0 pl-0" id="newcommenttextarea">
                                 <textarea name="newCommentTA" type="text" className="form-control mb-3" placeholder="add a comment" id="newcomment"
