@@ -80,7 +80,19 @@ exports.get_trips = function(req, res)
       if (key == "name")
       {
         // THIS IS VUNERABLE TO INJECTIONS
-        query += "`user`.?? LIKE ? AND "
+        query += "`user`.?? LIKE ? AND ";
+        searchTerms.push(key);
+        searchTerms.push(value);
+      }
+      else if (
+        key == "title" ||
+        key == "body" ||
+        key == "origin" ||
+        key == "destination" ||
+        key == "image_url"
+      )
+      {
+        query += "`trip`.?? LIKE ? AND ";
         searchTerms.push(key);
         searchTerms.push(value);
       }
