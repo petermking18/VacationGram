@@ -78,11 +78,18 @@ export default class OtherProfile extends React.Component {
         document.body.style.overflow = "visible";
         this.setState({ posts: this.state.posts });//pull from api again
     }
+    async postComment() {
+        await this.apiClient.postComment(this.state.modalPost.post_id, this.state.curr_user_id, this.state.newComment).then(comment => {
+            return comment.info[0];
+        });
+    }
     onNewComment() {
+        var commentReturn = this.postComment();
         let dateObj = new Date();
         let date = months[dateObj.getMonth()] + " " + dateObj.getDate() + ", " + dateObj.getFullYear();
         let mycomment = new Comment(
-            null, this.state.modalPost.id, this.state.curr_user_id, this.state.username, null, null, date, this.state.newComment, 0, false
+            commentReturn.id, this.state.modalPost.id, this.state.curr_user_id, this.state.username, 
+            null, null, date, this.state.newComment, 0, false
         );
         /* let mycomment = new Comment(
             null, this.state.modalPost.id, this.state.curr
