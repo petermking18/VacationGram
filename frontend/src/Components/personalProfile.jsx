@@ -13,6 +13,7 @@ import { Price } from './Price';
 import CommentList from './CommentList';
 import './personalProfile.css';
 import Feed from './Feed';
+import {VacationGramAPIClient} from '../Api/VacationGramAPIClient';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -30,6 +31,8 @@ export class PersonalProfile extends React.Component {
     blankPost = new post_card(
         0, 0, "", "", "", "", "", "", "", "", "", [], false, 0, false
     );
+
+    apiClient = new VacationGramAPIClient();
 
     constructor(props) {
         super(props)
@@ -53,7 +56,7 @@ export class PersonalProfile extends React.Component {
             modalPostLiked: false,
             modalPostNumLikes: 0,
             modalPostSaved: false,
-            posts: this.dummyPosts,//get from api
+            posts: [],//get from api
             savedPage: false,
             settingsPage: false,
         }
@@ -69,7 +72,24 @@ export class PersonalProfile extends React.Component {
     goSavedPage = e => {
         this.setState({savedPage: true});
     }
-
+    getPrice(dbPrice) {
+        return this.prices[dbPrice - 1];
+    }
+    getRating(dbRating) {
+        return this.ratings[dbRating - 1];
+    }
+    getReaction(dbReaction) {
+        return this.reactions[dbReaction - 1];
+    }
+    getDbPrice(price) {
+        return this.prices.indexOf(price) + 1;
+    }
+    getDbRating(rating) {
+        return this.ratings.indexOf(rating) + 1;
+    }
+    getDbReaction(reaction) {
+        return this.reactions.indexOf(reaction) + 1;
+    }
     postModalOpen = (post) => {
         this.setState({ postModal: true });
         this.setState({ modalPost: post });
@@ -192,12 +212,119 @@ export class PersonalProfile extends React.Component {
             document.body.style.overflow = "visible";
         }
     }
+    postIsDeletable = (poster_id) => {
+        if(poster_id == this.state.user_id) return true;
+        return false;
+    }
+    async deleteTrip(post_id) {
+        await this.apiClient.deleteTrip(post_id);
+    }
+    deletePost = (post_id) => {
+        this.deleteTrip(post_id);
+        var postsArr = this.state.posts;
+        for (let i = 0; i < postsArr.length; i++) {
+            let currPost = postsArr[i];
+            if (currPost.post_id == post_id) {
+                postsArr.splice(i, 1);
+            }
+        }
+        this.setState({ posts: postsArr });
+        this.postModalClose();
+    }
+    async loadPosts() {
+        //get current username
+        await this.apiClient.getUserInfo(this.state.user_id).then(user => {
+            this.setState({username: user.info[0].name});
+        })
+
+        var postsArr = [];
+        var trips;
+        await this.apiClient.getUserTrips(this.state.user_id).then(tripsReturned => {
+            trips = tripsReturned;
+        });
+        for(let t = 0; t < trips.cout; t++){
+            var trip = trips.info[t];
+
+            ///get username
+            var username;
+            await this.apiClient.getUserInfo(trip.user_id).then(user => {
+                username = user.info[0].name;
+            });
+
+            ///get comments
+            var comments;
+            var commentsArr = [];
+            await this.apiClient.getComments(trip.id).then(commentsReturned => {
+                comments = commentsReturned;
+            });
+
+            ///get curr_user_liked
+            var curr_user_liked;
+            await this.apiClient.didUserLikeTrip(trip.id, this.state.user_id).then(resp => {
+                curr_user_liked = resp.did_like;
+            });
+
+            ///get numlikes
+            var numlikes;
+            await this.apiClient.getLikes(trip.id).then(likes => {
+                numlikes = likes.count;
+            });
+
+            ///get curr_user_saved
+            var curr_user_saved;
+            await this.apiClient.didUserSaveTrip(this.state.user_id, trip.id).then(resp => {
+                curr_user_saved = resp.did_save;
+            });
+
+            ///Construct comments
+            if(comments.success){
+                for(let c = 0; c < comments.count; c++){
+                    var comment = comments.info[c];
+
+                    ///get commenter username
+                    var commenter;
+                    await this.apiClient.getUserInfo(comment.user_id).then(user => {
+                        commenter = user.info[0].name;
+                    });
+
+                    //get numcommentlikes and curr_user_liked_comment
+                    var numCommentLikes;
+                    var curr_user_liked_comment = false;
+                    await this.apiClient.getCommentLikes(trip.id, comment.id).then(likes => {
+                        numCommentLikes = likes.count;
+                        for(let i = 0; i < numCommentLikes; i++){
+                            if(this.state.user_id == likes.info[i]) curr_user_liked_comment = true;
+                        }
+                    });
+
+                    var newComment = new Comment(
+                        comment.id, comment.trip_id, comment.user_id, commenter,
+                        null, null, comment.date_created, comment.body, numCommentLikes,
+                        curr_user_liked_comment
+                    );
+                    commentsArr.push(newComment);
+                }
+            }
+            commentsArr.sort((a,b) => (a.date_created < b.date_created) ? 1 : -1);
+
+            ///Construct post
+            var post = new post_card(
+                trip.id, trip.user_id, trip.date_created,
+                trip.origin, trip.destination, trip.image_url, trip.body,
+                this.getPrice(trip.price), trip.reaction_id, this.getRating(trip.rating), commentsArr,
+                curr_user_liked, numlikes, curr_user_saved
+            );
+            postsArr.push(post);
+        }
+        postsArr.sort((a,b) => (a.date < b.date) ? 1 : -1);
+        this.setState({posts: postsArr});
+    }
     componentDidMount() {
         window.scrollTo(0,0);
         document.addEventListener("keydown", this.checkEsc, false);
         console.log("PersonalProfile mounted, user id: " + this.props.match.params.id);
+        this.loadPosts();
     }
-
     render() {
         return (
             <>
@@ -231,7 +358,7 @@ export class PersonalProfile extends React.Component {
                 <button id="newpostbutton" type="button" onClick={e => this.postFormOpen(e)}>
                     New Post
                 </button>
-                <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton}/>
+                <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} postIsDeletable={this.postIsDeletable}/>
                 <PostForm show={this.state.postForm} handleClose={e => this.postFormClose(e)}>
                     <div className="mt-3 pt-4">
                         <h2>Make a Post</h2>
