@@ -59,7 +59,7 @@ export class Home extends React.Component {
             modalPostLiked: false,
             modalPostNumLikes: 0,
             modalPostSaved: false,
-            posts: [],//get from api
+            posts: null,//get from api
             viewOtherProfile: false,
             otherProfileId: null,
         }

@@ -26,7 +26,7 @@ export default class Saved extends React.Component {
     blankPost = new post_card(
         0, 0, "", "", "", "", "", "", "", "", "", [], false, 0, false
     );
-    repo = new VacationGramAPIClient();
+    apiClient = new VacationGramAPIClient();
 
     constructor(props) {
         super(props)
@@ -40,7 +40,7 @@ export default class Saved extends React.Component {
             modalPostLiked: false,
             modalPostNumLikes: 0,
             modalPostSaved: false,
-            posts: this.dummyPosts,
+            posts: null,
             postPage: false,
             settingsPage: false,
             otherProfileId: null,
@@ -137,7 +137,6 @@ export default class Saved extends React.Component {
         }
         this.setState({ posts: postsArr });
     }
-
     checkEsc(event) {
         if (event.keyCode === 27) {
             this.postModalClose();
@@ -151,6 +150,25 @@ export default class Saved extends React.Component {
             this.setState({ rating: "" });
             document.body.style.overflow = "visible";
         }
+    }
+    async deleteTrip(post_id) {
+        await this.apiClient.deleteTrip(post_id);
+    }
+    deletePost = (post_id) => {
+        this.deleteTrip(post_id);
+        var postsArr = this.state.posts;
+        for (let i = 0; i < postsArr.length; i++) {
+            let currPost = postsArr[i];
+            if (currPost.post_id == post_id) {
+                postsArr.splice(i, 1);
+            }
+        }
+        this.setState({ posts: postsArr });
+        this.postModalClose();
+    }
+    postIsDeletable = (poster_id) => {
+        if (poster_id == this.state.user_id) return true;
+        return false;
     }
     componentDidMount() {
         window.scrollTo(0, 0);
@@ -188,7 +206,7 @@ export default class Saved extends React.Component {
                     </ul>
                 </div>
             </div>
-            <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} />
+            <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} postIsDeletable={this.postIsDeletable} />
             <PostModal id="postmodal" show={this.state.postModal} handleClose={e => this.postModalClose(e)}>
                 <div className="" id="modalcontainer">
                     <h3>{this.state.modalPost.origin} ✈ {this.state.modalPost.destination}</h3>

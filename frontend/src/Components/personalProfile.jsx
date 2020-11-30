@@ -56,7 +56,7 @@ export class PersonalProfile extends React.Component {
             modalPostLiked: false,
             modalPostNumLikes: 0,
             modalPostSaved: false,
-            posts: [],
+            posts: null,
             savedPage: false,
             settingsPage: false,
             profImgUrl: null
