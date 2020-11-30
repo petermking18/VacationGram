@@ -70,6 +70,8 @@ export class Search extends React.Component {
         return this.prices.indexOf(price) + 1;
     }
     getDbRating(rating) {
+        console.log(rating);
+        console.log(this.ratings.indexOf(rating));
         return this.ratings.indexOf(rating) + 1;
     }
     getDbReaction(reaction) {
@@ -235,8 +237,8 @@ export class Search extends React.Component {
         if(this.state.username !== '') searchParams["name"] = this.state.username;
         if(this.state.origin !== '') searchParams["origin"] = this.state.origin;
         if(this.state.destination !== '') searchParams["destination"] = this.state.destination;
-        if(this.state.price !== '') searchParams["price"] = this.getDbPrice(this.state.price);
-        if(this.state.rating !== '') searchParams["rating"] = this.getDbRating(this.state.rating);
+        if(this.state.price !== '') searchParams["price"] = this.state.price;
+        if(this.state.rating !== '') searchParams["rating"] = this.state.rating;
         if(this.state.reaction !== '') searchParams["reaction_id"] = this.getDbReaction(this.state.reaction);
 
         console.log(searchParams);
