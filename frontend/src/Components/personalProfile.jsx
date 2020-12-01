@@ -388,7 +388,7 @@ export class PersonalProfile extends React.Component {
         }
     }
     onLikeCommentButton = (comment_id) => {
-        this.onLikeCommentButton(comment_id);
+        this.onLikeComment(comment_id);
     }
     componentDidMount() {
         window.scrollTo(0,0);

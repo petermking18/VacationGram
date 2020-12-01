@@ -73,7 +73,7 @@ export default class CommentList extends React.Component {
                 <ul className="mt-1 list-unstyled bg-white">
                     <div id="commentListDiv">
                         {this.state.comments.length === 0 && <li className="rounded bg-light border border-secondary-50 px-1 py-2 mt-1">Be the first to comment on this trip!</li>}
-                        {this.props.comments.map((comment, index) => (
+                        {this.state.comments.map((comment, index) => (
                             <li className="rounded border border-secondary-50 border-top px-0 mb-3" key={index}>
                                 <div className="alert-secondary py-2 border-bottom px-2">
                                     <div className="row">
