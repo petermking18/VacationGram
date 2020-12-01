@@ -32,9 +32,15 @@ export default class CommentList extends React.Component {
         this.setState({numComments: this.state.numComments-1});
         this.props.handleDeletion(this.props.post_id,comments,cid);
     }
-    likeCommentButton = (commentid) => {
-        this.props.onLikeCommentButton(commentid);
-        var commentsArr = this.state.comments;
+    likeCommentButton = (comment) => {
+        var comments = this.state.comments;
+        var ind = comments.indexOf(comment);
+        if(comments[ind].curr_user_liked) comments[ind].numlikes--;
+        else if(!comments[ind].curr_user_liked) comments[ind].numlikes++;
+        comments[ind].curr_user_liked = !comments[ind].curr_user_liked;
+        this.setState({comments: comments});
+        this.props.onLikeCommentButton(comment.id);
+        /* var commentsArr = this.state.comments;
         for(let c = 0; c < commentsArr.length; c++){
             if(commentsArr[c].id === commentid){
                 if(commentsArr[c].curr_user_liked){
@@ -46,7 +52,7 @@ export default class CommentList extends React.Component {
                 }
             }
         }
-        this.setState({comments: commentsArr});
+        this.setState({comments: commentsArr}); */
     }
     prettyPrintDate(dbDate){
         let date = new Date(dbDate);
@@ -90,7 +96,7 @@ export default class CommentList extends React.Component {
                                     <p className="mb-1">"{comment.text}"</p>
                                     <div className="row">
                                         <div className="col" id="numlikesoncomment">
-                                            <button type="button" onClick={() => this.likeCommentButton(comment.id)} className="btn alert-secondary px-2 mr-1 mt-0" id="likecomment">
+                                            <button type="button" onClick={() => this.likeCommentButton(comment)} className="btn alert-secondary px-2 mr-1 mt-0" id="likecomment">
                                                 👍
                                                 {comment.curr_user_liked && <p>Unlike Comment</p>}
                                                 {!comment.curr_user_liked && <p>Like Comment</p>}
