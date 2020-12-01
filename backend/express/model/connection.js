@@ -7,8 +7,8 @@ const
   ExpressAPILogMiddleware
 } = require("@rama41222/node-logger");
 
-var connection = mysql.createConnection(
-{
+var pool_config = {
+  connectionLimit: 10,
   host: process.env.MYSQL_CLOUD_HOST,
   user: process.env.MYSQL_CLOUD_USER,
   password: process.env.MYSQL_CLOUD_PASS,
@@ -34,7 +34,9 @@ var connection = mysql.createConnection(
     return (useDefaultTypeCasting());
 
   },
-});
+}
+
+var connection = mysql.createPool(pool_config);
 
 const logger = log(
 {
@@ -43,10 +45,9 @@ const logger = log(
   label: "VacationGram-express",
 });
 
-connection.connect(function(err)
+connection.on('connection', function(connection)
 {
-  if (err) logger.error("Cannot connect host: " + process.env.MYSQL_DB);
-  else logger.info("Connected to the DB! ");
+  logger.info(`Connection ${connection.threadId} acquired`);
 });
 
 exports.propertyCheck = function(req, res, propertyNameList)
