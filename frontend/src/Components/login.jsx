@@ -63,7 +63,7 @@ class Login extends React.Component {
                         className="form-control"
                         value={this.state.password}
                         onChange={e => this.setState({ password: e.target.value })}
-                        />
+                    />
                 </div>
                 <button className="btn btn-primary btn-lg btn-block" type="button"
                     onClick={() => this.onLogin()}>Log In</button>
@@ -73,7 +73,7 @@ class Login extends React.Component {
                     <button className="btn btn-primary btn-lg btn-block" type="button">Register</button>
                 </Link>
             </div>
-            <Link to={'/home/' + this.state.id}>Skip to Home</Link>
+            {/* <Link to={'/home/' + this.state.id}>Skip to Home</Link> */}
         </>;
     }
 
