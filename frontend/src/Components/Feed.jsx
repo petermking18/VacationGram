@@ -86,15 +86,15 @@ export default class Feed extends React.Component {
                         {/* Middle area: image, text */}
                         <div className="pl-3 py-2">
                             <div className="row py-2">
-                                <div className="col-3" id="postcardimgcol">
+                                <div className="col-sm-3" id="postcardimgcol">
                                     <img id="postcardimg" src={post.imgurl} alt="Trip" />
                                 </div>
                                 {!this.props.postIsDeletable(post.user_id) && 
-                                <div className="col-9 pl-1 pr-5">
+                                <div className="col-lg pl-1 pr-5">
                                     <p>{post.text}</p>
                                 </div>}
                                 {this.props.postIsDeletable(post.user_id) &&
-                                <div className="col-7 pl-1 pr-5">
+                                <div className="col-md pl-1 pr-5">
                                 <p>{post.text}</p>
                                 </div>}
                                 {this.props.postIsDeletable(post.user_id) &&
