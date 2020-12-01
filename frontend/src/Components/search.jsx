@@ -50,7 +50,8 @@ export class Search extends React.Component {
             modalPostSaved: false,
             viewOtherProfile: false,
             otherProfileId: null,
-            hasSearched: false
+            hasSearched: false,
+            nextCommentId: null
         }
     }
 
@@ -100,15 +101,15 @@ export class Search extends React.Component {
     }
     async postComment() {
         await this.apiClient.postComment(this.state.modalPost.post_id, this.state.user_id, this.state.newComment).then(comment => {
-            return comment.info[0];
+            this.setState({nextCommentId: comment.info[0].id});
         });
     }
-    onNewComment() {
-        var commentReturn = this.postComment();
+    async onNewComment() {
+        await this.postComment();
         let dateObj = new Date();
         let date = months[dateObj.getMonth()] + " " + dateObj.getDate() + ", " + dateObj.getFullYear();
         let mycomment = new Comment(
-            commentReturn.id, this.state.modalPost.id, this.state.user_id, this.state.curr_username, null, null, date, this.state.newComment, 0, false
+            this.state.nextCommentId, this.state.modalPost.id, this.state.user_id, this.state.curr_username, null, null, date, this.state.newComment, 0, false
         );
         this.state.modalPost.comments.unshift(mycomment);
         this.postModalClose();
