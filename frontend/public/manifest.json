@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "TravelGram",
+  "name": "TravelGram: Share your adventures",
   "icons": [
     {
       "src": "favicon.ico",
