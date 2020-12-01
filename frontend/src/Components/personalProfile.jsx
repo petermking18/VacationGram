@@ -60,7 +60,8 @@ export class PersonalProfile extends React.Component {
             posts: null,
             savedPage: false,
             settingsPage: false,
-            profImgUrl: null
+            profImgUrl: null,
+            nextCommentId: null
         }
     }
 
@@ -159,15 +160,16 @@ export class PersonalProfile extends React.Component {
     }
     async postComment() {
         await this.apiClient.postComment(this.state.modalPost.post_id, this.state.user_id, this.state.newComment).then(comment => {
-            return comment.info[0];
+            this.setState({nextCommentId: comment.info[0].id});
         });
     }
-    onNewComment() {
-        var commentReturn = this.postComment();
+    async onNewComment() {
+        await this.postComment();
+        var commentReturnId = this.state.nextCommentId;
         let date = new Date();
         let mydate = months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
         let mycomment = new Comment(
-            commentReturn.id, this.state.modalPost.id, this.state.user_id, this.state.username,
+            commentReturnId, this.state.modalPost.id, this.state.user_id, this.state.username,
             null/*parent id?*/, null/*is question?*/, mydate, this.state.newComment, 0, false
         );
         this.state.modalPost.comments.unshift(mycomment);
