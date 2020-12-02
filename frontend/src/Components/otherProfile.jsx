@@ -1,7 +1,7 @@
 import React from 'react';
 import './otherProfile.css';
 import NavBar from './NavBar';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { post_card } from '../models/post_card';
 import PostModal from './PostModal';
 import CommentList from './CommentList';
@@ -54,7 +54,8 @@ export default class OtherProfile extends React.Component {
             rating: "",
             newComment: "",
             posts: null,
-            nextCommentId: null
+            nextCommentId: null,
+            isSameUser: false
         }
     }
 
@@ -330,11 +331,15 @@ export default class OtherProfile extends React.Component {
         window.scrollTo(0,0);
         document.addEventListener("keydown", this.checkEsc, false);
         console.log("Other Profile mounted, curr user: " + this.state.curr_user_id + ", other user: " + this.state.other_user_id);
+        if(this.state.curr_user_id === this.state.other_user_id){
+            this.setState({ isSameUser: true });
+        }
         this.loadPosts();
     }
 
     render() {
         return <>
+        {this.state.isSameUser && <Redirect to={'/profile/' + this.state.curr_user_id}/>}
             <NavBar id={this.state.curr_user_id} />
             <div className="container bootstrap-snippet header-container">
                 <div className="bg-white">
