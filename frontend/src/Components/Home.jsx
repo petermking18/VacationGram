@@ -537,12 +537,10 @@ export class Home extends React.Component {
                                         <button type="button" className="btn alert-secondary text-danger float-right" id="deletePostButton" onClick={() => this.deletePost(this.state.modalPost.post_id)}>
                                             Delete Post
                                         </button>
-                                    </div>
-                                    <div className="clearfix">
-                                        <button type="button" className="btn alert-secondary text-primary float-right" id="deletePostButton" onClick={() => this.editPostOpen(this.state.modalPost)}>
+                                        <button type="button" className="btn alert-secondary text-primary mr-1 float-right" id="deletePostButton" onClick={() => this.editPostOpen(this.state.modalPost)}>
                                             Edit Post
                                         </button>
-                                        </div>
+                                    </div>
                                 </div>
                             }
                             <div className="row py-1">
