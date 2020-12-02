@@ -47,7 +47,16 @@ export default class Saved extends React.Component {
             settingsPage: false,
             otherProfileId: null,
             viewOtherProfile: false,
-            nextCommentId: null
+            nextCommentId: null,
+            editPost: false,
+            editPostId: "",
+            editOrigin: "",
+            editDestination: "",
+            editRating: "",
+            editPrice: "",
+            editReaction: "",
+            editImgurl: "",
+            editText: ""
         }
     }
 
@@ -93,10 +102,44 @@ export default class Saved extends React.Component {
         this.setState({ newComment: "" });
         document.body.style.overflow = "visible";
         this.setState({ posts: this.state.posts });//pull from api again
+        this.setState({ editPost: false });
+    }
+    async updatePost() {
+        //api here
+        var postsArr = this.state.posts;
+        for (let p = 0; p < postsArr.length; p++) {
+            if (postsArr[p].post_id == this.state.editPostId) {
+                postsArr[p].origin = this.state.editOrigin;
+                postsArr[p].destination = this.state.editDestination;
+                postsArr[p].rating = this.state.editRating;
+                postsArr[p].price = this.state.editPrice;
+                postsArr[p].reaction = this.state.editReaction;
+                postsArr[p].imgurl = this.state.editImgurl;
+                postsArr[p].text = this.state.editText;
+            }
+        }
+        this.setState({ posts: postsArr });
+        this.postModalClose();
+    }
+    editPostOpen = (post) => {
+        this.postModalOpen(post);
+        this.setState({ editPost: true });
+        this.setState({ editPostId: post.post_id });
+        this.setState({ editOrigin: post.origin });
+        this.setState({ editDestination: post.destination });
+        this.setState({ editRating: post.rating });
+        this.setState({ editPrice: post.price });
+        this.setState({ editReaction: post.reaction });
+        this.setState({ editImgurl: post.imgurl });
+        this.setState({ editText: post.text });
+    }
+    editPostClose = () => {
+        this.postModalClose();
+        this.setState({ editPost: false });
     }
     async postComment() {
         await this.apiClient.postComment(this.state.modalPost.post_id, this.state.user_id, this.state.newComment).then(comment => {
-            this.setState({nextCommentId: comment.info[0].id});
+            this.setState({ nextCommentId: comment.info[0].id });
         });
     }
     async onNewComment() {
@@ -377,78 +420,142 @@ export default class Saved extends React.Component {
                     </ul>
                 </div>
             </div>
-            <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} postIsDeletable={this.postIsDeletable} deletePost={this.deletePost} />
+            <Feed posts={this.state.posts} openPost={this.postModalOpen} editPost={this.editPostOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} postIsDeletable={this.postIsDeletable} deletePost={this.deletePost} />
             <PostModal id="postmodal" show={this.state.postModal} handleClose={e => this.postModalClose(e)}>
-                <div className="" id="modalcontainer">
-                    <h3>{this.state.modalPost.origin} ✈ {this.state.modalPost.destination}</h3>
-                    <div className="row py-1">
-                        <div className="col-4">
-                            <h5 onClick={e => this.openOtherProfile(this.state.modalPost.user_id)} id="modalUsername">{this.state.modalPost.username}</h5>
+                {!this.state.editPost &&
+                    <div className="" id="modalcontainer">
+                        <h3>{this.state.modalPost.origin} ✈ {this.state.modalPost.destination}</h3>
+                        <div className="row py-1">
+                            <div className="col-4">
+                                <h5 onClick={e => this.openOtherProfile(this.state.modalPost.user_id)} id="modalUsername">{this.state.modalPost.username}</h5>
+                            </div>
+                            <div className="col text-right text-muted">
+                                <Rating value={this.state.modalPost.rating} />
+                            </div>
                         </div>
-                        <div className="col text-right text-muted">
-                            <Rating value={this.state.modalPost.rating} />
+                        <div className="row">
+                            <div className="col text-muted">
+                                {/* <h6>{this.state.modalPost.date}</h6> */}
+                                <h6>{this.prettyPrintDate(this.state.modalPost.date)}</h6>
+                            </div>
+                            <div className="col text-right text-muted">
+                                <Price value={this.state.modalPost.price} />
+                            </div>
                         </div>
-                    </div>
-                    <div className="row">
-                        <div className="col text-muted">
-                            {/* <h6>{this.state.modalPost.date}</h6> */}
-                            <h6>{this.prettyPrintDate(this.state.modalPost.date)}</h6>
+                        <div className="row text-muted">
+                            <p className="col text-right">Reaction: {this.state.modalPost.reaction}</p>
                         </div>
-                        <div className="col text-right text-muted">
-                            <Price value={this.state.modalPost.price} />
-                        </div>
-                    </div>
-                    <div className="row text-muted">
-                        <p className="col text-right">Reaction: {this.state.modalPost.reaction}</p>
-                    </div>
-                    {this.postIsDeletable(this.state.modalPost.user_id) &&
-                        <div className="clearfix">
-                            <button type="button" className="btn alert-secondary text-danger float-right" id="deletePostButton" onClick={() => this.deletePost(this.state.modalPost.post_id)}>
-                                Delete Post
+                        {this.postIsDeletable(this.state.modalPost.user_id) &&
+                            <div className="clearfix">
+                                <button type="button" className="btn alert-secondary text-danger float-right" id="deletePostButton" onClick={() => this.deletePost(this.state.modalPost.post_id)}>
+                                    Delete Post
                                 </button>
+                                <button type="button" className="btn alert-secondary text-primary mr-1 float-right" id="deletePostButton" onClick={() => this.editPostOpen(this.state.modalPost)}>
+                                    Edit Post
+                                </button>
+                            </div>
+                        }
+                        <div className="row py-1">
+                            <img id="modalimg" src={this.state.modalPost.imgurl} />
                         </div>
-                    }
-                    <div className="row py-1">
-                        <img id="modalimg" src={this.state.modalPost.imgurl} />
-                    </div>
-                    <div className="row py-3">
-                        <div className="col">
-                            <p>{this.state.modalPost.text}</p>
+                        <div className="row py-3">
+                            <div className="col">
+                                <p>{this.state.modalPost.text}</p>
+                            </div>
                         </div>
-                    </div>
-                    <div className="row py-1">
-                        <div className="col">
-                            {/* <button type="button" className="btn mr-2" id="likebutton">
+                        <div className="row py-1">
+                            <div className="col">
+                                {/* <button type="button" className="btn mr-2" id="likebutton">
                                 👍 Like
                                 </button> */}
-                            <button type="button" onClick={() => this.onClickFeedLikeButton(this.state.modalPost)} className="btn mr-2" id="likebutton">
-                                👍 {!this.state.modalPostLiked && "Like (" + this.state.modalPostNumLikes + ")"}{this.state.modalPostLiked && "Unlike (" + this.state.modalPostNumLikes + ")"}
-                            </button>
-                            <button type="button" className="btn mr-2" id="commentbutton" onClick={this.scrollToAddComment}>
-                                Comment
+                                <button type="button" onClick={() => this.onClickFeedLikeButton(this.state.modalPost)} className="btn mr-2" id="likebutton">
+                                    👍 {!this.state.modalPostLiked && "Like (" + this.state.modalPostNumLikes + ")"}{this.state.modalPostLiked && "Unlike (" + this.state.modalPostNumLikes + ")"}
                                 </button>
-                            <button type="button" onClick={() => this.onClickSaveButton(this.state.modalPost)} className="btn mr-2" id="savebutton">
-                                {!this.state.modalPostSaved && "Save"}{this.state.modalPostSaved && "Unsave"}
-                            </button>
+                                <button type="button" className="btn mr-2" id="commentbutton" onClick={this.scrollToAddComment}>
+                                    Comment
+                                </button>
+                                <button type="button" onClick={() => this.onClickSaveButton(this.state.modalPost)} className="btn mr-2" id="savebutton">
+                                    {!this.state.modalPostSaved && "Save"}{this.state.modalPostSaved && "Unsave"}
+                                </button>
+                            </div>
                         </div>
+                        <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.user_id} poster_id={this.state.modalPost.user_id} post_id={this.state.modalPost.post_id} handleDeletion={this.onCommentDeletion} onLikeCommentButton={this.onLikeCommentButton} />
+                        <form className="row mt-0 ml-0 pl-0" name="newCommentForm">
+                            <div className="ml-0 pl-0" id="newcommenttextarea">
+                                <textarea name="newCommentTA" type="text" className="form-control mb-3" placeholder="add a comment" id="newcomment"
+                                    value={this.state.newComment}
+                                    onChange={e => this.setState({ newComment: e.target.value })} required />
+                            </div>
+                            <div className="col text-right">
+                                {this.state.newComment == "" &&
+                                    <button type="button" className="btn mt-2 mr-4" id="newCommentButtonInactive">Post Comment</button>
+                                }
+                                {this.state.newComment != "" &&
+                                    <button type="button" className="btn btn-secondary mt-2 mr-4" id="newCommentButton" onClick={() => this.onNewComment()}>Post Comment</button>
+                                }
+                            </div>
+                        </form>
+                    </div>}
+                {this.state.editPost &&
+                    <div id="modalcontainer">
+                        <form className="w-75">
+                            <h3 className="card-title">Edit Post</h3>
+                            <div className="row form-group">
+                                <div className="col">
+                                    <label htmlFor="editOrigin">Origin</label>
+                                    <input type="text" className="form-control" value={this.state.editOrigin} onChange={e => this.setState({ editOrigin: e.target.value })} />
+                                </div>
+                                <div className="col">
+                                    <label htmlFor="editDestination">Destination</label>
+                                    <input type="text" className="form-control" value={this.state.editDestination} onChange={e => this.setState({ editDestination: e.target.value })} />
+                                </div>
+                            </div>
+                            <div className="row form-group">
+                                <div className="col">
+                                    <label htmlFor="editText">Description</label>
+                                    <textarea className="form-control" id="text" rows="5" value={this.state.editText} onChange={e => this.setState({ editText: e.target.value })} />
+                                </div>
+                            </div>
+                            <div className="row form-group">
+                                <div className="col">
+                                    <label htmlFor="editPrice">Price</label>
+                                    <select className="form-control" value={this.state.editPrice} onChange={e => this.setState({ editPrice: e.target.value })}>
+                                        <option></option>
+                                        {this.prices.map((x, i) => <option key={i}>{x}</option>)}
+                                    </select>
+                                </div>
+                                <div className="col">
+                                    <label htmlFor="editRating">Rating</label>
+                                    <select className="form-control" value={this.state.editRating} onChange={e => this.setState({ editRating: e.target.value })}>
+                                        <option></option>
+                                        {this.ratings.map((x, i) => <option key={i}>{x}</option>)}
+                                    </select>
+                                </div>
+                                <div className="col">
+                                    <label htmlFor="editReaction">Reaction</label>
+                                    <select className="form-control" value={this.state.editReaction} onChange={e => this.setState({ editReaction: e.target.value })}>
+                                        <option></option>
+                                        {this.reactions.map((x, i) => <option key={i}>{x}</option>)}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="row form-group">
+                                <div className="col">
+                                    <label htmlFor="editImgurl">Photo URL</label>
+                                    <input type="text" className="form-control" value={this.state.editImgurl} onChange={e => this.setState({ editImgurl: e.target.value })} />
+                                </div>
+                                <div className="col">
+                                    <img src={this.state.editImgurl} alt="Trip" className="img-fluid"></img>
+                                </div>
+                            </div>
+                            <div className="row form-group">
+                                <div className="col-sm">
+                                    <button type="button" className="btn" id="postButton" onClick={() => this.updatePost()}>Update Post</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.user_id} poster_id={this.state.modalPost.user_id} post_id={this.state.modalPost.post_id} handleDeletion={this.onCommentDeletion} onLikeCommentButton={this.onLikeCommentButton} />
-                    <form className="row mt-0 ml-0 pl-0" name="newCommentForm">
-                        <div className="ml-0 pl-0" id="newcommenttextarea">
-                            <textarea name="newCommentTA" type="text" className="form-control mb-3" placeholder="add a comment" id="newcomment"
-                                value={this.state.newComment}
-                                onChange={e => this.setState({ newComment: e.target.value })} required />
-                        </div>
-                        <div className="col text-right">
-                            {this.state.newComment == "" &&
-                                <button type="button" className="btn mt-2 mr-4" id="newCommentButtonInactive">Post Comment</button>
-                            }
-                            {this.state.newComment != "" &&
-                                <button type="button" className="btn btn-secondary mt-2 mr-4" id="newCommentButton" onClick={() => this.onNewComment()}>Post Comment</button>
-                            }
-                        </div>
-                    </form>
-                </div>
+                }
             </PostModal>
         </>
     }
