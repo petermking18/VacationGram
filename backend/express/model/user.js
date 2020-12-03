@@ -182,7 +182,7 @@ exports.update_user = function(req, res)
             res.status(200).send(
             {
               success: false,
-              response: "User with id " + req.params.id + " not found, nothing was updated",
+              response: "Nothing was updated, user " + req.params.id + " might not exist.",
             });
           }
           else
