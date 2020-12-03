@@ -110,6 +110,16 @@ export class Search extends React.Component {
         this.setState({ editPost: false });
     }
     async updatePost() {
+        var newTripInfo = {
+            "origin": this.state.editOrigin,
+            "destination": this.state.editDestination,
+            "rating": this.getDbRating(this.state.editRating),
+            "price": this.getDbPrice(this.state.editPrice),
+            "reaction_id": this.getDbReaction(this.state.editReaction),
+            "image_url": this.state.editImgurl,
+            "body": this.state.editText
+        }
+        await this.apiClient.updateTrip(this.state.editPostId, newTripInfo);
         //api here
         var postsArr = this.state.results;
         for (let p = 0; p < postsArr.length; p++) {
