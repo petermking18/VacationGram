@@ -201,8 +201,8 @@ export class PersonalProfile extends React.Component {
             });
         return new_trip_id;
     }
-    onPost() {
-        var new_trip_id = this.postTrip();
+    async onPost() {
+        var new_trip_id = await this.postTrip();
         let dateObj = new Date();
         let date = months[dateObj.getMonth()] + " " + dateObj.getDate() + ", " + dateObj.getFullYear();
         let mypost = new post_card(
