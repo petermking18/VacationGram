@@ -7,7 +7,7 @@ const PostForm = ({ handleClose, show, children}) => {
     return (
         <div className={showHideClassName}>
             <div id="backdiv" onClick={handleClose}></div>
-            <div id="postformdiv">
+            <div id="postformdiv" className="fadeInDown">
                 <button type="button" /*href="javascript:;"*/ className="float-right mr-2" onClick={handleClose} id="closeModalButton">
                 ×
                 </button>
