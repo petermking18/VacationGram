@@ -16,6 +16,8 @@
     overflow-y: auto;/**/
     overflow-x: hidden;
     max-width: 700px;
+    -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+    box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
 }
 
 #modalimg{
