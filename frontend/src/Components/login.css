@@ -146,7 +146,25 @@ img.avatar {
     border-bottom: 2px solid royalblue;
 }
 
+#loginFormContent button, #loginFormContent input[type=text], #loginFormContent input[type=password]{
+    transition: all 0.3s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all -.3s ease-in-out;
+}
 
+#loginFormContent input[type=text]:hover, #loginFormContent input[type=password]:hover{
+    background-color:rgb(245, 245, 245) !important;
+}
+
+/* #loginFormContent button{
+    -webkit-box-shadow: 0 10px 30px 0 rgba(65, 105, 225, 0.4);
+    box-shadow: 0 10px 30px 0 rgba(65, 105, 225, 0.4);
+} */
+
+.webshadow{
+    -webkit-box-shadow: 0 10px 30px 0 rgba(65, 105, 225, 0.4);
+    box-shadow: 0 10px 30px 0 rgba(65, 105, 225, 0.4);
+}
 
 @media only screen and (max-width: 600px){
     #loginWrapper{
