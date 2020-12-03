@@ -200,6 +200,19 @@ export class VacationGramAPIClient
     });
   }
 
+  updateTrip(trip_id, updateJSON)
+  {
+    return new Promise((resolve, reject) =>
+    {
+      axios.put(
+          `${this.url}/trips/${trip_id}`,
+          updateJSON
+        )
+        .then(response => resolve(response.data))
+        .catch(error => alert(error));
+    });
+  }
+
   deleteTrip(trip_id)
   {
     return new Promise((resolve, reject) =>

@@ -155,6 +155,57 @@ exports.get_trip = function(req, res)
   );
 };
 
+exports.update_trip = function(req, res)
+{
+  if (req.body.length <= 0)
+  {
+    res.status(400).send(
+    {
+      success: false,
+      response: "Empty request body",
+    });
+  }
+  else
+  {
+    sql.connection.query(
+      "UPDATE `trip` SET ? WHERE `id` = ?;",
+      [req.body, req.params.id],
+      function(sqlErr, sqlRes)
+      {
+        if (sql.isSuccessfulQuery(sqlErr, res))
+        {
+          if (sqlRes.affectedRows == 0)
+          {
+            res.status(200).send(
+            {
+              success: false,
+              response: "Nothing was updated, trip " + req.params.id + " might not exist.",
+            });
+          }
+          else
+          {
+            sql.connection.query(
+              "SELECT * FROM `trip` WHERE `id` = ?;",
+              req.params.id,
+              function(subErr, subRes)
+              {
+                if (sql.isSuccessfulQuery(subErr, res))
+                {
+                  res.status(200).send(
+                  {
+                    success: true,
+                    response: "Successfully updated trip " + req.params.id,
+                  });
+                }
+              }
+            );
+          }
+        }
+      }
+    );
+  }
+}
+
 exports.delete_trip = function(req, res)
 {
   sql.connection.query(

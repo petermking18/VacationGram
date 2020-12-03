@@ -49,6 +49,7 @@ module.exports = function(app)
   app.route("/api/trips").get(tripController.get_trips);
   app.route("/api/trips").post(tripController.create_trip);
   app.route("/api/trips/:id").get(tripController.get_trip);
+  app.route("/api/trips/:id").put(tripController.update_trip);
   app.route("/api/trips/:id").delete(tripController.delete_trip);
 
   // TRIP LIKES
