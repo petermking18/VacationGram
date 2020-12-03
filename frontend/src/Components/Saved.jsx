@@ -11,6 +11,9 @@ import Feed from './Feed';
 import { VacationGramAPIClient } from '../Api/VacationGramAPIClient';
 import PostModal from './PostModal';
 import { Reactions } from '../reactions';
+import feedIcon from '../feedIcon.png';
+import savedIcon from '../savedIcon.png';
+import settingsIcon from '../settingsIcon.png';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -417,14 +420,14 @@ export default class Saved extends React.Component {
                     <hr className="m-0" />
                     <ul className="nav nav-tabs tabs-alt justify-content-center">
                         <li className="nav-item">
-                            <a onClick={this.goPostPage} className="nav-link py-4"><img src="https://cdn.icon-icons.com/icons2/1875/PNG/512/imagegallery_120168.png" id="galleryIcon" /></a>
+                            <a onClick={this.goPostPage} className="nav-link py-4"><img src={feedIcon} id="galleryIcon" /></a>
                             {this.state.postPage && <Redirect to={'/profile/' + this.state.user_id} />}
                         </li>
                         <li className="nav-item">
-                            <a onClick={this.goSavedPage} className="nav-link py-4 active"><img src="https://www.flaticon.com/svg/static/icons/svg/84/84510.svg" id="bookMarkIcon" /></a>
+                            <a onClick={this.goSavedPage} className="nav-link py-4 active"><img src={savedIcon} id="bookMarkIcon" /></a>
                         </li>
                         <li className="nav-item">
-                            <a onClick={this.goSettingsPage} className="nav-link py-4"><img src="https://icon-library.net/images/white-gear-icon-png/white-gear-icon-png-13.jpg" id="gearIcon" /></a>
+                            <a onClick={this.goSettingsPage} className="nav-link py-4"><img src={settingsIcon} id="gearIcon" /></a>
                             {this.state.settingsPage && <Redirect to={'/settings/' + this.state.user_id} />}
                         </li>
                     </ul>

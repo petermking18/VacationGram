@@ -2,7 +2,10 @@ import React from 'react';
 import { VacationGramAPIClient } from '../Api/VacationGramAPIClient';
 import { Redirect } from 'react-router-dom';
 import NavBar from "./NavBar";
-import "./profilePage.css"
+import "./profilePage.css";
+import feedIcon from '../feedIcon.png';
+import savedIcon from '../savedIcon.png';
+import settingsIcon from '../settingsIcon.png';
 
 ///This page is settings page
 export default class ProfilePage extends React.Component {
@@ -84,15 +87,15 @@ export default class ProfilePage extends React.Component {
                         <hr className="m-0" />
                         <ul className="nav nav-tabs tabs-alt justify-content-center">
                             <li className="nav-item">
-                                <a onClick={this.goPostPage} className="nav-link py-4"><img src="https://cdn.icon-icons.com/icons2/1875/PNG/512/imagegallery_120168.png" id="galleryIcon" alt="Posts" /></a>
+                                <a onClick={this.goPostPage} className="nav-link py-4"><img src={feedIcon} id="galleryIcon" alt="Posts" /></a>
                                 {this.state.postPage && <Redirect to={"/profile/" + this.state.id} />}
                             </li>
                             <li className="nav-item">
-                                <a onClick={this.goSavedPage} className="nav-link py-4"><img src="https://www.flaticon.com/svg/static/icons/svg/84/84510.svg" id="bookMarkIcon" alt="Saved" /></a>
+                                <a onClick={this.goSavedPage} className="nav-link py-4"><img src={savedIcon} id="bookMarkIcon" alt="Saved" /></a>
                                 {this.state.savedPage && <Redirect to={'/saved/' + this.state.id} />}
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link py-4 active"><img src="https://icon-library.net/images/white-gear-icon-png/white-gear-icon-png-13.jpg" id="gearIcon" alt="Settings" /></a>
+                                <a className="nav-link py-4 active"><img src={settingsIcon} id="gearIcon" alt="Settings" /></a>
                             </li>
                         </ul>
                     </div>
