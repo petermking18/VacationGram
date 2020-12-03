@@ -43,7 +43,7 @@ class Login extends React.Component {
             <div id="loginPageBG">
             <div className="fadeInDown" id="loginWrapper">
                 <div id="loginFormContent">
-                    <div className="imgcontainer pt-3 mb-0">
+                    <div className="imgcontainer pt-4 mb-0">
                         <h1>Welcome to TravelGram!</h1>
                         <img src={logo} alt="Avatar" className="avatar"></img>
                     </div>
@@ -73,7 +73,7 @@ class Login extends React.Component {
                             onClick={() => this.onLogin()}>Log In</button>
                         {this.state.authenticated && <Redirect to={'/home/' + this.state.id} />}
                         <br></br>
-                        <div className="pb-4">
+                        <div className="pb-5">
                         <Link to={'register'}>
                             <button className="btn btn-primary btn-lg mb-7 btn-block" type="button">Register</button>
                         </Link>

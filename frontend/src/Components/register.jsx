@@ -85,7 +85,7 @@ export class RegisterPage extends React.Component {
                 <div className="fadeInDown" id="loginWrapper">
                     <div id="loginFormContent">
                         <form className="container">
-                            <div className="imgcontainer pt-2">
+                            <div className="imgcontainer pt-3">
                                 <h1>Register</h1>
                                 <img src={logo} alt="Avatar" className="avatar"></img>
                             </div>
