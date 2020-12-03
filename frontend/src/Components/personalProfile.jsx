@@ -484,6 +484,7 @@ export class PersonalProfile extends React.Component {
                     New Post
                 </button>
                 <Feed posts={this.state.posts} openPost={this.postModalOpen} editPost={this.editPostOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} postIsDeletable={this.postIsDeletable} deletePost={this.deletePost} />
+                <div id="bottomspacer" />
                 <PostForm show={this.state.postForm} handleClose={e => this.postFormClose(e)}>
                     <div className="mt-3 pt-4">
                         <h2>Make a Post</h2>
