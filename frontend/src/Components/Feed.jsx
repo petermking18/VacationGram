@@ -7,7 +7,7 @@ const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ];
 
-//Props: array posts, func openPost(post), func openProfile(user id), 
+//Props: array posts, func openPost(post), func openProfile(user id), func editPost(post),
 //       func likePost(post), func savePost(post), func postIsDeletable(poster_id), func deletePost(post_id)
 export default class Feed extends React.Component {
     constructor(props) {
@@ -28,8 +28,8 @@ export default class Feed extends React.Component {
         let mydate = months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
         return mydate;
     }
-    notNullLength0(){
-        if(this.state.posts !== null && this.state.posts.length === 0){
+    notNullLength0() {
+        if (this.state.posts !== null && this.state.posts.length === 0) {
             return true;
         }
         return false;
@@ -48,10 +48,10 @@ export default class Feed extends React.Component {
                         {/* <p>(there may be no posts yet...)</p> */}
                     </div>
                 }
-                {this.notNullLength0() && 
-                <div className="jumbotron text-muted mt-5 text-center">
-                    <h2>No posts yet...</h2>
-                </div>
+                {this.notNullLength0() &&
+                    <div className="jumbotron text-muted mt-5 text-center">
+                        <h2>No posts yet...</h2>
+                    </div>
                 }
                 {this.state.posts !== null && this.state.posts.map((post, index) => (
                     <li key={index} className="container rounded border border-secondary-50 border-top px-0 mt-3">
@@ -89,21 +89,26 @@ export default class Feed extends React.Component {
                                 <div className="col-sm-3" id="postcardimgcol">
                                     <img id="postcardimg" src={post.imgurl} alt="Trip" />
                                 </div>
-                                {!this.props.postIsDeletable(post.user_id) && 
-                                <div className="col-lg pl-1 pr-5">
-                                    <p>{post.text}</p>
-                                </div>}
+                                {!this.props.postIsDeletable(post.user_id) &&
+                                    <div className="col-lg pl-1 pr-5">
+                                        <p>{post.text}</p>
+                                    </div>}
                                 {this.props.postIsDeletable(post.user_id) &&
-                                <div className="col-md pl-1 pr-5">
-                                <p>{post.text}</p>
+                                    <div className="col-md pl-1 pr-5">
+                                        <p>{post.text}</p>
+                                    </div>}
+                                {this.props.postIsDeletable(post.user_id) && <div>
+                                    <div className="clearfix">
+                                        <button type="button" className="btn alert-secondary text-danger px-2 mr-4 mt-1 float-right" id="deletePostButton" onClick={() => this.props.deletePost(post.post_id)}>
+                                            Delete Post
+                                            </button>
+                                    </div>
+                                    <div className="clearfix">
+                                        <button type="button" className="btn alert-secondary text-primary px-2 mr-4 mt-1 float-right" id="deletePostButton" onClick={() => this.props.editPost(post)}>
+                                            Edit Post
+                                        </button>
+                                    </div>
                                 </div>}
-                                {this.props.postIsDeletable(post.user_id) &&
-                                <div className="clearfix">
-                                    <button type="button" className="btn alert-secondary text-danger px-2 mr-4 mt-1 float-right" id="deletePostButton" onClick={() => this.props.deletePost(post.post_id)}>
-                                        Delete Post
-                                    </button>
-                                </div>
-                            }
                             </div>
                         </div>
                         {/* Bottom area: like button, comment button, save button, numlikes, numcomments */}

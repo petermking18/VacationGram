@@ -1,6 +1,6 @@
 import React from 'react';
 import PostFeed from './PostFeed';
-import {post_card} from '../models/post_card';
+import { post_card } from '../models/post_card';
 import PostCard from './PostCard';
 import { Comment } from '../models/comment';
 import { Redirect, Link } from 'react-router-dom';
@@ -13,8 +13,8 @@ import { Price } from './Price';
 import CommentList from './CommentList';
 import './personalProfile.css';
 import Feed from './Feed';
-import {VacationGramAPIClient} from '../Api/VacationGramAPIClient';
-import {Reactions} from '../reactions';
+import { VacationGramAPIClient } from '../Api/VacationGramAPIClient';
+import { Reactions } from '../reactions';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -27,7 +27,7 @@ export class PersonalProfile extends React.Component {
     dummyPost1 = new post_card(1, 2, "Mark Fontenot", "Nov 9 2020",
         "Dallas", "Hawaii", "https://lp-cms-production.imgix.net/2019-06/c05b829af5ee38ab1917f335d937f8e1-hawaii.jpg?auto=compress&fit=crop&fm=auto&sharp=10&vib=20&w=1200",
         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        "$$$", "happy", "4 stars", [this.dummyComment1,this.dummyComment2], true, 12, false);
+        "$$$", "happy", "4 stars", [this.dummyComment1, this.dummyComment2], true, 12, false);
     dummyPosts = [this.dummyPost1];
     blankPost = new post_card(
         0, 0, "", "", "", "", "", "", "", "", "", [], false, 0, false
@@ -61,7 +61,16 @@ export class PersonalProfile extends React.Component {
             savedPage: false,
             settingsPage: false,
             profImgUrl: null,
-            nextCommentId: null
+            nextCommentId: null,
+            editPost: false,
+            editPostId: "",
+            editOrigin: "",
+            editDestination: "",
+            editRating: "",
+            editPrice: "",
+            editReaction: "",
+            editImgurl: "",
+            editText: ""
         }
     }
 
@@ -83,10 +92,10 @@ export class PersonalProfile extends React.Component {
         return false;
     }
     goSettingsPage = e => {
-        this.setState({settingsPage: true});
+        this.setState({ settingsPage: true });
     }
     goSavedPage = e => {
-        this.setState({savedPage: true});
+        this.setState({ savedPage: true });
     }
     getPrice(dbPrice) {
         return this.prices[dbPrice - 1];
@@ -119,8 +128,41 @@ export class PersonalProfile extends React.Component {
         this.setState({ newComment: "" });
         document.body.style.overflow = "visible";
         this.setState({ posts: this.state.posts });//pull from api again
+        this.setState({ editPost: false });
     }
-
+    async updatePost() {
+        //api here
+        var postsArr = this.state.posts;
+        for (let p = 0; p < postsArr.length; p++) {
+            if (postsArr[p].post_id == this.state.editPostId) {
+                postsArr[p].origin = this.state.editOrigin;
+                postsArr[p].destination = this.state.editDestination;
+                postsArr[p].rating = this.state.editRating;
+                postsArr[p].price = this.state.editPrice;
+                postsArr[p].reaction = this.state.editReaction;
+                postsArr[p].imgurl = this.state.editImgurl;
+                postsArr[p].text = this.state.editText;
+            }
+        }
+        this.setState({ posts: postsArr });
+        this.postModalClose();
+    }
+    editPostOpen = (post) => {
+        this.postModalOpen(post);
+        this.setState({ editPost: true });
+        this.setState({ editPostId: post.post_id });
+        this.setState({ editOrigin: post.origin });
+        this.setState({ editDestination: post.destination });
+        this.setState({ editRating: post.rating });
+        this.setState({ editPrice: post.price });
+        this.setState({ editReaction: post.reaction });
+        this.setState({ editImgurl: post.imgurl });
+        this.setState({ editText: post.text });
+    }
+    editPostClose = () => {
+        this.postModalClose();
+        this.setState({ editPost: false });
+    }
     postFormOpen() {
         this.setState({ postForm: true });
         document.body.style.overflow = "hidden";
@@ -160,7 +202,7 @@ export class PersonalProfile extends React.Component {
     }
     async postComment() {
         await this.apiClient.postComment(this.state.modalPost.post_id, this.state.user_id, this.state.newComment).then(comment => {
-            this.setState({nextCommentId: comment.info[0].id});
+            this.setState({ nextCommentId: comment.info[0].id });
         });
     }
     async onNewComment() {
@@ -229,8 +271,8 @@ export class PersonalProfile extends React.Component {
             }
         }
     }
-    openOtherProfile(){
-        
+    openOtherProfile() {
+
     }
     async deleteComment(trip_id, comment_id) {
         await this.apiClient.deleteComment(trip_id, comment_id);
@@ -238,12 +280,12 @@ export class PersonalProfile extends React.Component {
     onCommentDeletion = (postid, comments, commentid) => {
         this.deleteComment(postid, commentid);
         var postsArr = this.state.posts;
-        for(let p = 0; p < postsArr.length; p++){//find the post
-            if(postsArr[p].id === postid){
+        for (let p = 0; p < postsArr.length; p++) {//find the post
+            if (postsArr[p].id === postid) {
                 postsArr[p].comments = comments;
             }
         }
-        this.setState({posts: postsArr});
+        this.setState({ posts: postsArr });
     }
     checkEsc(event) {
         if (event.keyCode === 27) {
@@ -260,7 +302,7 @@ export class PersonalProfile extends React.Component {
         }
     }
     postIsDeletable = (poster_id) => {
-        if(poster_id == this.state.user_id) return true;
+        if (poster_id == this.state.user_id) return true;
         return false;
     }
     async deleteTrip(post_id) {
@@ -281,8 +323,8 @@ export class PersonalProfile extends React.Component {
     async loadPosts() {
         //get current username & profile image url
         await this.apiClient.getUserInfo(this.state.user_id).then(user => {
-            this.setState({username: user.info[0].name});
-            this.setState({profImgUrl: user.info[0].image_url});
+            this.setState({ username: user.info[0].name });
+            this.setState({ profImgUrl: user.info[0].image_url });
             console.log(user.info[0].image_url);
         })
 
@@ -291,7 +333,7 @@ export class PersonalProfile extends React.Component {
         await this.apiClient.getUserTrips(this.state.user_id).then(tripsReturned => {
             trips = tripsReturned;
         });
-        for(let t = 0; t < trips.count; t++){
+        for (let t = 0; t < trips.count; t++) {
             var trip = trips.info[t];
 
             ///get username
@@ -326,8 +368,8 @@ export class PersonalProfile extends React.Component {
             });
 
             ///Construct comments
-            if(comments.success){
-                for(let c = 0; c < comments.count; c++){
+            if (comments.success) {
+                for (let c = 0; c < comments.count; c++) {
                     var comment = comments.info[c];
 
                     ///get commenter username
@@ -341,8 +383,8 @@ export class PersonalProfile extends React.Component {
                     var curr_user_liked_comment = false;
                     await this.apiClient.getCommentLikes(trip.id, comment.id).then(likes => {
                         numCommentLikes = likes.count;
-                        for(let i = 0; i < numCommentLikes; i++){
-                            if(this.state.user_id == likes.info[i]) curr_user_liked_comment = true;
+                        for (let i = 0; i < numCommentLikes; i++) {
+                            if (this.state.user_id == likes.info[i]) curr_user_liked_comment = true;
                         }
                     });
 
@@ -354,7 +396,7 @@ export class PersonalProfile extends React.Component {
                     commentsArr.push(newComment);
                 }
             }
-            commentsArr.sort((a,b) => (a.date_created < b.date_created) ? 1 : -1);
+            commentsArr.sort((a, b) => (a.date_created < b.date_created) ? 1 : -1);
 
             ///Construct post
             var post = new post_card(
@@ -365,15 +407,15 @@ export class PersonalProfile extends React.Component {
             );
             postsArr.push(post);
         }
-        postsArr.sort((a,b) => (a.date < b.date) ? 1 : -1);
-        this.setState({posts: postsArr});
+        postsArr.sort((a, b) => (a.date < b.date) ? 1 : -1);
+        this.setState({ posts: postsArr });
     }
     prettyPrintDate(dbDate) {
         let date = new Date(dbDate);
         let mydate = months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
         return mydate;
     }
-    async onLikeComment(comment_id){
+    async onLikeComment(comment_id) {
         var curr_user_liked = false;
         await this.apiClient.getCommentLikes(this.state.modalPost.post_id, comment_id).then(users => {
             for (let u = 0; u < users.count; u++) {
@@ -393,7 +435,7 @@ export class PersonalProfile extends React.Component {
         this.onLikeComment(comment_id);
     }
     componentDidMount() {
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
         document.addEventListener("keydown", this.checkEsc, false);
         console.log("PersonalProfile mounted, user id: " + this.props.match.params.id);
         this.loadPosts();
@@ -401,29 +443,29 @@ export class PersonalProfile extends React.Component {
     render() {
         return (
             <>
-                <NavBar id={this.state.user_id}/>
-                <div className = "container boostrap-snippet header-container">
-                    <div className = "bg-white">
-                        <div className = "container pt-0">
-                            <div className = "media col-md-10 cold-lg-8 col-xl-7 p-0 mb-4 mx-auto">
-                                <img src={this.state.profImgUrl} className = "d-block ui-w-100 rounded circle mt-4" id = "profImg"/>
+                <NavBar id={this.state.user_id} />
+                <div className="container boostrap-snippet header-container">
+                    <div className="bg-white">
+                        <div className="container pt-0">
+                            <div className="media col-md-10 cold-lg-8 col-xl-7 p-0 mb-4 mx-auto">
+                                <img src={this.state.profImgUrl} className="d-block ui-w-100 rounded circle mt-4" id="profImg" />
                             </div>
-                            <div className = "profUsername">
-                                    <h4 className = "font-weight-bold mb-4">{this.state.username}</h4>
+                            <div className="profUsername">
+                                <h4 className="font-weight-bold mb-4">{this.state.username}</h4>
                             </div>
                         </div>
-                        <hr className = "m-0"/>
+                        <hr className="m-0" />
                         <ul className="nav nav-tabs tabs-alt justify-content-center">
                             <li className="nav-item">
-                            <a className="nav-link py-4 active"><img src = "https://cdn.icon-icons.com/icons2/1875/PNG/512/imagegallery_120168.png" id = "galleryIcon"/></a>
+                                <a className="nav-link py-4 active"><img src="https://cdn.icon-icons.com/icons2/1875/PNG/512/imagegallery_120168.png" id="galleryIcon" /></a>
                             </li>
                             <li className="nav-item">
-                            <a onClick={this.goSavedPage} className="nav-link py-4"><img src = "https://www.flaticon.com/svg/static/icons/svg/84/84510.svg" id = "bookMarkIcon"/></a>
-                            {this.state.savedPage && <Redirect to={'/saved/'+this.state.user_id}/>}
+                                <a onClick={this.goSavedPage} className="nav-link py-4"><img src="https://www.flaticon.com/svg/static/icons/svg/84/84510.svg" id="bookMarkIcon" /></a>
+                                {this.state.savedPage && <Redirect to={'/saved/' + this.state.user_id} />}
                             </li>
                             <li className="nav-item">
-                            <a onClick = {this.goSettingsPage} className="nav-link py-4"><img src = "https://icon-library.net/images/white-gear-icon-png/white-gear-icon-png-13.jpg" id = "gearIcon"/></a>
-                            {this.state.settingsPage && <Redirect to={'/settings/'+this.state.user_id}/>}
+                                <a onClick={this.goSettingsPage} className="nav-link py-4"><img src="https://icon-library.net/images/white-gear-icon-png/white-gear-icon-png-13.jpg" id="gearIcon" /></a>
+                                {this.state.settingsPage && <Redirect to={'/settings/' + this.state.user_id} />}
                             </li>
                         </ul>
                     </div>
@@ -431,7 +473,7 @@ export class PersonalProfile extends React.Component {
                 <button id="newpostbutton" type="button" onClick={e => this.postFormOpen(e)}>
                     New Post
                 </button>
-                <Feed posts={this.state.posts} openPost={this.postModalOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} postIsDeletable={this.postIsDeletable} deletePost={this.deletePost}/>
+                <Feed posts={this.state.posts} openPost={this.postModalOpen} editPost={this.editPostOpen} openProfile={this.openOtherProfile} likePost={this.onClickFeedLikeButton} savePost={this.onClickSaveButton} postIsDeletable={this.postIsDeletable} deletePost={this.deletePost} />
                 <PostForm show={this.state.postForm} handleClose={e => this.postFormClose(e)}>
                     <div className="mt-3 pt-4">
                         <h2>Make a Post</h2>
@@ -496,75 +538,141 @@ export class PersonalProfile extends React.Component {
                     </div>
                 </PostForm>
                 <PostModal id="postmodal" show={this.state.postModal} handleClose={e => this.postModalClose(e)}>
-                    <div className="" id="modalcontainer">
-                        <h3>{this.state.modalPost.origin} ✈ {this.state.modalPost.destination}</h3>
-                        <div className="row py-1">
-                            <div className="col">
-                                <h5>{this.state.modalPost.username}</h5>
+                    {!this.state.editPost &&
+                        <div className="" id="modalcontainer">
+                            <h3>{this.state.modalPost.origin} ✈ {this.state.modalPost.destination}</h3>
+                            <div className="row py-1">
+                                <div className="col">
+                                    <h5>{this.state.modalPost.username}</h5>
+                                </div>
+                                <div className="col text-right text-muted">
+                                    <Rating value={this.state.modalPost.rating} />
+                                </div>
                             </div>
-                            <div className="col text-right text-muted">
-                                <Rating value={this.state.modalPost.rating} />
+                            <div className="row">
+                                <div className="col text-muted">
+                                    <h6>{this.prettyPrintDate(this.state.modalPost.date)}</h6>
+                                </div>
+                                <div className="col text-right text-muted">
+                                    <Price value={this.state.modalPost.price} />
+                                </div>
                             </div>
-                        </div>
-                        <div className="row">
-                            <div className="col text-muted">
-                                <h6>{this.prettyPrintDate(this.state.modalPost.date)}</h6>
+                            <div className="row text-muted">
+                                <p className="col text-right">Reaction: {this.state.modalPost.reaction}</p>
                             </div>
-                            <div className="col text-right text-muted">
-                                <Price value={this.state.modalPost.price} />
+                            {this.postIsDeletable(this.state.modalPost.user_id) &&
+                                <div>
+                                    <div className="clearfix">
+                                        <button type="button" className="btn alert-secondary text-danger float-right" id="deletePostButton" onClick={() => this.deletePost(this.state.modalPost.post_id)}>
+                                            Delete Post
+                                        </button>
+                                        <button type="button" className="btn alert-secondary text-primary mr-1 float-right" id="deletePostButton" onClick={() => this.editPostOpen(this.state.modalPost)}>
+                                            Edit Post
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                            <div className="row py-1">
+                                <img id="modalimg" src={this.state.modalPost.imgurl} />
                             </div>
-                        </div>
-                        <div className="row text-muted">
-                            <p className="col text-right">Reaction: {this.state.modalPost.reaction}</p>
-                        </div>
-                        {this.postIsDeletable(this.state.modalPost.user_id) &&
-                            <div className="clearfix">
-                                <button type="button" className="btn alert-secondary text-danger float-right" id="deletePostButton" onClick={() => this.deletePost(this.state.modalPost.post_id)}>
-                                    Delete Post
-                                </button>
+                            <div className="row py-3">
+                                <div className="col">
+                                    <p>{this.state.modalPost.text}</p>
+                                </div>
                             </div>
-                        }
-                        <div className="row py-1">
-                            <img id="modalimg" src={this.state.modalPost.imgurl} />
-                        </div>
-                        <div className="row py-3">
-                            <div className="col">
-                                <p>{this.state.modalPost.text}</p>
-                            </div>
-                        </div>
-                        <div className="row py-1">
-                            <div className="col">
-                                {/* <button type="button" className="btn mr-2" id="likebutton">
+                            <div className="row py-1">
+                                <div className="col">
+                                    {/* <button type="button" className="btn mr-2" id="likebutton">
                                 👍 Like
                                 </button> */}
-                                <button type="button" onClick={() => this.onClickFeedLikeButton(this.state.modalPost)} className="btn mr-2" id="likebutton">
-                                    👍 {!this.state.modalPostLiked && "Like (" + this.state.modalPostNumLikes + ")"}{this.state.modalPostLiked && "Unlike (" + this.state.modalPostNumLikes + ")"}
+                                    <button type="button" onClick={() => this.onClickFeedLikeButton(this.state.modalPost)} className="btn mr-2" id="likebutton">
+                                        👍 {!this.state.modalPostLiked && "Like (" + this.state.modalPostNumLikes + ")"}{this.state.modalPostLiked && "Unlike (" + this.state.modalPostNumLikes + ")"}
+                                    </button>
+                                    <button type="button" className="btn mr-2" id="commentbutton" onClick={this.scrollToAddComment}>
+                                        Comment
                                 </button>
-                                <button type="button" className="btn mr-2" id="commentbutton" onClick={this.scrollToAddComment}>
-                                    Comment
-                                </button>
-                                <button type="button" onClick={() => this.onClickSaveButton(this.state.modalPost)} className="btn mr-2" id="savebutton">
-                                    {!this.state.modalPostSaved && "Save"}{this.state.modalPostSaved && "Unsave"}
-                                </button>
+                                    <button type="button" onClick={() => this.onClickSaveButton(this.state.modalPost)} className="btn mr-2" id="savebutton">
+                                        {!this.state.modalPostSaved && "Save"}{this.state.modalPostSaved && "Unsave"}
+                                    </button>
+                                </div>
                             </div>
+                            <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.user_id} poster_id={this.state.modalPost.user_id} post_id={this.state.modalPost.post_id} handleDeletion={this.onCommentDeletion} onLikeCommentButton={this.onLikeCommentButton} />
+                            <form className="row mt-0 ml-0 pl-0" name="newCommentForm">
+                                <div className="ml-0 pl-0" id="newcommenttextarea">
+                                    <textarea name="newCommentTA" type="text" className="form-control mb-3" placeholder="add a comment" id="newcomment"
+                                        value={this.state.newComment}
+                                        onChange={e => this.setState({ newComment: e.target.value })} required />
+                                </div>
+                                <div className="col text-right">
+                                    {this.state.newComment == "" &&
+                                        <button type="button" className="btn mt-2 mr-4" id="newCommentButtonInactive">Post Comment</button>
+                                    }
+                                    {this.state.newComment != "" &&
+                                        <button type="button" className="btn btn-secondary mt-2 mr-4" id="newCommentButton" onClick={() => this.onNewComment()}>Post Comment</button>
+                                    }
+                                </div>
+                            </form>
+                        </div>}
+                    {this.state.editPost &&
+                        <div id="modalcontainer">
+                            <form className="w-75">
+                                <h3 className="card-title">Edit Post</h3>
+                                <div className="row form-group">
+                                    <div className="col">
+                                        <label htmlFor="editOrigin">Origin</label>
+                                        <input type="text" className="form-control" value={this.state.editOrigin} onChange={e => this.setState({ editOrigin: e.target.value })} />
+                                    </div>
+                                    <div className="col">
+                                        <label htmlFor="editDestination">Destination</label>
+                                        <input type="text" className="form-control" value={this.state.editDestination} onChange={e => this.setState({ editDestination: e.target.value })} />
+                                    </div>
+                                </div>
+                                <div className="row form-group">
+                                    <div className="col">
+                                        <label htmlFor="editText">Description</label>
+                                        <textarea className="form-control" id="text" rows="5" value={this.state.editText} onChange={e => this.setState({ editText: e.target.value })} />
+                                    </div>
+                                </div>
+                                <div className="row form-group">
+                                    <div className="col">
+                                        <label htmlFor="editPrice">Price</label>
+                                        <select className="form-control" value={this.state.editPrice} onChange={e => this.setState({ editPrice: e.target.value })}>
+                                            <option></option>
+                                            {this.prices.map((x, i) => <option key={i}>{x}</option>)}
+                                        </select>
+                                    </div>
+                                    <div className="col">
+                                        <label htmlFor="editRating">Rating</label>
+                                        <select className="form-control" value={this.state.editRating} onChange={e => this.setState({ editRating: e.target.value })}>
+                                            <option></option>
+                                            {this.ratings.map((x, i) => <option key={i}>{x}</option>)}
+                                        </select>
+                                    </div>
+                                    <div className="col">
+                                        <label htmlFor="editReaction">Reaction</label>
+                                        <select className="form-control" value={this.state.editReaction} onChange={e => this.setState({ editReaction: e.target.value })}>
+                                            <option></option>
+                                            {this.reactions.map((x, i) => <option key={i}>{x}</option>)}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="row form-group">
+                                    <div className="col">
+                                        <label htmlFor="editImgurl">Photo URL</label>
+                                        <input type="text" className="form-control" value={this.state.editImgurl} onChange={e => this.setState({ editImgurl: e.target.value })} />
+                                    </div>
+                                    <div className="col">
+                                        <img src={this.state.editImgurl} alt="Trip" className="img-fluid"></img>
+                                    </div>
+                                </div>
+                                <div className="row form-group">
+                                    <div className="col-sm">
+                                        <button type="button" className="btn" id="postButton" onClick={() => this.updatePost()}>Update Post</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                        <CommentList comments={this.state.modalPost.comments} curr_user_id={this.state.user_id} poster_id={this.state.modalPost.user_id} post_id={this.state.modalPost.post_id} handleDeletion={this.onCommentDeletion} onLikeCommentButton={this.onLikeCommentButton}/>
-                        <form className="row mt-0 ml-0 pl-0" name="newCommentForm">
-                            <div className="ml-0 pl-0" id="newcommenttextarea">
-                                <textarea name="newCommentTA" type="text" className="form-control mb-3" placeholder="add a comment" id="newcomment"
-                                    value={this.state.newComment}
-                                    onChange={e => this.setState({ newComment: e.target.value })} required />
-                            </div>
-                            <div className="col text-right">
-                                {this.state.newComment == "" &&
-                                    <button type="button" className="btn mt-2 mr-4" id="newCommentButtonInactive">Post Comment</button>
-                                }
-                                {this.state.newComment != "" &&
-                                    <button type="button" className="btn btn-secondary mt-2 mr-4" id="newCommentButton" onClick={() => this.onNewComment()}>Post Comment</button>
-                                }
-                            </div>
-                        </form>
-                    </div>
+                    }
                 </PostModal>
             </>
         );
