@@ -44,6 +44,9 @@
     padding-bottom: 0;
     margin-bottom: 0.1rem;
 }
+#likecommentsave{
+    margin-left: 1rem;
+}
 
 @media only screen and (max-width: 600px){
     #FeedUL{
@@ -80,11 +83,19 @@
     }
     #condBreak{
         display:block;
+        width:100%;
+    }
+    #numcomments{
+        margin-right: 1rem;
     }
 }
 
 @media only screen and (min-width: 600px){
     #condBreak{
         display:none;
+    }
+    #numlikesnumcomments{
+        margin-right: 2rem;
+        margin-top: .5rem;
     }
 }

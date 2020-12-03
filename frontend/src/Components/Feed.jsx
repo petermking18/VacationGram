@@ -115,6 +115,7 @@ export default class Feed extends React.Component {
                         <div className="bg-light py-2 border-top pl-3">
                             <div className="row">
                                 {/* <div className="col"> */}
+                                <div id="likecommentsave">
                                     <span id="respButtonSpan">
                                         <button type="button" onClick={() => this.props.likePost(post)} className="btn mr-2" id="likebutton">
                                             <span role="img" aria-label="thumbs up">👍 </span> {!post.curr_user_liked && "Like"}{post.curr_user_liked && "Unlike"}
@@ -130,14 +131,22 @@ export default class Feed extends React.Component {
                                             {!post.curr_user_saved && "Save"}{post.curr_user_saved && "Unsave"}
                                         </button>
                                     </span>
+                                </div>
                                 {/* </div> */}
                                 {/* <div className="col-4 pr-5 text-right pt-2" id="numlikesnumcomments"> */}
-                                <br id="condBreak"/>
-                                <div id="numlikesnumcomments">
-                                    {post.numlikes === 1 && (<p className="mr-3" onClick={() => this.props.openPost(post)} id="numlikes">1 like</p>)}
-                                    {post.numlikes !== 1 && (<p className="mr-3" onClick={() => this.props.openPost(post)} id="numlikes">{post.numlikes} likes</p>)}
-                                    {post.comments.length === 1 && (<p onClick={() => this.props.openPost(post)} id="numcomments">1 comment</p>)}
-                                    {post.comments.length !== 1 && (<p onClick={() => this.props.openPost(post)} id="numcomments">{post.comments.length} comments</p>)}
+                                <br id="condBreak" />
+                                <div id="numlikesnumcomments" className="col text-right">
+                                    <br id="condBreak"/>
+                                    <br id="condBreak"/>
+                                    <br id="condBreak"/>
+                                    <span id="respButtonSpan">
+                                        {post.numlikes === 1 && (<p className="mr-3" onClick={() => this.props.openPost(post)} id="numlikes">1 like</p>)}
+                                        {post.numlikes !== 1 && (<p className="mr-3" onClick={() => this.props.openPost(post)} id="numlikes">{post.numlikes} likes</p>)}
+                                    </span>
+                                    <span id="respButtonSpan">
+                                        {post.comments.length === 1 && (<p onClick={() => this.props.openPost(post)} id="numcomments">1 comment</p>)}
+                                        {post.comments.length !== 1 && (<p onClick={() => this.props.openPost(post)} id="numcomments">{post.comments.length} comments</p>)}
+                                    </span>
                                 </div>
                             </div>
                         </div>
