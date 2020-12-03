@@ -36,7 +36,7 @@ export default class Feed extends React.Component {
     }
     render() {
         return <>
-            <ul className="feed bg-white list-unstyled">
+            <ul className="feed bg-white list-unstyled" id="FeedUL">
                 {this.state.posts === null &&
                     <div className="jumbotron text-muted mt-5 text-center">
                         <h2>Loading posts
@@ -85,25 +85,25 @@ export default class Feed extends React.Component {
                         </div>
                         {/* Middle area: image, text */}
                         <div className="pl-3 py-2">
-                            <div className="row py-2">
+                            <div className="row py-2" id="deleteEditRow">
                                 <div className="col-sm-3" id="postcardimgcol">
                                     <img id="postcardimg" src={post.imgurl} alt="Trip" />
                                 </div>
                                 {!this.props.postIsDeletable(post.user_id) &&
                                     <div className="col-lg pl-1 pr-5">
-                                        <p>{post.text}</p>
+                                        <p id="PostCardText">{post.text}</p>
                                     </div>}
                                 {this.props.postIsDeletable(post.user_id) &&
                                     <div className="col-md pl-1 pr-5">
-                                        <p>{post.text}</p>
+                                        <p id="PostCardText">{post.text}</p>
                                     </div>}
-                                {this.props.postIsDeletable(post.user_id) && <div>
-                                    <div className="clearfix">
+                                {this.props.postIsDeletable(post.user_id) && <div id="DeleteEditDiv">
+                                    <div className="clearfix" id="clearDeleteEdit">
                                         <button type="button" className="btn alert-secondary text-danger px-2 mr-4 mt-1 float-right" id="deletePostButton" onClick={() => this.props.deletePost(post.post_id)}>
                                             Delete Post
                                             </button>
                                     </div>
-                                    <div className="clearfix">
+                                    <div className="clearfix" id="clearDeleteEdit">
                                         <button type="button" className="btn alert-secondary text-primary px-2 mr-4 mt-1 float-right" id="deletePostButton" onClick={() => this.props.editPost(post)}>
                                             Edit Post
                                         </button>
@@ -114,18 +114,26 @@ export default class Feed extends React.Component {
                         {/* Bottom area: like button, comment button, save button, numlikes, numcomments */}
                         <div className="bg-light py-2 border-top pl-3">
                             <div className="row">
-                                <div className="col">
-                                    <button type="button" onClick={() => this.props.likePost(post)} className="btn mr-2" id="likebutton">
-                                        <span role="img" aria-label="thumbs up">👍 </span> {!post.curr_user_liked && "Like"}{post.curr_user_liked && "Unlike"}
+                                {/* <div className="col"> */}
+                                    <span id="respButtonSpan">
+                                        <button type="button" onClick={() => this.props.likePost(post)} className="btn mr-2" id="likebutton">
+                                            <span role="img" aria-label="thumbs up">👍 </span> {!post.curr_user_liked && "Like"}{post.curr_user_liked && "Unlike"}
+                                        </button>
+                                    </span>
+                                    <span id="respButtonSpan">
+                                        <button type="button" onClick={() => this.props.openPost(post)} className="btn mr-2" id="commentbutton">
+                                            Comment
                                     </button>
-                                    <button type="button" onClick={() => this.props.openPost(post)} className="btn mr-2" id="commentbutton">
-                                        Comment
-                                    </button>
-                                    <button type="button" onClick={() => this.props.savePost(post)} className="btn mr-2" id="savebutton">
-                                        {!post.curr_user_saved && "Save"}{post.curr_user_saved && "Unsave"}
-                                    </button>
-                                </div>
-                                <div className="col-4 pr-5 text-right pt-2" id="numlikesnumcomments">
+                                    </span>
+                                    <span id="respButtonSpan">
+                                        <button type="button" onClick={() => this.props.savePost(post)} className="btn mr-2" id="savebutton">
+                                            {!post.curr_user_saved && "Save"}{post.curr_user_saved && "Unsave"}
+                                        </button>
+                                    </span>
+                                {/* </div> */}
+                                {/* <div className="col-4 pr-5 text-right pt-2" id="numlikesnumcomments"> */}
+                                <br id="condBreak"/>
+                                <div id="numlikesnumcomments">
                                     {post.numlikes === 1 && (<p className="mr-3" onClick={() => this.props.openPost(post)} id="numlikes">1 like</p>)}
                                     {post.numlikes !== 1 && (<p className="mr-3" onClick={() => this.props.openPost(post)} id="numlikes">{post.numlikes} likes</p>)}
                                     {post.comments.length === 1 && (<p onClick={() => this.props.openPost(post)} id="numcomments">1 comment</p>)}

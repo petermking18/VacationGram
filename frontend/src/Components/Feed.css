@@ -44,3 +44,47 @@
     padding-bottom: 0;
     margin-bottom: 0.1rem;
 }
+
+@media only screen and (max-width: 600px){
+    #FeedUL{
+        max-width: 95vw;
+    }
+    #postcardimg{
+        display: block;
+        margin-left:auto;
+        margin-right:auto;
+    }
+    #PostCardText{
+        text-align: center;
+        padding-top: .5rem;
+    }
+    #deletePostButton{
+        float: none !important;
+    }
+    #clearDeleteEdit{
+        display: inline-block;
+    }
+    #DeleteEditDiv{
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 1rem;
+        margin-top: .5rem;
+    }
+    #respButtonSpan{
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        padding-top: .1rem;
+        padding-bottom: .1rem;
+    }
+    #condBreak{
+        display:block;
+    }
+}
+
+@media only screen and (min-width: 600px){
+    #condBreak{
+        display:none;
+    }
+}
