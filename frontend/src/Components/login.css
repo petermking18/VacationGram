@@ -1,6 +1,6 @@
 .imgcontainer {
     text-align: center;
-    color: #3498DB;
+    color: royalblue;
     margin: 24px 0 12px 0;
 }
 
@@ -36,6 +36,19 @@
     cursor: pointer;
     font-weight: bold;
     color: #ffffff;
+}
+
+#loginFormContent .form-group{
+    margin-bottom: 0;
+}
+
+#loginFormContent label{
+    margin-bottom: 0;
+    padding: 0;
+}
+
+#loginFormContent h1{
+    margin-bottom: 0;
 }
 
 img.avatar {
@@ -81,4 +94,70 @@ img.avatar {
 .error {
     color: red;
     text-align: center;
+}
+
+#loginWrapper{
+    margin-top: 10vh;
+    padding-top: 1vh;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 325px;
+}
+
+#loginFormContent{
+    margin-top: 10vh;
+    -webkit-border-radius: 10px 10px 10px 10px;
+    border-radius: 10px 10px 10px 10px;
+    background: #fff;
+    padding: 30px;
+    width: 90%;
+    max-width: 450px;
+    position: relative;
+    padding: 0px;
+    -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+    box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#loginPageBG{
+    background-color: #0269D9;
+    height: 100vh;
+    margin-top: -97px;
+}
+
+.fadeInDown{
+    -webkit-animation-name: fadeInDown;
+    animation-name: fadeInDown;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+#loginFormContent input[type=text]:focus{
+    border-bottom: 2px solid royalblue;
+}
+
+#loginFormContent input[type=password]:focus{
+    border-bottom: 2px solid royalblue;
+}
+
+
+
+@media only screen and (max-width: 600px){
+    #loginWrapper{
+        margin-top: 0;
+    }
+
+    #loginFormContent{
+        margin-top: 0;
+    }
+
+    #loginPageBG{
+        margin-top: 0;
+    }
 }
