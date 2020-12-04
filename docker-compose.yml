@@ -13,9 +13,9 @@ services:
     # map code volumes from local to inside working directory, changes made locally will update into the container
     volumes:
       - ./backend:/usr/src/app
-    # ports to map, YOU CANNOT RUN ANYTHING ELSE ON PORT 8000
+    # ports to map, YOU CANNOT RUN ANYTHING ELSE ON PORT 443
     ports:
-      - 8000:8000
+      - 443:443
     # shared network
     networks:
       - api
@@ -37,9 +37,9 @@ services:
     # specify dependency on mysql db
     depends_on:
       - backend-api
-    # ports to map, YOU CANNOT RUN ANYTHING ELSE ON PORT 3000
+    # ports to map, YOU CANNOT RUN ANYTHING ELSE ON PORT 80
     ports:
-      - 3000:3000
+      - 80:80
     # shared network
     networks:
       - api
