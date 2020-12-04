@@ -21,3 +21,10 @@
 #numlikesoncomment p{
     display: inline;
 }
+
+#highlight{
+    background-color: rgba(255, 237, 133, 0.411);
+}
+#bg-light{
+    background-color: #F8F9FA;
+}

@@ -7,38 +7,42 @@ const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
 
 //export const CommentList = (props) => (
 export default class CommentList extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props)
         this.state = {
             comments: this.props.comments,
         }
     }
 
-    isDeletable(comment){
+    isDeletable(comment) {
         ///DO NOT CHANGE TO ===, IDK WHY BUT IT BREAKS THE WHOLE DELETE COMMENT THING
-        if(comment.user_id == this.props.curr_user_id) return true;
-        if(this.props.curr_user_id == this.props.poster_id) return true;
+        if (comment.user_id == this.props.curr_user_id) return true;
+        if (this.props.curr_user_id == this.props.poster_id) return true;
         return false;
+    }
+    doHighlight(comment) {
+        if (comment.user_id == this.props.curr_user_id) return "highlight";
+        return "bg-light";
     }
     deleteComment = (commentid) => {
         let cid = commentid;
         var comments = this.state.comments;
-        for(let c = 0; c < comments.length; c++){
-            if(comments[c].id === commentid){
-                comments.splice(c,1);
+        for (let c = 0; c < comments.length; c++) {
+            if (comments[c].id === commentid) {
+                comments.splice(c, 1);
             }
         }
-        this.setState({comments: comments});
-        this.setState({numComments: this.state.numComments-1});
-        this.props.handleDeletion(this.props.post_id,comments,cid);
+        this.setState({ comments: comments });
+        this.setState({ numComments: this.state.numComments - 1 });
+        this.props.handleDeletion(this.props.post_id, comments, cid);
     }
     likeCommentButton = (comment) => {
         var comments = this.state.comments;
         var ind = comments.indexOf(comment);
-        if(comments[ind].curr_user_liked) comments[ind].numlikes--;
-        else if(!comments[ind].curr_user_liked) comments[ind].numlikes++;
+        if (comments[ind].curr_user_liked) comments[ind].numlikes--;
+        else if (!comments[ind].curr_user_liked) comments[ind].numlikes++;
         comments[ind].curr_user_liked = !comments[ind].curr_user_liked;
-        this.setState({comments: comments});
+        this.setState({ comments: comments });
         this.props.onLikeCommentButton(comment.id);
         /* var commentsArr = this.state.comments;
         for(let c = 0; c < commentsArr.length; c++){
@@ -54,17 +58,17 @@ export default class CommentList extends React.Component {
         }
         this.setState({comments: commentsArr}); */
     }
-    prettyPrintDate(dbDate){
+    prettyPrintDate(dbDate) {
         let date = new Date(dbDate);
         let mydate = months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
         return mydate;
     }
-    componentDidMount(){
-        this.setState({comments: this.props.comments});
+    componentDidMount() {
+        this.setState({ comments: this.props.comments });
 
     }
-    componentWillReceiveProps(nextProps){
-        this.setState({comments: nextProps.comments});
+    componentWillReceiveProps(nextProps) {
+        this.setState({ comments: nextProps.comments });
     }
     /* static getDerivedStateFromProps(props, state){
         return props;
@@ -92,7 +96,7 @@ export default class CommentList extends React.Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="py-1 bg-light border-bottom my-0 px-2">
+                                <div className="py-1 border-bottom my-0 px-2" id={this.doHighlight(comment)}>
                                     <p className="mb-1">"{comment.text}"</p>
                                     <div className="row">
                                         <div className="col" id="numlikesoncomment">
@@ -106,8 +110,8 @@ export default class CommentList extends React.Component {
                                         </div>
                                         <div className="col text-right">
                                             {this.isDeletable(comment) &&
-                                            <button type="button" onClick={() => this.deleteComment(comment.id)} className="btn alert-secondary text-danger px-2 mr-1 mt-0" id="deletecomment">
-                                                Delete comment
+                                                <button type="button" onClick={() => this.deleteComment(comment.id)} className="btn alert-secondary text-danger px-2 mr-1 mt-0" id="deletecomment">
+                                                    Delete comment
                                             </button>
                                             }
                                         </div>
